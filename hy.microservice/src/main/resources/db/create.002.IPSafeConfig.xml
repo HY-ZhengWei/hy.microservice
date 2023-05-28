@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="sqls"            class="java.util.ArrayList" />
+    <import name="sql"             class="org.hy.common.xml.XSQL" />
+
+
+
+    <!-- 系统安全访问IP黑白名单的相关SQL -->
+    <sqls>
+    
+        <sql id="XSQL_Create_IPSafeConfig">
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                CREATE TABLE TIPSafeConfig
+                (
+                 id                         VARCHAR(64)   NOT NULL COMMENT '主键'
+                ,ipType                     VARCHAR(64)   NOT NULL COMMENT 'IP类型'
+                ,ip                         VARCHAR(128)  NOT NULL COMMENT 'IP地址'
+                ,comment                    VARCHAR(4000)          COMMENT '备注说明'
+                ,isDel                      INT           NOT NULL COMMENT '删除标记。1删除；0未删除'
+                ,createUserID               VARCHAR(64)   NOT NULL COMMENT '数据创建人ID'
+                ,createTime                 DATETIME      NOT NULL COMMENT '创建时间'
+                ,updateTime                 DATETIME      NOT NULL COMMENT '修改时间'
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;/
+                
+                ALTER TABLE TIPSafeConfig ADD CONSTRAINT PK_IPSafeConfig PRIMARY KEY (id);/
+                
+                Alter TABLE TIPSafeConfig COMMENT = '系统安全访问IP黑白名单';/
+                
+                INSERT INTO TIPSafeConfig VALUES ('IPS00001' ,'blacklist' ,'5.79.108.34'     ,'荷兰:疑似恶意'        ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00002' ,'blacklist' ,'162.159.200.123' ,'美国'                ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00003' ,'blacklist' ,'34.117.65.55'    ,'美国'                ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00004' ,'blacklist' ,'193.36.84.224'   ,'德国:ssh'            ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00005' ,'blacklist' ,'202.118.1.130'   ,'辽宁'                ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00006' ,'blacklist' ,'189.195.123.18'  ,'墨西哥:ssh'          ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00007' ,'blacklist' ,'195.135.221.140' ,'德国:ip-ip'          ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00008' ,'blacklist' ,'107.150.126.215' ,'韩国:傀儡机 恶意'     ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00009' ,'blacklist' ,'45.33.55.247'    ,'美国:ssh'            ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00010' ,'blacklist' ,'45.148.10.81'    ,'荷兰:僵尸机 恶意'     ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00011' ,'blacklist' ,'125.227.151.216' ,'台湾:ssh'            ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00012' ,'blacklist' ,'192.241.209.125' ,'美国:傀儡机 恶意'     ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00013' ,'blacklist' ,'94.156.11.81'    ,'土耳其:暴力破解 恶意' ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00014' ,'blacklist' ,'116.193.159.2'   ,'香港'                ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00015' ,'blacklist' ,'159.203.82.102'  ,'美国'                ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00016' ,'blacklist' ,'185.224.128.141' ,'荷兰'                ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00017' ,'blacklist' ,'35.203.210.53'   ,'英国'                ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00018' ,'blacklist' ,'161.35.19.130'   ,'德国'                ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00019' ,'blacklist' ,'36.103.205.251'  ,'中卫'                ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00020' ,'blacklist' ,'222.184.120.235' ,'江苏淮安'             ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00021' ,'blacklist' ,'147.182.198.25'  ,'美国'                ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00022' ,'blacklist' ,'165.227.166.78'  ,'德国'                ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00023' ,'blacklist' ,'212.87.204.72'   ,'荷兰'                ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00024' ,'blacklist' ,'182.156.238.54'  ,'印度'                ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00025' ,'blacklist' ,'157.230.22.119'  ,'德国'                ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00026' ,'blacklist' ,'111.7.96.134'    ,'河南驻马店'           ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00027' ,'blacklist' ,'60.2.100.125'    ,'河北唐山'             ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00028' ,'blacklist' ,'161.35.229.231'  ,'美国'                ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00029' ,'blacklist' ,'139.59.186.183'  ,'英国'                ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00030' ,'blacklist' ,'83.137.149.135'  ,'荷兰'                ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                INSERT INTO TIPSafeConfig VALUES ('IPS00031' ,'blacklist' ,'36.111.168.163'  ,'贵州'                ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
+                ]]>
+            </content>
+            
+            <comment>系统安全访问IP黑白名单</comment>
+            <create if="启用 == IsCreateDB_MS_CDC.getValue">TIPSafeConfig</create>
+            
+        </sql>
+        
+    </sqls>
+    
+</config>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="sqls"            class="java.util.ArrayList" />
+    <import name="sqlGroup"        class="org.hy.common.xml.plugins.XSQLGroup" />
+    <import name="sql"             class="org.hy.common.xml.XSQL" />
+
+
+
+    <!-- 系统安全访问IP黑白名单的相关SQL -->
+    <sqls>
+    
+        <sql id="XSQL_Common_IPSafeConfig_Insert"> 
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                INSERT  INTO TIPSafeConfig
+                       (
+                         id          
+                        ,ipType      
+                        ,ip          
+                        ,comment     
+                        ,isDel       
+                        ,createUserID
+                        ,createTime  
+                        ,updateTime  
+                       )
+                VALUES (
+                         ':id'
+                        ,':ipType'
+                        ,':ip'
+                        ,':comment'
+                        ,':isDel'
+                        ,':createUserID'
+                        ,NOW()
+                        ,NOW()
+                       )
+                ]]>
+            </content>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_IPSafeConfig_Update"> 
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                UPDATE  TIPSafeConfig
+                   SET  updateTime = NOW()
+              <[       ,ipType     = ':ipType'     ]>
+              <[       ,ip         = ':ip'         ]>
+              <[       ,comment    = ':comment'    ]>
+              <[       ,isDel      = ':isDel'      ]>
+                 WHERE  id         = ':id'
+                ]]>
+            </content>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_IPSafeConfig_Query_ByIPType"> 
+            
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                SELECT   id
+                        ,ipType      
+                        ,ip          
+                        ,comment     
+                        ,isDel       
+                        ,createUserID
+                        ,createTime  
+                        ,updateTime  
+                  FROM  TIPSafeConfig
+                 WHERE  isDel  = 0
+                   ANd  ipType = ':ipType'
+                 ORDER  BY updateTime DESC
+                ]]>
+            </content>
+            
+            <result>
+                <row>org.hy.microservice.common.ipSafe.IPSafeConfig</row>
+                <cfill>setter(colValue)</cfill>
+            </result>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_IPSafeConfig_Query_ByID"> 
+            
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                SELECT   id
+                        ,ipType      
+                        ,ip          
+                        ,comment     
+                        ,isDel       
+                        ,createUserID
+                        ,createTime  
+                        ,updateTime  
+                  FROM  TIPSafeConfig
+                 WHERE  id  = ':id'
+                ]]>
+            </content>
+            
+            <result>
+                <row>org.hy.microservice.common.ipSafe.IPSafeConfig</row>
+                <cfill>setter(colValue)</cfill>
+            </result>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_IPSafeConfig_Query_All"> 
+            
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                SELECT   id
+                        ,ipType      
+                        ,ip          
+                        ,comment     
+                        ,isDel       
+                        ,createUserID
+                        ,createTime  
+                        ,updateTime  
+                  FROM  TIPSafeConfig
+                 WHERE  isDel = 0
+                 ORDER  BY ipType
+                          ,ip
+                ]]>
+            </content>
+            
+            <result>
+                <table>org.hy.common.TablePartitionRID</table>
+                <fill>putRow(row.ipType ,row.ip ,row)</fill>
+                <row>org.hy.microservice.common.ipSafe.IPSafeConfig</row>
+                <cfill>setter(colValue)</cfill>
+            </result>
+            
+        </sql>
+        
+    </sqls>
+    
+</config>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="sqls"            class="java.util.ArrayList" />
+    <import name="sqlGroup"        class="org.hy.common.xml.plugins.XSQLGroup" />
+    <import name="sql"             class="org.hy.common.xml.XSQL" />
+
+
+
+    <!-- 系统操作日志的相关SQL -->
+    <sqls>
+    
+        <sql id="XSQL_Common_OperationLog_Insert"> 
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                INSERT  INTO TOperationLog
+                       (
+                         id
+                        ,systemCode
+                        ,moduleCode
+                        ,url
+                        ,urlRequest
+                        ,urlRequestBody
+                        ,urlResponse
+                        ,resultCode
+                        ,userID
+                        ,userIP
+                        ,requestTime
+                        ,responseTime
+                        ,timeLen
+                        ,createTime
+                        ,attackType
+                       )
+                VALUES (
+                         ':id'
+                        ,':systemCode'
+                        ,':moduleCode'
+                        ,':url'
+                        ,':urlRequest'
+                        ,':urlRequestBody'
+                        ,':urlResponse'
+                        ,':resultCode'
+                        ,':userID'
+                        ,':userIP'
+                        ,':requestTime'
+                        ,':responseTime'
+                        ,':timeLen'
+                        ,':createTime'
+                        ,':attackType'
+                       )
+                ]]>
+            </content>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_OperationLog_Update"> 
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <contentDB>
+                <safeCheck>false</safeCheck>
+            </contentDB>
+            
+            <content>
+                <![CDATA[
+                UPDATE  TOperationLog
+                   SET  urlResponse    = ':urlResponse'
+                       ,resultCode     = ':resultCode'
+                       ,responseTime   = ':responseTime'
+                       ,timeLen        = ':timeLen'
+                 WHERE  id             = ':id'
+                ]]>
+            </content>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_OperationLog_Query"> 
+            
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                SELECT   id
+                        ,systemCode
+                        ,moduleCode
+                        ,url
+                        ,urlRequest
+                        ,urlRequestBody
+                        ,urlResponse
+                        ,resultCode
+                        ,userID
+                        ,userIP
+                        ,requestTime
+                        ,responseTime
+                        ,timeLen
+                        ,createTime
+                        ,attackType
+                  FROM  TOperationLog
+                 WHERE  createTime >= DATE_ADD(NOW(), INTERVAL -10 DAY)
+                   AND  userID      = ':userID'          
+              <[   AND  userIP      = ':userIP'            ]>
+              <[   AND  systemCode  = ':systemCode'        ]>
+              <[   AND  moduleCode  = ':moduleCode'        ]>
+              <[   AND  url         = ':url'               ]>
+              <[   AND  resultCode  = ':resultCode'        ]>
+              <[   AND  createTime >= ':createTime'        ]>
+              <[   AND  timeLen    >= ':timeLen'           ]>
+                 ORDER  BY createTime DESC
+                ]]>
+            </content>
+            
+            <result>
+                <row>org.hy.microservice.common.operationLog.OperationLog</row>
+                <cfill>setter(colValue)</cfill>
+            </result>
+            
+        </sql>
+        
+    </sqls>
+    
+</config>
