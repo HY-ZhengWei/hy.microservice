@@ -487,7 +487,7 @@
         
         
         
-        <property name="java-output-path" value="/hy.microservice.cdc/target/classes"/>
+        <property name="java-output-path" value="/hy.microservice/target/classes"/>
         <property name="context-root" value="hy.microservice"/>
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
     

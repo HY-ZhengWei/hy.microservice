@@ -44,7 +44,7 @@
             </content>
             
             <comment>系统操作日志</comment>
-            <create if="启用 == IsCreateDB_MS_ECS.getValue">TOperationLog</create>
+            <create if="启用 == IsCreateDB_MS_Common.getValue">TOperationLog</create>
             
         </sql>
         

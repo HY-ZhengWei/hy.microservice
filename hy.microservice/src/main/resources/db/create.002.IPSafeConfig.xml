@@ -67,7 +67,7 @@
             </content>
             
             <comment>系统安全访问IP黑白名单</comment>
-            <create if="启用 == IsCreateDB_MS_CDC.getValue">TIPSafeConfig</create>
+            <create if="启用 == IsCreateDB_MS_Common.getValue">TIPSafeConfig</create>
             
         </sql>
         

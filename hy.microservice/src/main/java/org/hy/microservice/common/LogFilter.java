@@ -207,7 +207,7 @@ public class LogFilter extends XSQLFilter
             v_OLog.setUrlRequest(v_Request.getQueryString());
             v_OLog.setUrlRequestBody(v_Request.getBodyString());
             v_OLog.setUserIP(getIpAddress(v_Request));
-            v_OLog.setSystemCode("msCDC");
+            v_OLog.setSystemCode(XJava.getParam("MS_Common_ServiceName").getValue());
             v_OLog.setModuleCode(v_Urls[1]);
             
             v_OLogDAO.insert(this.backWhiteCheck(v_OLog));

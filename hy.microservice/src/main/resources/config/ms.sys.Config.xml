@@ -13,6 +13,20 @@
 
         <xparam id="SYSParam_MS_Common" key="name">
             
+            <item id="MS_Common_ProjectName">
+                <name>MS_Common_ProjectName</name>
+                <value>hy.microservice</value>
+                <comment>项目名称，开发测试时使用</comment>
+            </item>
+            
+            
+            <item id="MS_Common_ServiceName">
+                <name>MS_Common_ServiceName</name>
+                <value>msCommon</value>
+                <comment>服务名称，产品运维时使用</comment>
+            </item>
+            
+            
             <item id="MS_Common_Analyses_Password">
                 <name>MS_Common_Analyses_Password</name>
                 <value encrypt="org.hy.common.StringHelp">mscommon</value>

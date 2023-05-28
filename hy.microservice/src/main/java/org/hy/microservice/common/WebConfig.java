@@ -2,6 +2,7 @@ package org.hy.microservice.common;
 
 import javax.annotation.Resource;
 
+import org.hy.common.xml.XJava;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -41,8 +42,8 @@ public class WebConfig implements WebMvcConfigurer
     @Override
     public void addInterceptors(InterceptorRegistry registry)
     {
-        registry.addInterceptor(commonInterceptor).addPathPatterns("/msCDC/**");
-        registry.addInterceptor(commonInterceptor).addPathPatterns("/hy.microservice.cdc/**");
+        registry.addInterceptor(commonInterceptor).addPathPatterns("/" + XJava.getParam("MS_Common_ProjectName").getValue() + "/**");
+        registry.addInterceptor(commonInterceptor).addPathPatterns("/" + XJava.getParam("MS_Common_ServiceName").getValue() + "/**");
     }
 
 
