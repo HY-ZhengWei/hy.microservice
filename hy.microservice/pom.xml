@@ -171,6 +171,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
+                    <!--注意增加这两行，在打包时相关的类会被独立打成jar -->
+                    <attachClasses>true</attachClasses>
+                    <classesClassifier>api</classesClassifier>
                     <webResources>
                         <resource>
                             <directory>${project.basedir}/src/main/resources/lib/</directory>
