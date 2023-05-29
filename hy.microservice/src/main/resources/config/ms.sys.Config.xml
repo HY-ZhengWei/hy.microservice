@@ -17,6 +17,7 @@
                 <name>MS_Common_ProjectName</name>
                 <value>hy.microservice</value>
                 <comment>项目名称，开发测试时使用</comment>
+                <onlyRead>false</onlyRead>
             </item>
             
             
@@ -24,6 +25,7 @@
                 <name>MS_Common_ServiceName</name>
                 <value>msCommon</value>
                 <comment>服务名称，产品运维时使用</comment>
+                <onlyRead>false</onlyRead>
             </item>
             
             
@@ -31,6 +33,7 @@
                 <name>MS_Common_Analyses_Password</name>
                 <value encrypt="org.hy.common.StringHelp">mscommon</value>
                 <comment>分析中心的访问密码</comment>
+                <onlyRead>false</onlyRead>
             </item>
             
             
@@ -38,6 +41,7 @@
                 <name>IsInitDSG_MS_Common</name>
                 <value>启用</value>
                 <comment>是否初始化数据库连接池组。如果不在内部初始化，请在外部预先初始化好</comment>
+                <onlyRead>false</onlyRead>
             </item>
             
             
@@ -45,13 +49,7 @@
                 <name>IsCreateDB_MS_Common</name>
                 <value>启用</value>
                 <comment>是否自动创建数据库对象</comment>
-            </item>
-            
-            
-            <item id="MS_Common_RootPackageName">
-                <name>MS_Common_RootPackageName</name>
-                <value>org.hy.microservice</value>
-                <comment>顶级包的路径。用于初始化。一般不修改</comment>
+                <onlyRead>false</onlyRead>
             </item>
             
             
@@ -59,6 +57,14 @@
                 <name>MS_Common_IsCheckToken</name>
                 <value>false</value>
                 <comment>是否验证用户登录的票据</comment>
+                <onlyRead>false</onlyRead>
+            </item>
+            
+            
+            <item id="MS_Common_RootPackageName">
+                <name>MS_Common_RootPackageName</name>
+                <value>org.hy.microservice</value>
+                <comment>顶级包的路径。用于初始化。一般不修改</comment>
             </item>
             
         </xparam>
