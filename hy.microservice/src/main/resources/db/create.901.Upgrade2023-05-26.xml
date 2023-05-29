@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="sqls"            class="java.util.ArrayList" />
+    <import name="sql"             class="org.hy.common.xml.XSQL" />
+
+
+
+    <!-- 2023-05-26升级版本的自动化脚本的相关SQL -->
+    <sqls>
+    
+        <sql id="XSQL_Upgrade_20230526_Step001">
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                INSERT INTO TUpgrade20230526 (id,createTime) VALUES ('攻击类型' ,NOW());/
+                
+                ALTER TABLE TOperationLog ADD attackType VARCHAR(64) NULL COMMENT '攻击类型';/
+                
+                UPDATE TUpgrade20230526 SET updateTime = NOW() WHERE id = '攻击类型';/
+                ]]>
+            </content>
+            
+            <comment>操作日志添加：攻击类型</comment>
+            
+        </sql>
+        
+        
+    
+        <sql id="XSQL_Create_Upgrade_20230526">
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                CREATE TABLE TUpgrade20230526
+                (
+                 id                         VARCHAR(64)   NOT NULL COMMENT '主键'
+                ,createTime                 DATETIME      NOT NULL COMMENT '创建时间'
+                ,updateTime                 DATETIME               COMMENT '修改时间'
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;/
+                
+                ALTER TABLE TUpgrade20230526 ADD CONSTRAINT PK_TUpgrade20230526 PRIMARY KEY (id);/
+                
+                Alter TABLE TUpgrade20230526 COMMENT = '2023-05-26升级版本';/
+                ]]>
+            </content>
+            
+            <trigger>
+                <create ref="XSQL_Upgrade_20230526_Step001" />
+            </trigger>
+            
+            <comment>2023-05-26升级版本</comment>
+            <create if="启用 == IsCreateDB_MS_Common.getValue">TUpgrade20230526</create>
+            
+        </sql>
+        
+    </sqls>
+    
+</config>

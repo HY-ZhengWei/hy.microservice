@@ -31,7 +31,7 @@
             
             <item id="MS_Common_Analyses_Password">
                 <name>MS_Common_Analyses_Password</name>
-                <value encrypt="org.hy.common.StringHelp">mscommon</value>
+                <value encrypt="org.hy.common.StringHelp">encrypt:IURY581a3vtKMEYxGCNgVw==</value>
                 <comment>分析中心的访问密码</comment>
                 <onlyRead>false</onlyRead>
             </item>

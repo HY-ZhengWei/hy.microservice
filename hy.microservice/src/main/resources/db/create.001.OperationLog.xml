@@ -40,6 +40,13 @@
                 CREATE INDEX IDX_TOperationLog_CreateTime   USING BTREE ON TOperationLog (createTime);/
                 
                 Alter TABLE TOperationLog COMMENT = '系统操作日志';/
+                
+                CREATE TABLE TUpgrade20230526
+                (
+                 id                         VARCHAR(64)   NOT NULL COMMENT '主键'
+                ,createTime                 DATETIME      NOT NULL COMMENT '创建时间'
+                ,updateTime                 DATETIME               COMMENT '修改时间'
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;/
                 ]]>
             </content>
             
