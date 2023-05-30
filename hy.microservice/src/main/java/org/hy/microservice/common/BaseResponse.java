@@ -24,6 +24,12 @@ public class BaseResponse<D> extends BaseResp
     /** 响应数据 */
     private BaseResponseData<D> data;
     
+    /** 总行数 */
+    private Long                totalCount;
+    
+    /** 响应数据的数量 */
+    private Long                dataCount;
+    
     
     
     public BaseResponse()
@@ -119,6 +125,51 @@ public class BaseResponse<D> extends BaseResp
         }
         
         this.data.setDatas(i_Datas);
+        return this;
+    }
+
+    
+    
+    /**
+     * 获取：总行数
+     */
+    public Long getTotalCount()
+    {
+        return totalCount;
+    }
+
+
+    /**
+     * 设置：总行数
+     * 
+     * @param i_TotalCount 总行数
+     */
+    public BaseResponse<D> setTotalCount(Long i_TotalCount)
+    {
+        this.totalCount = i_TotalCount;
+        return this;
+    }
+
+
+    
+    /**
+     * 获取：响应数据的数量
+     */
+    public Long getDataCount()
+    {
+        return dataCount;
+    }
+
+
+    
+    /**
+     * 设置：响应数据的数量
+     * 
+     * @param i_DataCount 响应数据的数量
+     */
+    public BaseResponse<D> setDataCount(Long i_DataCount)
+    {
+        this.dataCount = i_DataCount;
         return this;
     }
     

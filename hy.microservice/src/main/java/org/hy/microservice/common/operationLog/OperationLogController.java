@@ -64,13 +64,13 @@ public class OperationLogController extends BaseController
      * @param i_Token
      * @return
      */
-    @RequestMapping(name="查询系统操作日志" ,value="queryOperationLog" ,method={RequestMethod.GET ,RequestMethod.POST} ,produces=MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(name="查询系统操作日志" ,value="queryOperationLog" ,method={RequestMethod.POST} ,produces=MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public BaseResponse<OperationLog> queryOperationLog(@RequestParam(value="token" ,required=false) String i_Token
                                                        ,@RequestBody OperationLog i_OperationLog)
     {
         BaseResponse<OperationLog> v_RetResp = new BaseResponse<OperationLog>();
-        int                        v_Count = 0;
+        long                       v_Count   = 0L;
         
         if ( i_OperationLog == null )
         {
@@ -103,7 +103,7 @@ public class OperationLogController extends BaseController
             
             List<OperationLog> v_DataList = this.operationLogService.queryList(i_OperationLog);
             v_Count = v_DataList.size();
-            return v_RetResp.setData(v_DataList);
+            return v_RetResp.setData(v_DataList).setDataCount(v_Count);
         }
         catch (Exception exce)
         {
@@ -128,13 +128,13 @@ public class OperationLogController extends BaseController
      * @param i_Token
      * @return
      */
-    @RequestMapping(name="查询系统模块" ,value="queryModule" ,method={RequestMethod.GET ,RequestMethod.POST} ,produces=MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(name="查询系统模块" ,value="queryModule" ,method={RequestMethod.POST} ,produces=MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public BaseResponse<OperationLogModule> queryModule(@RequestParam(value="token" ,required=false) String i_Token
                                                        ,@RequestBody OperationLog i_OperationLog)
     {
         BaseResponse<OperationLogModule> v_RetResp = new BaseResponse<OperationLogModule>();
-        int                              v_Count = 0;
+        long                             v_Count   = 0L;
         
         if ( i_OperationLog == null )
         {
@@ -166,7 +166,7 @@ public class OperationLogController extends BaseController
             }
             
             v_Count = ProjectStart.$RequestMappingModules.size();
-            return v_RetResp.setData(Help.toList(ProjectStart.$RequestMappingModules));
+            return v_RetResp.setData(Help.toList(ProjectStart.$RequestMappingModules)).setDataCount(v_Count);
         }
         catch (Exception exce)
         {
@@ -191,13 +191,13 @@ public class OperationLogController extends BaseController
      * @param i_Token
      * @return
      */
-    @RequestMapping(name="查询系统接口" ,value="queryApi" ,method={RequestMethod.GET ,RequestMethod.POST} ,produces=MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(name="查询系统接口" ,value="queryApi" ,method={RequestMethod.POST} ,produces=MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public BaseResponse<OperationLogApi> queryApi(@RequestParam(value="token" ,required=false) String i_Token
                                                  ,@RequestBody OperationLog i_OperationLog)
     {
         BaseResponse<OperationLogApi> v_RetResp = new BaseResponse<OperationLogApi>();
-        int                           v_Count = 0;
+        long                          v_Count   = 0;
         
         if ( i_OperationLog == null )
         {
@@ -239,7 +239,7 @@ public class OperationLogController extends BaseController
                 if ( !Help.isNull(v_Apis) )
                 {
                     v_Count = ProjectStart.$RequestMappingMethods.get(i_OperationLog.getModuleCode()).size();
-                    return v_RetResp.setData(ProjectStart.$RequestMappingMethods.get(i_OperationLog.getModuleCode()));
+                    return v_RetResp.setData(ProjectStart.$RequestMappingMethods.get(i_OperationLog.getModuleCode())).setDataCount(v_Count);
                 }
                 else
                 {

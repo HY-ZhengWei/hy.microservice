@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-                                                                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                                                                
     
     
     
@@ -69,8 +69,10 @@
     
     
     
-    <wb-module deploy-name="hy.microservice-1.0.0">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+    
+    <wb-module deploy-name="hy.microservice-1.0.1">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+        
         
         
         
@@ -141,7 +143,8 @@
         
         
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+        
         
         
         
@@ -212,7 +215,8 @@
         
         
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+        
         
         
         
@@ -283,7 +287,8 @@
         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+        
         
         
         
@@ -354,70 +359,92 @@
         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-                        
+                                
+        
         
         <dependent-module archiveName="hy.common.base-1.0.169.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/hy.common.base/hy.common.base">
-                                    
+                                                
+            
             
             <dependency-type>uses</dependency-type>
-                                
+                                            
+        
         
         </dependent-module>
-                        
+                                
+        
         
         <dependent-module archiveName="hy.common.file-1.2.3.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/hy.common.file/hy.common.file">
-                                    
+                                                
+            
             
             <dependency-type>uses</dependency-type>
-                                
+                                            
+        
         
         </dependent-module>
-                        
+                                
+        
         
         <dependent-module archiveName="hy.common.db-2.6.6.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/hy.common.db/hy.common.db">
-                                    
+                                                
+            
             
             <dependency-type>uses</dependency-type>
-                                
+                                            
+        
         
         </dependent-module>
-                        
+                                
+        
         
         <dependent-module archiveName="hy.common.tpool-1.3.3.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/hy.common.tpool/hy.common.tpool">
-                                    
+                                                
+            
             
             <dependency-type>uses</dependency-type>
-                                
+                                            
+        
         
         </dependent-module>
-                        
+                                
+        
         
         <dependent-module archiveName="hy.common.net-3.0.3.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/hy.common.net/hy.common.net">
-                                    
+                                                
+            
             
             <dependency-type>uses</dependency-type>
-                                
+                                            
+        
         
         </dependent-module>
-                        
+                                
+        
         
         <dependent-module archiveName="hy.common.license-1.1.5.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/hy.common.license/hy.common.license">
-                                    
+                                                
+            
             
             <dependency-type>uses</dependency-type>
-                                
+                                            
+        
         
         </dependent-module>
-                        
+                                
+        
         
         <dependent-module archiveName="hy.common.xjava-4.3.3.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/hy.common.xjava/hy.common.xjava">
-                                    
+                                                
+            
             
             <dependency-type>uses</dependency-type>
-                                
+                                            
+        
         
         </dependent-module>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+        
         
         
         
@@ -488,8 +515,10 @@
         
         
         <property name="java-output-path" value="/hy.microservice/target/classes"/>
+                
         <property name="context-root" value="hy.microservice"/>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+    
     
     
     
@@ -560,7 +589,8 @@
     
     
     </wb-module>
-                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                            
+
 
 
 
