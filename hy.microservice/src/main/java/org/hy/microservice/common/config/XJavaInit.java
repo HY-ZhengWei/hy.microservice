@@ -62,7 +62,7 @@ public class XJavaInit extends AppInitConfig
             {
                 this.loadXML("config/ms.sys.Config.xml" ,this.xmlRoot);
                 
-                // 系统参数加载之后，公共资源加载之前，先行加载子项目的初始化参数
+                // 父项目参数加载之后，公共资源加载之前，先行加载子项目的初始化参数
                 this.loadDirectory("config/initialization/" ,this.xmlRoot);
                 
                 // 加载子项目的启动配置
