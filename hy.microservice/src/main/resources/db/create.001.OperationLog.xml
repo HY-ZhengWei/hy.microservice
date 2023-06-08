@@ -31,6 +31,7 @@
                 ,requestTime                BIGINT        NOT NULL COMMENT '请求时间'
                 ,responseTime               BIGINT                 COMMENT '响应时间'
                 ,timeLen                    BIGINT                 COMMENT '操作时长（单位：毫秒）'
+                ,attackType                 VARCHAR(64)            COMMENT '攻击类型'
                 ,createTime                 DATETIME               COMMENT '数据库的创建时间'
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;/
                 

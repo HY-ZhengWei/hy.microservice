@@ -17,13 +17,7 @@ import org.hy.microservice.common.operationLog.OperationLogApi;
 import org.hy.microservice.common.operationLog.OperationLogModule;
 import org.springframework.boot.ApplicationContextFactory;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.method.HandlerMethod;
@@ -31,7 +25,6 @@ import org.springframework.web.servlet.handler.AbstractHandlerMethodMapping;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 import com.google.common.collect.ImmutableMap;
 
 
@@ -46,24 +39,11 @@ import com.google.common.collect.ImmutableMap;
  * @version     v1.0
  *              v2.0  2021-02-19  添加：支持SpringBoot 2.4.0版本
  */
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, DruidDataSourceAutoConfigure.class})
-@ServletComponentScan
-public class ProjectStart extends SpringBootServletInitializer
+public class ProjectStartBase
 {
     public static final Map<String ,OperationLogModule>       $RequestMappingModules = new HashMap<String ,OperationLogModule>();
     
     public static final PartitionMap<String ,OperationLogApi> $RequestMappingMethods = new TablePartition<String ,OperationLogApi>();
-    
-    
-    
-    @SuppressWarnings("unused")
-    public static void main(String[] args)
-    {
-        SpringApplication v_SpringApp = new SpringApplication(ProjectStart.class);
-        v_SpringApp.addInitializers(new XJavaSpringInitialzer());
-        v_SpringApp.setApplicationContextFactory(ApplicationContextFactory.ofContextClass(XJavaSpringAnnotationConfigServletWebServerApplicationContext.class));
-        ConfigurableApplicationContext v_CAC = v_SpringApp.run(args);
-    }
     
     
     
@@ -79,8 +59,7 @@ public class ProjectStart extends SpringBootServletInitializer
      *
      * @see org.springframework.boot.web.servlet.support.SpringBootServletInitializer#run(org.springframework.boot.SpringApplication)
      */
-    @Override
-    protected WebApplicationContext run(SpringApplication i_Application)
+    public static WebApplicationContext run(SpringApplication i_Application)
     {
         i_Application.addInitializers(new XJavaSpringInitialzer());
         i_Application.setApplicationContextFactory(ApplicationContextFactory.ofContextClass(XJavaSpringAnnotationConfigServletWebServerApplicationContext.class));
@@ -154,8 +133,7 @@ public class ProjectStart extends SpringBootServletInitializer
      *
      * @return
      */
-    @Bean
-    public ServletRegistrationBean<VueServlet> vueServlet()
+    public static ServletRegistrationBean<VueServlet> vueServlet()
     {
         return new ServletRegistrationBean<VueServlet>(new VueServlet() ,"/ms/*");
     }
@@ -171,8 +149,7 @@ public class ProjectStart extends SpringBootServletInitializer
      *
      * @return
      */
-    @Bean
-    public ServletRegistrationBean<AnalysesServlet> analysesServlet()
+    public static ServletRegistrationBean<AnalysesServlet> analysesServlet()
     {
         return new ServletRegistrationBean<AnalysesServlet>(new AnalysesServlet() ,"/analyses/*");
     }
@@ -188,8 +165,7 @@ public class ProjectStart extends SpringBootServletInitializer
      *
      * @return
      */
-    @Bean
-    public ServletRegistrationBean<AnalyseObjectServlet> analyseObjectServlet()
+    public static ServletRegistrationBean<AnalyseObjectServlet> analyseObjectServlet()
     {
         ServletRegistrationBean<AnalyseObjectServlet> v_SRB = new ServletRegistrationBean<AnalyseObjectServlet>(new AnalyseObjectServlet() ,"/analyses/analyseObject/*");
         

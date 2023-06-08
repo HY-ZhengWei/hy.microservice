@@ -7,7 +7,7 @@ import org.hy.common.app.Param;
 import org.hy.common.xml.log.Logger;
 import org.hy.microservice.common.BaseController;
 import org.hy.microservice.common.BaseResponse;
-import org.hy.microservice.common.ProjectStart;
+import org.hy.microservice.common.ProjectStartBase;
 import org.hy.microservice.common.user.UserSSO;
 import org.hy.microservice.common.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -165,8 +165,8 @@ public class OperationLogController extends BaseController
                 }
             }
             
-            v_Count = ProjectStart.$RequestMappingModules.size();
-            return v_RetResp.setData(Help.toList(ProjectStart.$RequestMappingModules)).setDataCount(v_Count);
+            v_Count = ProjectStartBase.$RequestMappingModules.size();
+            return v_RetResp.setData(Help.toList(ProjectStartBase.$RequestMappingModules)).setDataCount(v_Count);
         }
         catch (Exception exce)
         {
@@ -230,16 +230,16 @@ public class OperationLogController extends BaseController
             
             if ( Help.isNull(i_OperationLog.getModuleCode()) )
             {
-                v_Count = ProjectStart.$RequestMappingMethods.size();
-                return v_RetResp.setData(Help.toList(ProjectStart.$RequestMappingMethods));
+                v_Count = ProjectStartBase.$RequestMappingMethods.size();
+                return v_RetResp.setData(Help.toList(ProjectStartBase.$RequestMappingMethods));
             }
             else
             {
-                List<OperationLogApi> v_Apis = ProjectStart.$RequestMappingMethods.get(i_OperationLog.getModuleCode());
+                List<OperationLogApi> v_Apis = ProjectStartBase.$RequestMappingMethods.get(i_OperationLog.getModuleCode());
                 if ( !Help.isNull(v_Apis) )
                 {
-                    v_Count = ProjectStart.$RequestMappingMethods.get(i_OperationLog.getModuleCode()).size();
-                    return v_RetResp.setData(ProjectStart.$RequestMappingMethods.get(i_OperationLog.getModuleCode())).setDataCount(v_Count);
+                    v_Count = ProjectStartBase.$RequestMappingMethods.get(i_OperationLog.getModuleCode()).size();
+                    return v_RetResp.setData(ProjectStartBase.$RequestMappingMethods.get(i_OperationLog.getModuleCode())).setDataCount(v_Count);
                 }
                 else
                 {
