@@ -67,6 +67,13 @@
                 <comment>顶级包的路径。用于初始化。一般不修改</comment>
             </item>
             
+            
+            <item id="MS_Common_SessionTimeOut">
+                <name>MS_Common_SessionTimeOut</name>
+                <value>36000</value>
+                <comment>会话的有效时长（单位：秒）</comment>
+            </item>
+            
         </xparam>
         
     </xconfig>

@@ -2,6 +2,8 @@ package org.hy.microservice.common;
 
 import java.util.List;
 
+import org.hy.common.Date;
+
 
 
 
@@ -49,6 +51,19 @@ public class BaseResponse<D> extends BaseResp
     public BaseResponse<D> setCode(String code)
     {
         this.code = code;
+        return this;
+    }
+    
+    
+    /**
+     * 设置：响应时间
+     * 
+     * @return
+     */
+    @Override
+    public BaseResponse<D> setRespTime(Date respTime)
+    {
+        this.respTime = respTime;
         return this;
     }
 

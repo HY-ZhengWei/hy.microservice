@@ -21,6 +21,10 @@
                 <value>config/ms.XSSO.xml</value>
             </item>
             
+            <item>
+                <value>config/ms.sys.DNS.xml</value>
+            </item>
+            
             <!-- 加载数据库目录所有配置文件 -->
             <item>
                 <value>db/</value>
