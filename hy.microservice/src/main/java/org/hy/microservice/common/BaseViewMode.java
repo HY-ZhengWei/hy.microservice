@@ -21,6 +21,9 @@ public class BaseViewMode extends SerializableDef
 {
     private static final long serialVersionUID = -3998918924300953503L;
 
+    /** 应用appKey */
+    private String  appKey;
+    
     /** 票据号 */
     private String  token;
     
@@ -57,8 +60,14 @@ public class BaseViewMode extends SerializableDef
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,timezone = "GMT+8")
     private Date    updateTime;
     
-    /** 创建人ID */
+    /** 创建人编号 */
     private String  createUserID;
+    
+    /** 修改者编号 */
+    private String  updateUserID;
+    
+    /** 有效标记。1有效；-1无效 */
+    private Integer isValid;
     
     /** 删除标记。1删除；0未删除 */
     private Integer isDel;
@@ -87,8 +96,34 @@ public class BaseViewMode extends SerializableDef
     
     /** 总行数 */
     private Long    totalCount;
+    
+    /** 备注说明 */
+    private String  remarks;
+    
+    /** 注解说明 */
+    private String  comment;
+    
+    
+    
+    /**
+     * 获取：应用appKey
+     */
+    public String getAppKey()
+    {
+        return appKey;
+    }
 
     
+    /**
+     * 设置：应用appKey
+     * 
+     * @param appKey
+     */
+    public void setAppKey(String appKey)
+    {
+        this.appKey = appKey;
+    }
+
     
     /**
      * 获取：票据号
@@ -578,10 +613,30 @@ public class BaseViewMode extends SerializableDef
     {
         this.expireTime = expireTime;
     }
+    
+    
+    /**
+     * 获取：备注说明
+     */
+    public String getRemarks()
+    {
+        return remarks;
+    }
+
+    
+    /**
+     * 设置：备注说明
+     * 
+     * @param remarks
+     */
+    public void setRemarks(String remarks)
+    {
+        this.remarks = remarks;
+    }
 
 
     /**
-     * 获取：创建人ID
+     * 获取：创建人编号
      */
     public String getCreateUserID()
     {
@@ -590,13 +645,73 @@ public class BaseViewMode extends SerializableDef
 
 
     /**
-     * 设置：创建人ID
+     * 设置：创建人编号
      * 
      * @param createUserID
      */
     public void setCreateUserID(String createUserID)
     {
         this.createUserID = createUserID;
+    }
+
+
+    /**
+     * 获取：修改者编号
+     */
+    public String getUpdateUserID()
+    {
+        return updateUserID;
+    }
+
+
+    /**
+     * 设置：修改者编号
+     * 
+     * @param updateUserID
+     */
+    public void setUpdateUserID(String updateUserID)
+    {
+        this.updateUserID = updateUserID;
+    }
+
+
+    /**
+     * 获取：有效标记。1有效；-1无效
+     */
+    public Integer getIsValid()
+    {
+        return isValid;
+    }
+
+
+    /**
+     * 设置：有效标记。1有效；-1无效
+     * 
+     * @param isValid
+     */
+    public void setIsValid(Integer isValid)
+    {
+        this.isValid = isValid;
+    }
+
+    
+    /**
+     * 获取：注解说明
+     */
+    public String getComment()
+    {
+        return comment;
+    }
+
+
+    /**
+     * 设置：注解说明
+     * 
+     * @param i_Comment 注解说明
+     */
+    public void setComment(String i_Comment)
+    {
+        this.comment = i_Comment;
     }
 
 }
