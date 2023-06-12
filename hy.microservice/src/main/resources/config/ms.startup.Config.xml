@@ -18,6 +18,10 @@
             </item>
             
             <item>
+                <value>config/ms.sys.AppKey.Config.xml</value>
+            </item>
+            
+            <item>
                 <value>config/ms.XSSO.xml</value>
             </item>
             
