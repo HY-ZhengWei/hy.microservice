@@ -33,7 +33,6 @@ public class IPSafeConfigService implements IIPSafeConfigService ,Serializable
     private IIPSafeConfigDAO ipSafeConfigDAO;
     
     
-    
 
     /**
      * 新增系统安全访问IP黑白名单
