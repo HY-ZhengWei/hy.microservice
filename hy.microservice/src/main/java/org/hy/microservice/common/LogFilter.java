@@ -63,7 +63,7 @@ public class LogFilter extends XSQLFilter
      * @param i_APIUrl
      * @return
      */
-    private boolean allowUseAPI(String i_APIUrl)
+    private synchronized boolean allowUseAPI(String i_APIUrl)
     {
         TimeGroupTotal v_APITimeTotal = $APITotal.get(i_APIUrl);
         Date           v_Now          = Date.getNowTime();
@@ -87,6 +87,7 @@ public class LogFilter extends XSQLFilter
         }
         
         v_APITimeTotal.put(v_Now);
+        $APITotal.put(i_APIUrl ,v_APITimeTotal);
         return true;
     }
     
