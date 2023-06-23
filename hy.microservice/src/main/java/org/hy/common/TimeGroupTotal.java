@@ -198,15 +198,15 @@ public class TimeGroupTotal extends LinkedHashMap<Date ,Long> implements Map<Dat
         }
         else if ( i_Key instanceof Date )
         {
-            return super.get(i_Key);
+            return super.get(this.getTimeKey((Date)i_Key));
         }
         else if ( i_Key instanceof java.util.Date )
         {
-            return super.get(new Date((java.util.Date)i_Key));
+            return super.get(this.getTimeKey(new Date((java.util.Date)i_Key)));
         }
         else if ( i_Key instanceof Long )
         {
-            return super.get(new Date((Long)i_Key));
+            return super.get(this.getTimeKey(new Date((Long)i_Key)));
         }
         else
         {
@@ -257,15 +257,15 @@ public class TimeGroupTotal extends LinkedHashMap<Date ,Long> implements Map<Dat
         }
         else if ( i_Key instanceof Date )
         {
-            return super.remove(i_Key);
+            return super.remove(this.getTimeKey((Date)i_Key));
         }
         else if ( i_Key instanceof java.util.Date )
         {
-            return super.remove(new Date((java.util.Date)i_Key));
+            return super.remove(this.getTimeKey(new Date((java.util.Date)i_Key)));
         }
         else if ( i_Key instanceof Long )
         {
-            return super.remove(new Date((Long)i_Key));
+            return super.remove(this.getTimeKey(new Date((Long)i_Key)));
         }
         else
         {
