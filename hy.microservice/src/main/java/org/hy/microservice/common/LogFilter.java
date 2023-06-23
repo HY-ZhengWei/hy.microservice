@@ -46,15 +46,18 @@ import org.hy.microservice.common.operationLog.OperationLog;
 })
 public class LogFilter extends XSQLFilter
 {
-    private static final Logger                      $Logger   = new Logger(LogFilter.class);
+    private static final Logger                      $Logger           = new Logger(LogFilter.class);
     
-    /** 接口的时间分组统计 */
-    private static final Map<String ,TimeGroupTotal> $APITotal = new HashMap<String ,TimeGroupTotal>();
+    /** 接口的时间分组统计（每分钟） */
+    private static final Map<String ,TimeGroupTotal> $APITotalMinute   = new HashMap<String ,TimeGroupTotal>();
+    
+    /** 接口的时间分组统计（每10分钟） */
+    private static final Map<String ,TimeGroupTotal> $APITotalMinute10 = new HashMap<String ,TimeGroupTotal>();
     
     
     
     /**
-     * 统计接口访问的分时数量，及判定接口访问量是否超过阈值
+     * 统计接口访问的分时数量，及判定接口访问量是否超过阈值（每分钟）
      * 
      * @author      ZhengWei(HY)
      * @createDate  2023-06-23
@@ -63,16 +66,16 @@ public class LogFilter extends XSQLFilter
      * @param i_APIUrl
      * @return
      */
-    private synchronized boolean allowUseAPI(String i_APIUrl)
+    private synchronized boolean allowUseAPIMinute(String i_APIUrl)
     {
-        TimeGroupTotal v_APITimeTotal = $APITotal.get(i_APIUrl);
+        TimeGroupTotal v_APITimeTotal = $APITotalMinute.get(i_APIUrl);
         Date           v_Now          = Date.getNowTime();
         
         if ( v_APITimeTotal == null )
         {
             v_APITimeTotal = new TimeGroupTotal(1);
             v_APITimeTotal.setMaxSize(60);
-            $APITotal.put(i_APIUrl ,v_APITimeTotal);
+            $APITotalMinute.put(i_APIUrl ,v_APITimeTotal);
         }
         else
         {
@@ -80,6 +83,46 @@ public class LogFilter extends XSQLFilter
             if ( v_TimeCount != null )
             {
                 long v_MaxCount = Long.valueOf(XJava.getParam("MS_Common_ApiUseMaxCountMinute").getValue());
+                if ( v_TimeCount > v_MaxCount )
+                {
+                    return false;
+                }
+            }
+        }
+        
+        v_APITimeTotal.put(v_Now);
+        return true;
+    }
+    
+    
+    
+    /**
+     * 统计接口访问的分时数量，及判定接口访问量是否超过阈值（每10分钟）
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2023-06-23
+     * @version     v1.0
+     *
+     * @param i_APIUrl
+     * @return
+     */
+    private synchronized boolean allowUseAPIMinute10(String i_APIUrl)
+    {
+        TimeGroupTotal v_APITimeTotal = $APITotalMinute10.get(i_APIUrl);
+        Date           v_Now          = Date.getNowTime();
+        
+        if ( v_APITimeTotal == null )
+        {
+            v_APITimeTotal = new TimeGroupTotal(15);
+            v_APITimeTotal.setMaxSize(8);
+            $APITotalMinute10.put(i_APIUrl ,v_APITimeTotal);
+        }
+        else
+        {
+            Long v_TimeCount = v_APITimeTotal.get(v_Now);
+            if ( v_TimeCount != null )
+            {
+                long v_MaxCount = Long.valueOf(XJava.getParam("MS_Common_ApiUseMaxCountMinute10").getValue());
                 if ( v_TimeCount > v_MaxCount )
                 {
                     return false;
@@ -275,9 +318,19 @@ public class LogFilter extends XSQLFilter
             return;
         }
         // 访问量达到上限
-        if ( !this.allowUseAPI(v_OLog.getUrl()) )
+        if ( !this.allowUseAPIMinute(v_OLog.getUrl()) )
         {
             v_OLog.setUrlResponse("访问量达到上限");
+            i_ServletResponse.setCharacterEncoding("UTF-8");
+            i_ServletResponse.setContentType("application/json");
+            v_Output = i_ServletResponse.getOutputStream();
+            v_Output.write(v_OLog.getUrlResponse().getBytes());
+            return;
+        }
+        // 访问量达到上限（10分钟）
+        if ( !this.allowUseAPIMinute10(v_OLog.getUrl()) )
+        {
+            v_OLog.setUrlResponse("访问量达到10分钟上限");
             i_ServletResponse.setCharacterEncoding("UTF-8");
             i_ServletResponse.setContentType("application/json");
             v_Output = i_ServletResponse.getOutputStream();

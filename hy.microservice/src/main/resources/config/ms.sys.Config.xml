@@ -77,8 +77,15 @@
             
             <item id="MS_Common_ApiUseMaxCountMinute">
                 <name>MS_Common_ApiUseMaxCountMinute</name>
-                <value>600</value>
-                <comment>API接口每分钟最大允许的请求量</comment>
+                <value>300</value>
+                <comment>每个API接口每分钟最大允许的请求量</comment>
+            </item>
+            
+            
+            <item id="MS_Common_ApiUseMaxCountMinute10">
+                <name>MS_Common_ApiUseMaxCountMinute10</name>
+                <value>1500</value>
+                <comment>每个API接口每10分钟最大允许的请求量</comment>
             </item>
             
         </xparam>
