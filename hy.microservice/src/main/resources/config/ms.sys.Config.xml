@@ -74,6 +74,13 @@
                 <comment>会话的有效时长（单位：秒）</comment>
             </item>
             
+            
+            <item id="MS_Common_ApiUseMaxCountMinute">
+                <name>MS_Common_ApiUseMaxCountMinute</name>
+                <value>600</value>
+                <comment>API接口每分钟最大允许的请求量</comment>
+            </item>
+            
         </xparam>
         
     </xconfig>

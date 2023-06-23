@@ -2,6 +2,7 @@ package org.hy.microservice.common;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.FilterChain;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.hy.common.Date;
 import org.hy.common.Help;
 import org.hy.common.StringHelp;
+import org.hy.common.TimeGroupTotal;
 import org.hy.common.xml.XJSON;
 import org.hy.common.xml.XJava;
 import org.hy.common.xml.log.Logger;
@@ -44,7 +46,49 @@ import org.hy.microservice.common.operationLog.OperationLog;
 })
 public class LogFilter extends XSQLFilter
 {
-    private static final Logger $Logger = new Logger(LogFilter.class);
+    private static final Logger                      $Logger   = new Logger(LogFilter.class);
+    
+    /** 接口的时间分组统计 */
+    private static final Map<String ,TimeGroupTotal> $APITotal = new HashMap<String ,TimeGroupTotal>();
+    
+    
+    
+    /**
+     * 统计接口访问的分时数量，及判定接口访问量是否超过阈值
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2023-06-23
+     * @version     v1.0
+     *
+     * @param i_APIUrl
+     * @return
+     */
+    private boolean allowUseAPI(String i_APIUrl)
+    {
+        TimeGroupTotal v_APITimeTotal = $APITotal.get(i_APIUrl);
+        Date           v_Now          = Date.getNowTime();
+        
+        if ( v_APITimeTotal == null )
+        {
+            v_APITimeTotal = new TimeGroupTotal(1);
+            v_APITimeTotal.setMaxSize(60);
+        }
+        else
+        {
+            Long v_TimeCount = v_APITimeTotal.get(v_Now);
+            if ( v_TimeCount != null )
+            {
+                long v_MaxCount = Long.valueOf(XJava.getParam("MS_Common_ApiUseMaxCountMinute").getValue());
+                if ( v_TimeCount > v_MaxCount )
+                {
+                    return false;
+                }
+            }
+        }
+        
+        v_APITimeTotal.put(v_Now);
+        return true;
+    }
     
     
     
@@ -223,6 +267,16 @@ public class LogFilter extends XSQLFilter
         // 阻止访问
         if ( !Help.isNull(v_OLog.getUrlResponse()) )
         {
+            i_ServletResponse.setCharacterEncoding("UTF-8");
+            i_ServletResponse.setContentType("application/json");
+            v_Output = i_ServletResponse.getOutputStream();
+            v_Output.write(v_OLog.getUrlResponse().getBytes());
+            return;
+        }
+        // 访问量达到上限
+        if ( !this.allowUseAPI(v_OLog.getUrl()) )
+        {
+            v_OLog.setUrlResponse("访问量达到上限");
             i_ServletResponse.setCharacterEncoding("UTF-8");
             i_ServletResponse.setContentType("application/json");
             v_Output = i_ServletResponse.getOutputStream();
