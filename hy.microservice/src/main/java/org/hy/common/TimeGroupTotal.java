@@ -172,7 +172,7 @@ public class TimeGroupTotal extends LinkedHashMap<Date ,Long> implements Map<Dat
      */
     public Long get(Date i_Key)
     {
-        return super.get(i_Key);
+        return super.get(this.getTimeKey(i_Key));
     }
     
     

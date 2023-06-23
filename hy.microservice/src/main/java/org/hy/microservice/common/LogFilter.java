@@ -72,6 +72,7 @@ public class LogFilter extends XSQLFilter
         {
             v_APITimeTotal = new TimeGroupTotal(1);
             v_APITimeTotal.setMaxSize(60);
+            $APITotal.put(i_APIUrl ,v_APITimeTotal);
         }
         else
         {
@@ -87,7 +88,6 @@ public class LogFilter extends XSQLFilter
         }
         
         v_APITimeTotal.put(v_Now);
-        $APITotal.put(i_APIUrl ,v_APITimeTotal);
         return true;
     }
     
