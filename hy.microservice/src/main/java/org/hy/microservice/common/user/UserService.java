@@ -33,16 +33,26 @@ import org.hy.microservice.common.BaseResponse;
 @Xjava
 public class UserService
 {
-    private static final Logger $Logger    = Logger.getLogger(UserService.class);
+    private static final Logger $Logger      = Logger.getLogger(UserService.class);
 	
     /** 登陆的Session会话ID标识，标识着是否登陆成功 */
-    public  static final String $SessionID = "$XSSO$";
+    public  static final String $SessionID   = "$XSSO$";
     
     /** 全局会话票据的前缀 */
-    public  static final String $USID      = "USID";
+    public  static final String $USID        = "USID";
     
     /** 本地会话票据的前缀 */
-    public  static final String $SID       = "SID";
+    public  static final String $SID         = "SID";
+    
+    
+    /** 当前的票据 */
+    protected static TokenInfo  $Token       = null;
+    
+    /** 获取票据的时间 */
+    protected static long       $TokenTime   = 0L;
+    
+    /** 获取票据的过期时长（单位：秒） */
+    protected static int        $TokenExpire = 0;
     
     
     
@@ -177,6 +187,47 @@ public class UserService
     
     
     /**
+     * 获取访问Token（带缓存、加同步锁）
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2023-07-05
+     * @version     v1.0
+     * 
+     * @param i_AppKey   应用编号
+     * @param i_UserSSO  应用接口访问者的信息
+     *
+     * @return
+     */
+    public synchronized String getAccessToken(AppKey i_AppKey ,UserSSO i_UserSSO)
+    {
+        long v_Timestamp = Date.getNowTime().getTime();
+        if ( $TokenTime + $TokenExpire * 1000 > v_Timestamp )
+        {
+            return $Token.getAccessToken();
+        }
+        
+        TokenInfo v_Token = this.getCode(i_AppKey);
+        if ( v_Token != null )
+        {
+            $TokenTime   = Date.getNowTime().getTime();
+            $TokenExpire = v_Token.getExpire() - 10;    // 为容错而减10秒
+            $Token       = v_Token;
+            
+            String v_Code = v_Token.getCode();
+            v_Token.setCode(null);                      // 应用系统的接口级访问，仅登录一次即可
+            
+            this.loginUser(v_Code ,i_AppKey ,i_UserSSO);
+            return v_Token.getAccessToken();
+        }
+        else
+        {
+            return null;
+        }
+    }
+    
+    
+    
+    /**
      * 获取登录临时Code
      * 
      * @author      ZhengWei(HY)
@@ -189,6 +240,8 @@ public class UserService
      */
     public TokenInfo getCode(AppKey i_AppKey)
     {
+        $Logger.debug("获取Token Starting...");
+        
         try
         {
             long        v_Timestamp = Date.getNowTime().getTime();
