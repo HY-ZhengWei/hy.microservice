@@ -39,7 +39,7 @@ import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
  *              v2.0  2021-02-19  添加：支持SpringBoot 2.4.0版本
  */
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, DruidDataSourceAutoConfigure.class})
-@ServletComponentScan({"org.hy.microservice"})
+@ServletComponentScan
 public class ProjectStart extends SpringBootServletInitializer
 {
     public static final Map<String ,OperationLogModule>       $RequestMappingModules = new HashMap<String ,OperationLogModule>();

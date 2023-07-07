@@ -64,7 +64,8 @@
             <item id="MS_Common_RootPackageName">
                 <name>MS_Common_RootPackageName</name>
                 <value>org.hy.microservice</value>
-                <comment>顶级包的路径。用于初始化。一般不修改</comment>
+                <comment>顶级包的路径。用于初始化。一般不修改。多个用英文逗号分隔，按先后顺序加载</comment>
+                <onlyRead>false</onlyRead>
             </item>
             
             

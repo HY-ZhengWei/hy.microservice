@@ -70,7 +70,17 @@ public class XJavaInit extends AppInitConfig
                 
                 this.loadXML("config/ms.startup.Config.xml" ,this.xmlRoot);
                 this.loadXML((List<Param>)XJava.getObject("StartupConfig_MS_Common") ,this.xmlRoot);
-                this.loadClasses(((Param)XJava.getObject("MS_Common_RootPackageName")).getValue());
+                
+                // 加载多个顶级包的路径
+                String    v_RootPackageNames = ((Param)XJava.getObject("MS_Common_RootPackageName")).getValue();
+                String [] v_RPackageNames    = v_RootPackageNames.split(",");
+                if ( !Help.isNull(v_RPackageNames) )
+                {
+                    for (String v_RPackageName : v_RPackageNames)
+                    {
+                        this.loadClasses(v_RPackageName);
+                    }
+                }
                 
                 // 在注解解释完成后，在Job任务解释之前执行
                 this.loadDirectory("config/startupFinish/" ,this.xmlRoot);
