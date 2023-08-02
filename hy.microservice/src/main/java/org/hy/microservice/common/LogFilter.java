@@ -350,9 +350,17 @@ public class LogFilter extends XSQLFilter
             
             if ( !Help.isNull(v_OLog.getUrlResponse()) )
             {
-                XJSON           v_XJson = new XJSON();
-                BaseResponse<?> v_BResp = (BaseResponse<?>) v_XJson.toJava(v_OLog.getUrlResponse() ,BaseResponse.class);
-                v_OLog.setResultCode(v_BResp.getCode());
+                try
+                {
+                    XJSON           v_XJson = new XJSON();
+                    BaseResponse<?> v_BResp = (BaseResponse<?>) v_XJson.toJava(v_OLog.getUrlResponse() ,BaseResponse.class);
+                    v_OLog.setResultCode(v_BResp.getCode());
+                }
+                catch (Exception exce)
+                {
+                    // 非Json格式的响应报文，默认为成功
+                    v_OLog.setResultCode(BaseResponse.$Succeed);
+                }
                 
                 if ( v_OLog.getUrlResponse().length() >= 4000 )
                 {
