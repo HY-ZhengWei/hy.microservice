@@ -1,6 +1,8 @@
 package org.hy.microservice.common.config;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hy.common.Help;
 import org.hy.common.app.Param;
@@ -89,6 +91,10 @@ public class XJavaInit extends AppInitConfig
                 {
                     this.loadXML("config/ms.job.xml" ,this.xmlRoot);
                 }
+                
+                Map<String ,String> v_AppMsgKeySysID = new HashMap<String ,String>();
+                v_AppMsgKeySysID.put(XJava.getParam("MS_Common_AppMsg_SYSID").getValue() ,XJava.getParam("MS_Common_AppMsg_MsgPWD").getValue());
+                XJava.putObject("AppMsgKeySysID" ,v_AppMsgKeySysID);
             }
             catch (Exception exce)
             {

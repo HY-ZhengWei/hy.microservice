@@ -89,6 +89,20 @@
                 <comment>每个API接口每10分钟最大允许的请求量</comment>
             </item>
             
+            
+            <item id="MS_Common_AppMsg_SYSID">
+                <name>MS_Common_AppMsg_SYSID</name>
+                <value>CalcCloud</value>
+                <comment>与服务端间发消息时，服务端对我们系统的编号</comment>
+            </item>
+            
+            
+            <item id="MS_Common_AppMsg_MsgPWD">
+                <name>MS_Common_AppMsg_MsgPWD</name>
+                <value>@20170801</value>
+                <comment>与服务端间发消息的加密密码</comment>
+            </item>
+            
         </xparam>
         
     </xconfig>

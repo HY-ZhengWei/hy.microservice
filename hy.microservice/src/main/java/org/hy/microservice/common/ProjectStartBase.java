@@ -9,6 +9,7 @@ import org.hy.common.PartitionMap;
 import org.hy.common.StringHelp;
 import org.hy.common.TablePartition;
 import org.hy.common.xml.XJava;
+import org.hy.common.xml.plugins.AppBaseServlet;
 import org.hy.common.xml.plugins.XJavaSpringAnnotationConfigServletWebServerApplicationContext;
 import org.hy.common.xml.plugins.analyse.AnalyseObjectServlet;
 import org.hy.common.xml.plugins.analyse.AnalysesServlet;
@@ -136,6 +137,22 @@ public class ProjectStartBase
     public static ServletRegistrationBean<VueServlet> vueServlet()
     {
         return new ServletRegistrationBean<VueServlet>(new VueServlet() ,"/ms/*");
+    }
+    
+    
+    
+    /**
+     * 注册App接口的基础的Servlet
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2023-08-07
+     * @version     v1.0
+     *
+     * @return
+     */
+    public static ServletRegistrationBean<AppBaseServlet> appServlet()
+    {
+        return new ServletRegistrationBean<AppBaseServlet>(new AppBaseServlet() ,"/app/*");
     }
     
     
