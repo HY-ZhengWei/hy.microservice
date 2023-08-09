@@ -112,4 +112,32 @@ public interface IIPSafeConfigService
      */
     public TablePartitionRID<String ,IPSafeConfig> cacheIPSafesRefurbish();
     
+    
+    
+    /**
+     * 添加IP黑白名单的命中信息
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2023-08-08
+     * @version     v1.0
+     *
+     * @param i_IpSafeKey
+     * @param i_IPSafeType
+     */
+    public void putIPSafeHit(String i_IpSafeKey ,String i_IPSafeType);
+    
+    
+    
+    /**
+     * 获取IP黑白名单的命中信息
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2023-08-08
+     * @version     v1.0
+     *
+     * @param i_IpSafeKey
+     * @return
+     */
+    public String getIPSafeHit(String i_IpSafeKey);
+    
 }

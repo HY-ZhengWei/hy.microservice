@@ -69,7 +69,33 @@ public class OperationLog extends BaseViewMode
     {
         this.requestTime = new Date().getTime();
     }
-
+    
+    
+    
+    /**
+     * IP+模块+URL组合成的Map集合的Key。
+     * 
+     * 主要用于从Map中快速匹配到黑白名单
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2023-08-08
+     * @version     v1.0
+     *
+     * @return
+     */
+    public String getIpSafeKey()
+    {
+        StringBuilder v_Buffer = new StringBuilder();
+        
+        v_Buffer.append(this.userIP);
+        v_Buffer.append("@");
+        v_Buffer.append(this.moduleCode);
+        v_Buffer.append("@");
+        v_Buffer.append(this.url);
+        
+        return v_Buffer.toString();
+    }
+    
 
     
     /**

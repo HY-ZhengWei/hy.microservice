@@ -21,6 +21,8 @@
                  id                         VARCHAR(64)   NOT NULL COMMENT '主键'
                 ,ipType                     VARCHAR(64)   NOT NULL COMMENT 'IP类型'
                 ,ip                         VARCHAR(128)  NOT NULL COMMENT 'IP地址'
+                ,moduleCode                 VARCHAR(64)            COMMENT '接口模块编号'
+                ,url                        VARCHAR(256)           COMMENT '接口URL地址'
                 ,comment                    VARCHAR(4000)          COMMENT '备注说明'
                 ,isDel                      INT           NOT NULL COMMENT '删除标记。1删除；0未删除'
                 ,createUserID               VARCHAR(64)   NOT NULL COMMENT '数据创建人ID'
@@ -31,6 +33,13 @@
                 ALTER TABLE TIPSafeConfig ADD CONSTRAINT PK_IPSafeConfig PRIMARY KEY (id);/
                 
                 Alter TABLE TIPSafeConfig COMMENT = '系统安全访问IP黑白名单';/
+                
+                CREATE TABLE TUpgrade20230808
+                (
+                 id                         VARCHAR(64)   NOT NULL COMMENT '主键'
+                ,createTime                 DATETIME      NOT NULL COMMENT '创建时间'
+                ,updateTime                 DATETIME               COMMENT '修改时间'
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;/
                 
                 INSERT INTO TIPSafeConfig VALUES ('IPS00001' ,'blacklist' ,'5.79.108.34'     ,'荷兰:疑似恶意'        ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/
                 INSERT INTO TIPSafeConfig VALUES ('IPS00002' ,'blacklist' ,'162.159.200.123' ,'美国'                ,0 ,'ZhengWei' ,'2023-05-26' ,NOW());/

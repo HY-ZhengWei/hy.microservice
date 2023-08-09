@@ -21,7 +21,7 @@
                  id                         VARCHAR(64)   NOT NULL COMMENT '主键'
                 ,systemCode                 VARCHAR(64)   NOT NULL COMMENT '系统编号'
                 ,moduleCode                 VARCHAR(64)   NOT NULL COMMENT '模块编号'
-                ,url                        VARCHAR(64)   NOT NULL COMMENT '操作的URL地址'
+                ,url                        VARCHAR(256)  NOT NULL COMMENT '操作的URL地址'
                 ,urlRequest                 TEXT                   COMMENT '操作的请求参数'
                 ,urlRequestBody             TEXT                   COMMENT '操作的请求体数据'
                 ,urlResponse                TEXT                   COMMENT '操作的响应信息'

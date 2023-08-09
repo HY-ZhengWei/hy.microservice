@@ -21,7 +21,9 @@
                        (
                          id          
                         ,ipType      
-                        ,ip          
+                        ,ip
+                        ,moduleCode
+                        ,url
                         ,comment     
                         ,isDel       
                         ,createUserID
@@ -32,6 +34,8 @@
                          ':id'
                         ,':ipType'
                         ,':ip'
+                        ,':moduleCode'
+                        ,':url'
                         ,':comment'
                         ,':isDel'
                         ,':createUserID'
@@ -53,10 +57,12 @@
                 <![CDATA[
                 UPDATE  TIPSafeConfig
                    SET  updateTime = NOW()
-              <[       ,ipType     = ':ipType'     ]>
-              <[       ,ip         = ':ip'         ]>
-              <[       ,comment    = ':comment'    ]>
-              <[       ,isDel      = ':isDel'      ]>
+              <[       ,ipType     = ':ipType'      ]>
+              <[       ,ip         = ':ip'          ]>
+              <[       ,moduleCode = ':moduleCode'  ]>
+              <[       ,url        = ':url'         ]>
+              <[       ,comment    = ':comment'     ]>
+              <[       ,isDel      = ':isDel'       ]>
                  WHERE  id         = ':id'
                 ]]>
             </content>
@@ -73,7 +79,9 @@
                 <![CDATA[
                 SELECT   id
                         ,ipType      
-                        ,ip          
+                        ,ip
+                        ,moduleCode
+                        ,url
                         ,comment     
                         ,isDel       
                         ,createUserID
@@ -103,7 +111,9 @@
                 <![CDATA[
                 SELECT   id
                         ,ipType      
-                        ,ip          
+                        ,ip
+                        ,moduleCode
+                        ,url       
                         ,comment     
                         ,isDel       
                         ,createUserID
@@ -131,7 +141,9 @@
                 <![CDATA[
                 SELECT   id
                         ,ipType      
-                        ,ip          
+                        ,ip
+                        ,moduleCode
+                        ,url
                         ,comment     
                         ,isDel       
                         ,createUserID
@@ -146,7 +158,7 @@
             
             <result>
                 <table>org.hy.common.TablePartitionRID</table>
-                <fill>putRow(row.ipType ,row.ip ,row)</fill>
+                <fill>putRow(row.ipType ,row.ipSafeKey ,row)</fill>
                 <row>org.hy.microservice.common.ipSafe.IPSafeConfig</row>
                 <cfill>setter(colValue)</cfill>
             </result>

@@ -179,10 +179,30 @@ public class IPSafeConfigController extends BaseController
                     return v_RetResp.setCode("-5").setMessage("IP为空");
                 }
                 
-                // 防止重复
-                if ( this.ipSafeConfigService.queryAll().getRow(i_IPSafeConfig.getIpType() ,i_IPSafeConfig.getIp()) != null )
+                if ( !Help.isNull(i_IPSafeConfig.getUrl()) )
                 {
-                    return v_RetResp.setCode("-6").setMessage("相同安全配置已存在，请勿重复添加");
+                    String [] v_Url = i_IPSafeConfig.getUrl().split("/");
+                    if (  v_Url.length < 3
+                      || !i_IPSafeConfig.getUrl().startsWith("/")
+                      ||  i_IPSafeConfig.getUrl().endsWith("/") )
+                    {
+                        return v_RetResp.setCode("-6").setMessage("URL不符合要求");
+                    }
+                    i_IPSafeConfig.setModuleCode(i_IPSafeConfig.getUrl().split("/")[1]);
+                }
+                
+                if ( !Help.isNull(i_IPSafeConfig.getModuleCode()) )
+                {
+                    if ( i_IPSafeConfig.getModuleCode().indexOf("/") >= 0 )
+                    {
+                        return v_RetResp.setCode("-7").setMessage("接口模块不符合要求");
+                    }
+                }
+                
+                // 防止重复
+                if ( this.ipSafeConfigService.queryAll().getRow(i_IPSafeConfig.getIpType() ,i_IPSafeConfig.getIpSafeKey()) != null )
+                {
+                    return v_RetResp.setCode("-8").setMessage("相同安全配置已存在，请勿重复添加");
                 }
             }
             // 更新的验证
@@ -193,13 +213,33 @@ public class IPSafeConfigController extends BaseController
                   && Help.isNull(i_IPSafeConfig.getComment())
                   && Help.isNull(i_IPSafeConfig.getIsDel()) )
                 {
-                    return v_RetResp.setCode("-7").setMessage("没有要更新的内容");
+                    return v_RetResp.setCode("-9").setMessage("没有要更新的内容");
                 }
                 
                 IPSafeConfig v_OldConfig = this.ipSafeConfigService.queryByID(i_IPSafeConfig);
                 if ( v_OldConfig == null )
                 {
                     return v_RetResp.setCode("-102").setMessage("更新主键不存在");
+                }
+                
+                if ( !Help.isNull(i_IPSafeConfig.getUrl()) )
+                {
+                    String [] v_Url = i_IPSafeConfig.getUrl().split("/");
+                    if (  v_Url.length < 3
+                      || !i_IPSafeConfig.getUrl().startsWith("/")
+                      ||  i_IPSafeConfig.getUrl().endsWith("/") )
+                    {
+                        return v_RetResp.setCode("-6").setMessage("URL不符合要求");
+                    }
+                    i_IPSafeConfig.setModuleCode(i_IPSafeConfig.getUrl().split("/")[1]);
+                }
+                
+                if ( !Help.isNull(i_IPSafeConfig.getModuleCode()) )
+                {
+                    if ( i_IPSafeConfig.getModuleCode().indexOf("/") >= 0 )
+                    {
+                        return v_RetResp.setCode("-7").setMessage("接口模块不符合要求");
+                    }
                 }
                 
                 if ( i_IPSafeConfig.getIsDel() != null && i_IPSafeConfig.getIsDel() != 0 )
@@ -209,25 +249,25 @@ public class IPSafeConfigController extends BaseController
                 else if ( !Help.isNull(i_IPSafeConfig.getIpType()) && !Help.isNull(i_IPSafeConfig.getIp()) )
                 {
                     // 防止重复：新IP + IPType的重复
-                    if ( this.ipSafeConfigService.queryAll().getRow(i_IPSafeConfig.getIpType() ,i_IPSafeConfig.getIp()) != null )
+                    if ( this.ipSafeConfigService.queryAll().getRow(i_IPSafeConfig.getIpType() ,i_IPSafeConfig.getIpSafeKey()) != null )
                     {
-                        return v_RetResp.setCode("-6").setMessage("相同安全配置已存在，请勿重复添加");
+                        return v_RetResp.setCode("-8").setMessage("相同安全配置已存在，请勿重复添加");
                     }
                 }
                 else if ( !Help.isNull(i_IPSafeConfig.getIp()) )
                 {
                     // 防止重复：新IP重复
-                    if ( this.ipSafeConfigService.queryAll().getRow(v_OldConfig.getIpType() ,i_IPSafeConfig.getIp()) != null )
+                    if ( this.ipSafeConfigService.queryAll().getRow(v_OldConfig.getIpType() ,i_IPSafeConfig.getIpSafeKey()) != null )
                     {
-                        return v_RetResp.setCode("-6").setMessage("相同安全配置已存在，请勿重复添加");
+                        return v_RetResp.setCode("-8").setMessage("相同安全配置已存在，请勿重复添加");
                     }
                 }
                 else if ( !Help.isNull(i_IPSafeConfig.getIpType()) )
                 {
                     // 防止重复：新IPType重复
-                    if ( this.ipSafeConfigService.queryAll().getRow(i_IPSafeConfig.getIpType() ,v_OldConfig.getIp()) != null )
+                    if ( this.ipSafeConfigService.queryAll().getRow(i_IPSafeConfig.getIpType() ,v_OldConfig.getIpSafeKey()) != null )
                     {
-                        return v_RetResp.setCode("-6").setMessage("相同安全配置已存在，请勿重复添加");
+                        return v_RetResp.setCode("-8").setMessage("相同安全配置已存在，请勿重复添加");
                     }
                 }
             }

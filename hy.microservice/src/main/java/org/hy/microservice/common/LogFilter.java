@@ -2,7 +2,9 @@ package org.hy.microservice.common;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.FilterChain;
@@ -38,6 +40,8 @@ import org.hy.microservice.common.operationLog.OperationLog;
  * @author      ZhengWei(HY)
  * @createDate  2023-04-10
  * @version     v1.0
+ *              v2.0  2023-08-09  添加：接口模块编号和URL地址，允许更细粒度的控制黑白名单
+ *                                添加：黑白名单的命中率功能，提高黑白名单的判定性能
  */
 @WebFilter(filterName="logFilter" ,urlPatterns="/*" ,initParams={
         @WebInitParam(name="exclusions" ,value="*.js,*.gif,*.jpg,*.png,*.css,*.ico,*.swf")
@@ -53,6 +57,29 @@ public class LogFilter extends XSQLFilter
     
     /** 接口的时间分组统计（每10分钟） */
     private static final Map<String ,TimeGroupTotal> $APITotalMinute10 = new HashMap<String ,TimeGroupTotal>();
+    
+    
+    
+    private IIPSafeConfigService ipSafeConfigService;
+    
+    private IOperationLogDAO     operationLogDAO;
+    
+    private long                 apiUseMaxCountMinute;
+    
+    private long                 apiUseMaxCountMinute10;
+    
+    private String               systemCode;
+    
+    
+    
+    public LogFilter()
+    {
+        this.ipSafeConfigService    = (IIPSafeConfigService) XJava.getObject("IPSafeConfigService");
+        this.operationLogDAO        = (IOperationLogDAO)     XJava.getObject("OperationLogDAO");
+        this.apiUseMaxCountMinute   = Long.valueOf(XJava.getParam("MS_Common_ApiUseMaxCountMinute").getValue());
+        this.apiUseMaxCountMinute10 = Long.valueOf(XJava.getParam("MS_Common_ApiUseMaxCountMinute10").getValue());
+        this.systemCode             = XJava.getParam("MS_Common_ServiceName").getValue();
+    }
     
     
     
@@ -82,8 +109,7 @@ public class LogFilter extends XSQLFilter
             Long v_TimeCount = v_APITimeTotal.get(v_Now);
             if ( v_TimeCount != null )
             {
-                long v_MaxCount = Long.valueOf(XJava.getParam("MS_Common_ApiUseMaxCountMinute").getValue());
-                if ( v_TimeCount > v_MaxCount )
+                if ( v_TimeCount > this.apiUseMaxCountMinute )
                 {
                     return false;
                 }
@@ -122,8 +148,7 @@ public class LogFilter extends XSQLFilter
             Long v_TimeCount = v_APITimeTotal.get(v_Now);
             if ( v_TimeCount != null )
             {
-                long v_MaxCount = Long.valueOf(XJava.getParam("MS_Common_ApiUseMaxCountMinute10").getValue());
-                if ( v_TimeCount > v_MaxCount )
+                if ( v_TimeCount > this.apiUseMaxCountMinute10 )
                 {
                     return false;
                 }
@@ -147,8 +172,7 @@ public class LogFilter extends XSQLFilter
      */
     private boolean haveWhiteList()
     {
-        IIPSafeConfigService      v_IPSafeConfigService = (IIPSafeConfigService) XJava.getObject("IPSafeConfigService");
-        Map<String ,IPSafeConfig> v_IPMap               = v_IPSafeConfigService.queryAll().get(IPSafeConfig.$Type_WhiteList);
+        Map<String ,IPSafeConfig> v_IPMap = this.ipSafeConfigService.queryAll().get(IPSafeConfig.$Type_WhiteList);
         
         return !Help.isNull(v_IPMap);
     }
@@ -158,52 +182,69 @@ public class LogFilter extends XSQLFilter
     /**
      * 指定IP是否为黑名单或白名单
      * 
+     * IP地址支持：IP段
+     * 黑白名单判定优先级：黑名单 > 白名单 > 接口URL > 接口模块 > IP地址
+     * 
+     *   举例1：当配置IP 127.0.0.1 的 "接口URL /A/B/C" 为配置黑名单时，无论是否有白名单，均拒绝IP 127.0.0.1的访问 "接口/A/B/C
+     *   举例2：当配置IP 127.0.0.1 的 "接口URL /A/B/C" 为白名单，且无其它黑名单时，"接口/A/B/C" 仅允许此IP 127.0.0.1访问，其它IP无权访问
+     *   举例3：当 "接口URL /A/B/C" 未配置白名单，且无黑名单时，允许任何系统访问
+     * 
      * @author      ZhengWei(HY)
      * @createDate  2023-05-27
      * @version     v1.0
      *
      * @param i_IPType  IP类型
-     * @param i_IP      IP地址
+     * @param io_OLog   操作日志
      * @return
      */
-    private boolean isbackWhiteList(String i_IPType ,String i_IP)
+    private boolean isbackWhiteList(String i_IPType ,OperationLog io_OLog)
     {
-        IIPSafeConfigService      v_IPSafeConfigService = (IIPSafeConfigService) XJava.getObject("IPSafeConfigService");
-        Map<String ,IPSafeConfig> v_IPMap               = v_IPSafeConfigService.queryAll().get(i_IPType);
+        Map<String ,IPSafeConfig> v_IPMap = this.ipSafeConfigService.queryAll().get(i_IPType);
         
         if ( Help.isNull(v_IPMap) )
         {
             return false;
         }
         
-        IPSafeConfig v_IPSafeConfig = v_IPMap.get(i_IP);
-        if ( v_IPSafeConfig != null )
-        {
-            return true;
-        }
+        List<String> v_IPs   = new ArrayList<String>();
+        String []    v_IPArr = io_OLog.getUserIP().split("\\.");   // IP地址支持：IP段
         
-        String [] v_IPArr = i_IP.split("\\.");
+        v_IPs.add(io_OLog.getUserIP());
         if ( v_IPArr.length >= 4 )
         {
-            String v_IP = v_IPArr[0] + "." + v_IPArr[1] + "." + v_IPArr[2] + ".";
-            
-            v_IPSafeConfig = v_IPMap.get(v_IP);
+            v_IPs.add(v_IPArr[0] + "." + v_IPArr[1] + "." + v_IPArr[2] + ".");
+            v_IPs.add(v_IPArr[0] + "." + v_IPArr[1] + ".");
+            v_IPs.add(v_IPArr[0] + ".");
+        }
+        
+        String       v_FindKey      = "";
+        IPSafeConfig v_IPSafeConfig = null;
+        for (String v_IP : v_IPs)
+        {
+            // 接口URL的判定
+            v_FindKey      = v_IP + "@" + io_OLog.getModuleCode() + "@" + io_OLog.getUrl();
+            v_IPSafeConfig = v_IPMap.get(v_FindKey);
             if ( v_IPSafeConfig != null )
             {
+                this.ipSafeConfigService.putIPSafeHit(io_OLog.getIpSafeKey() ,i_IPType);
                 return true;
             }
             
-            v_IP           = v_IPArr[0] + "." + v_IPArr[1] + ".";
-            v_IPSafeConfig = v_IPMap.get(v_IP);
+            // 接口模块的判定
+            v_FindKey      = v_IP + "@" + io_OLog.getModuleCode();
+            v_IPSafeConfig = v_IPMap.get(v_FindKey);
             if ( v_IPSafeConfig != null )
             {
+                this.ipSafeConfigService.putIPSafeHit(io_OLog.getIpSafeKey() ,i_IPType);
                 return true;
             }
             
-            v_IP           = v_IPArr[0] + ".";
-            v_IPSafeConfig = v_IPMap.get(v_IP);
+            // IP地址的判定
+            v_FindKey      = v_IP;
+            v_IPSafeConfig = v_IPMap.get(v_FindKey);
             if ( v_IPSafeConfig != null )
             {
+                this.ipSafeConfigService.putIPSafeHit(io_OLog.getIpSafeKey() ,i_IPType);
                 return true;
             }
         }
@@ -224,8 +265,12 @@ public class LogFilter extends XSQLFilter
      */
     private OperationLog backWhiteCheck(OperationLog io_OLog)
     {
+        // 内存命中
+        String v_IPSafeHit = this.ipSafeConfigService.getIPSafeHit(io_OLog.getIpSafeKey());
+        
         // 黑名单查询
-        if ( isbackWhiteList(IPSafeConfig.$Type_BackList ,io_OLog.getUserIP()) )
+        if ( IPSafeConfig.$Type_BackList.equals(v_IPSafeHit)
+          || isbackWhiteList(IPSafeConfig.$Type_BackList ,io_OLog) )
         {
             io_OLog.setAttackType(IPSafeConfig.$Type_BackList);
             io_OLog.setUrlResponse("{\"code\": \"-891\", \"message\": \"" + IPSafeConfig.$Type_BackList + "\"}");
@@ -235,19 +280,19 @@ public class LogFilter extends XSQLFilter
         }
         else
         {
-            
             // 有白名单时，才启用
             if ( this.haveWhiteList() )
             {
                 // 白名单查询
-                if ( isbackWhiteList(IPSafeConfig.$Type_WhiteList ,io_OLog.getUserIP()) )
+                if ( IPSafeConfig.$Type_WhiteList.equals(v_IPSafeHit)
+                  || isbackWhiteList(IPSafeConfig.$Type_WhiteList ,io_OLog) )
                 {
                     io_OLog.setAttackType(IPSafeConfig.$Type_WhiteList);
                 }
                 else
                 {
-                    io_OLog.setAttackType("not " + IPSafeConfig.$Type_WhiteList);
-                    io_OLog.setUrlResponse("{\"code\": \"-892\", \"message\": \"not " + IPSafeConfig.$Type_WhiteList + "\"}");
+                    io_OLog.setAttackType("Not on the " + IPSafeConfig.$Type_WhiteList);
+                    io_OLog.setUrlResponse("{\"code\": \"-892\", \"message\": \"Not on the " + IPSafeConfig.$Type_WhiteList + "\"}");
                     io_OLog.setResultCode("-892");
                     io_OLog.setResponseTime(Date.getNowTime().getTime());
                     io_OLog.setTimeLen(io_OLog.getResponseTime() - io_OLog.getRequestTime());
@@ -273,7 +318,6 @@ public class LogFilter extends XSQLFilter
         
         LogHttpServletRequestWrapper v_Request = new LogHttpServletRequestWrapper((HttpServletRequest) i_ServletRequest);
         OperationLog                 v_OLog    = new OperationLog();
-        IOperationLogDAO             v_OLogDAO = (IOperationLogDAO) XJava.getObject("OperationLogDAO");
         
         try
         {
@@ -295,10 +339,10 @@ public class LogFilter extends XSQLFilter
             v_OLog.setUrlRequest(v_Request.getQueryString());
             v_OLog.setUrlRequestBody(v_Request.getBodyString());
             v_OLog.setUserIP(getIpAddress(v_Request));
-            v_OLog.setSystemCode(XJava.getParam("MS_Common_ServiceName").getValue());
+            v_OLog.setSystemCode(this.systemCode);
             v_OLog.setModuleCode(v_Urls[1]);
             
-            v_OLogDAO.insert(this.backWhiteCheck(v_OLog));
+            this.operationLogDAO.insert(this.backWhiteCheck(v_OLog));
         }
         catch (Exception exce)
         {
@@ -368,7 +412,7 @@ public class LogFilter extends XSQLFilter
                 }
             }
             
-            v_OLogDAO.update(v_OLog);
+            this.operationLogDAO.update(v_OLog);
             
             v_Output = i_ServletResponse.getOutputStream();
             v_Output.write(v_ResponseBody);

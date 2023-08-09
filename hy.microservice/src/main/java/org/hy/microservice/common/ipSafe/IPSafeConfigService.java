@@ -1,7 +1,9 @@
 package org.hy.microservice.common.ipSafe;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hy.common.Help;
 import org.hy.common.StringHelp;
@@ -26,6 +28,16 @@ public class IPSafeConfigService implements IIPSafeConfigService ,Serializable
     private static final long serialVersionUID = -8491749740722409103L;
     
     private static TablePartitionRID<String ,IPSafeConfig> $CacheIPSafes = new TablePartitionRID<String ,IPSafeConfig>();
+    
+    /**
+     * IP黑白名单的内存命中缓存。
+     * 
+     * 提高判定命中性能，不用每次判定均要执行12次Map.get(key)
+     * 
+     * Map.key为getIpSafeKey()，
+     * Map.value为IPSafeConfig.$Type_BackList或$Type_WhiteList
+     */
+    private static final Map<String ,String>               $IPSafeHits   = new HashMap<String ,String>();
     
     
     
@@ -186,7 +198,42 @@ public class IPSafeConfigService implements IIPSafeConfigService ,Serializable
     public synchronized TablePartitionRID<String ,IPSafeConfig> cacheIPSafesRefurbish()
     {
         $CacheIPSafes = this.ipSafeConfigDAO.queryAll();
+        $IPSafeHits.clear();  // 清空命中的历史信息
         return $CacheIPSafes;
+    }
+    
+    
+    
+    /**
+     * 添加IP黑白名单的命中信息
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2023-08-08
+     * @version     v1.0
+     *
+     * @param i_IpSafeKey
+     * @param i_IPSafeType
+     */
+    public void putIPSafeHit(String i_IpSafeKey ,String i_IPSafeType)
+    {
+        $IPSafeHits.put(i_IpSafeKey ,i_IPSafeType);
+    }
+    
+    
+    
+    /**
+     * 获取IP黑白名单的命中信息
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2023-08-08
+     * @version     v1.0
+     *
+     * @param i_IpSafeKey
+     * @return
+     */
+    public String getIPSafeHit(String i_IpSafeKey)
+    {
+        return $IPSafeHits.get(i_IpSafeKey);
     }
     
 }
