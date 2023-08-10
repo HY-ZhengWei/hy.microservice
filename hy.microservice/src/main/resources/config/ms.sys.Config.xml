@@ -93,6 +93,45 @@
             </item>
             
             
+            
+            <item id="MS_Common_TPool_MaxThread">
+                <name>MS_Common_TPool_MaxThread</name>
+                <value>100</value>
+                <comment>最大线程数</comment>
+            </item>
+            
+            <item id="MS_Common_TPool_MinThread">
+                <name>MS_Common_TPool_MinThread</name>
+                <value>1</value>
+                <comment>最小线程数</comment>
+            </item>
+            
+            <item id="MS_Common_TPool_MinIdleThread">
+                <name>MS_Common_TPool_MinIdleThread</name>
+                <value>100</value>
+                <comment>最小空闲数</comment>
+            </item>
+            
+            <item id="MS_Common_TPool_IntervalTime">
+                <name>MS_Common_TPool_IntervalTime</name>
+                <value>10</value>
+                <comment>间隔时间</comment>
+            </item>
+            
+            <item id="MS_Common_TPool_IdleTimeKill">
+                <name>MS_Common_TPool_IdleTimeKill</name>
+                <value>600</value>
+                <comment>空闲自毁时长</comment>
+            </item>
+            
+            <item id="MS_Common_TPool_WaitResource">
+                <name>MS_Common_TPool_WaitResource</name>
+                <value>23</value>
+                <comment>等待线程资源的时长(单位：毫秒)</comment>
+            </item>
+            
+            
+            
             <item id="MS_Common_AppMsg_SYSID">
                 <name>MS_Common_AppMsg_SYSID</name>
                 <value>CalcCloud</value>

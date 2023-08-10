@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.hy.common.Help;
 import org.hy.common.app.Param;
+import org.hy.common.thread.ThreadPool;
 import org.hy.common.xml.XJava;
 import org.hy.common.xml.log.Logger;
 import org.hy.common.xml.plugins.AppInitConfig;
@@ -84,6 +85,8 @@ public class XJavaInit extends AppInitConfig
                     }
                 }
                 
+                init_TPool();
+                
                 // 在注解解释完成后，在Job任务解释之前执行
                 this.loadDirectory("config/startupFinish/" ,this.xmlRoot);
                 
@@ -101,6 +104,25 @@ public class XJavaInit extends AppInitConfig
                 $Logger.error(exce);
             }
         }
+    }
+    
+    
+    
+    private void init_TPool()
+    {
+        ThreadPool.setMaxThread(    this.getIntConfig("MS_Common_TPool_MaxThread"));
+        ThreadPool.setMinThread(    this.getIntConfig("MS_Common_TPool_MinThread"));
+        ThreadPool.setMinIdleThread(this.getIntConfig("MS_Common_TPool_MinIdleThread"));
+        ThreadPool.setIntervalTime( this.getIntConfig("MS_Common_TPool_IntervalTime"));
+        ThreadPool.setIdleTimeKill( this.getIntConfig("MS_Common_TPool_IdleTimeKill"));
+        ThreadPool.setWaitResource( this.getIntConfig("MS_Common_TPool_WaitResource"));
+    }
+    
+    
+    
+    private int getIntConfig(String i_XJavaID)
+    {
+        return Integer.parseInt(XJava.getParam(i_XJavaID).getValue());
     }
 
 }
