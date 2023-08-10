@@ -13,10 +13,10 @@
     <xconfig>
     
         <!-- 全小写匹配（请填写为小写的），并允许的配置，可配置多个 -->
-        <dnsMap id="MS_Common_DNSConfigs" key="name">
-        
+        <dnsMap id="MS_Common_DNSConfigs" this="MS_Common_DNSConfigs" key="name">
+            
             <dns>
-                <name>127.0.0.1</name>
+                <name>localhost</name>
                 <comment>开发本机</comment>
             </dns>
             
@@ -25,11 +25,18 @@
         
         
         <!-- IP前缀匹配，并允许的配置，可配置多个 -->
-        <dnsList id="MS_Common_DNSIPConfigs">
+        <dnsList id="MS_Common_DNSIPConfigs" this="MS_Common_DNSIPConfigs">
             
+            <!-- 
             <dns>
                 <name>xxx.xxx.xxx.</name>
                 <comment>xxx段</comment>
+            </dns>
+            -->
+            
+            <dns>
+                <name>127.0.0.1</name>
+                <comment>开发本机</comment>
             </dns>
             
         </dnsList>

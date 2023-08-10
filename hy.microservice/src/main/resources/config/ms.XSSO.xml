@@ -11,7 +11,7 @@
     <xobjects>
     
         <!-- 验证并获取登录用户 -->
-        <http id="XHTTP_MS_Common_GetLoginUser">
+        <http id="XHTTP_MS_Common_GetLoginUser" this="XHTTP_MS_Common_GetLoginUser">
             <protocol>https</protocol>
             <ip>10.1.50.239</ip>
             <url>/msXSSO/xsso/getLoginUser</url>

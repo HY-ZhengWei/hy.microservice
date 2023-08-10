@@ -11,7 +11,7 @@
     <!-- 系统密钥配置参数信息 -->
     <xconfig>
         
-        <appMap id="MS_Common_AppKeys" key="appKey">
+        <appMap id="MS_Common_AppKeys" this="MS_Common_AppKeys" key="appKey">
             
             <application>
                 <appKey>D22DCADC06BB4EAE868D5728AACAD370</appKey>
