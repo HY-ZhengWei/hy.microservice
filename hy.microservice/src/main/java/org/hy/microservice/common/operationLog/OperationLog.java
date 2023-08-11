@@ -20,7 +20,9 @@ public class OperationLog extends BaseViewMode
 {
 
     private static final long serialVersionUID = -5413499847764917172L;
-
+    
+    
+    
     /** 主键 */
     private String                  id;
     
@@ -63,11 +65,28 @@ public class OperationLog extends BaseViewMode
     /** 攻击类型 */
     private String                  attackType;
     
+    /**
+     * 日志从缓存写到的数据库的标记
+     *  0: 初始值
+     *  1: 日志首次添加到缓存，准备Insert到DB
+     *  2: 成功Insert到DB
+     * 11: 日志二次添加到缓存，还未Insert到DB，准备Update到DB
+     * 12: 日志二次添加到缓存，成功Insert到DB，准备Update到DB
+     * 21: 还未Insert到DB、Update改为Insert到DB成功
+     * 22: 成功Insert到DB，成功Update到DB
+     */
+    private int                     cacheToDBFlag;
+    
+    /** 日志缓存持久化的异常的次数 */
+    private int                     cacheToDBErrCount;
+    
 
     
     public OperationLog()
     {
-        this.requestTime = new Date().getTime();
+        this.requestTime       = new Date().getTime();
+        this.cacheToDBFlag     = 0;
+        this.cacheToDBErrCount = 0;
     }
     
     
@@ -429,6 +448,62 @@ public class OperationLog extends BaseViewMode
     public void setAttackType(String i_AttackType)
     {
         this.attackType = i_AttackType;
+    }
+
+
+    
+    /**
+     * 获取：日志从缓存写到的数据库的标记
+     *  0: 初始值
+     *  1: 日志首次添加到缓存，准备Insert到DB
+     *  2: 成功Insert到DB
+     * 11: 日志二次添加到缓存，还未Insert到DB，准备Update到DB
+     * 12: 日志二次添加到缓存，成功Insert到DB，准备Update到DB
+     * 21: 还未Insert到DB、Update改为Insert到DB成功
+     * 22: 成功Insert到DB，成功Update到DB
+     */
+    public synchronized int getCacheToDBFlag()
+    {
+        return cacheToDBFlag;
+    }
+
+    
+    
+    /**
+     * 设置：日志从缓存写到的数据库的标记
+     *  0: 初始值
+     *  1: 日志首次添加到缓存，准备Insert到DB
+     *  2: 成功Insert到DB
+     * 11: 日志二次添加到缓存，还未Insert到DB，准备Update到DB
+     * 12: 日志二次添加到缓存，成功Insert到DB，准备Update到DB
+     * 21: 还未Insert到DB、Update改为Insert到DB成功
+     * 22: 成功Insert到DB，成功Update到DB
+     */
+    public synchronized void appendCacheToDBFlag(int i_CacheToDBFlag)
+    {
+        this.cacheToDBFlag += i_CacheToDBFlag;
+    }
+
+
+    
+    /**
+     * 获取：日志缓存持久化的异常的次数
+     */
+    public int getCacheToDBErrCount()
+    {
+        return cacheToDBErrCount;
+    }
+
+
+    
+    /**
+     * 设置：日志缓存持久化的异常的次数
+     * 
+     * @param i_CacheToDBErrCount 日志缓存持久化的异常的次数
+     */
+    public void setCacheToDBErrCount(int i_CacheToDBErrCount)
+    {
+        this.cacheToDBErrCount = i_CacheToDBErrCount;
     }
 
 }

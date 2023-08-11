@@ -27,7 +27,7 @@ import org.hy.common.xml.log.Logger;
 import org.hy.common.xml.plugins.XSQLFilter;
 import org.hy.microservice.common.ipSafe.IIPSafeConfigService;
 import org.hy.microservice.common.ipSafe.IPSafeConfig;
-import org.hy.microservice.common.operationLog.IOperationLogDAO;
+import org.hy.microservice.common.operationLog.IOperationLogService;
 import org.hy.microservice.common.operationLog.OperationLog;
 
 
@@ -42,6 +42,7 @@ import org.hy.microservice.common.operationLog.OperationLog;
  * @version     v1.0
  *              v2.0  2023-08-09  添加：接口模块编号和URL地址，允许更细粒度的控制黑白名单
  *                                添加：黑白名单的命中率功能，提高黑白名单的判定性能
+ *              v3.0  2023-08-11  添加：延时单线程队列周期性的处理日志的持久化
  */
 @WebFilter(filterName="logFilter" ,urlPatterns="/*" ,initParams={
         @WebInitParam(name="exclusions" ,value="*.js,*.gif,*.jpg,*.png,*.css,*.ico,*.swf")
@@ -62,7 +63,7 @@ public class LogFilter extends XSQLFilter
     
     private IIPSafeConfigService ipSafeConfigService;
     
-    private IOperationLogDAO     operationLogDAO;
+    private IOperationLogService operationLogService;
     
     private long                 apiUseMaxCountMinute;
     
@@ -75,7 +76,7 @@ public class LogFilter extends XSQLFilter
     public LogFilter()
     {
         this.ipSafeConfigService    = (IIPSafeConfigService) XJava.getObject("IPSafeConfigService");
-        this.operationLogDAO        = (IOperationLogDAO)     XJava.getObject("OperationLogDAO");
+        this.operationLogService    = (IOperationLogService) XJava.getObject("OperationLogService");
         this.apiUseMaxCountMinute   = Long.valueOf(XJava.getParam("MS_Common_ApiUseMaxCountMinute").getValue());
         this.apiUseMaxCountMinute10 = Long.valueOf(XJava.getParam("MS_Common_ApiUseMaxCountMinute10").getValue());
         this.systemCode             = XJava.getParam("MS_Common_ServiceName").getValue();
@@ -342,7 +343,7 @@ public class LogFilter extends XSQLFilter
             v_OLog.setSystemCode(this.systemCode);
             v_OLog.setModuleCode(v_Urls[1]);
             
-            this.operationLogDAO.insert(this.backWhiteCheck(v_OLog));
+            this.operationLogService.insert(this.backWhiteCheck(v_OLog));
         }
         catch (Exception exce)
         {
@@ -412,7 +413,7 @@ public class LogFilter extends XSQLFilter
                 }
             }
             
-            this.operationLogDAO.update(v_OLog);
+            this.operationLogService.update(v_OLog);
             
             v_Output = i_ServletResponse.getOutputStream();
             v_Output.write(v_ResponseBody);

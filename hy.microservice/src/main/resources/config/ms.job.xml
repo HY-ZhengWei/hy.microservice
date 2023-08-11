@@ -10,8 +10,22 @@
     
     <!-- 任务配置信息 -->
     <xconfig>
-    
+        
+        <job id="JOB_MS_Common_SaveOperationLogs">
+            <code>JOB_MS_Common_SaveOperationLogs</code>
+            <name>延时单线程队列周期性的处理日志的持久化</name>
+            <intervalType ref="this.$IntervalType_Minute"/>
+            <intervalLen>1</intervalLen>
+            <startTime>2023-08-11 00:00:00</startTime>
+            <xid>OperationLogCache</xid>
+            <methodName>saveLogs</methodName>
+        </job>
+        
+        
+        
         <jobs id="JOBS_MS_Common" this="JOBS_MS_Common">
+            <addJob ref="JOB_MS_Common_SaveOperationLogs" />
+        
             <call name="startup" />
         </jobs>
         
