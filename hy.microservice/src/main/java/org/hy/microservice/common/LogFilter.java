@@ -501,7 +501,7 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         }
         
         this.operationLogService.insert(v_OLog);
-		return v_Ret;
+		return v_Ret.setParamObj(v_OLog);
 	}
 	
 	
