@@ -478,6 +478,7 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         v_OLog.setUserIP(getIpAddress(i_Request));
         v_OLog.setSystemCode(this.systemCode);
         v_OLog.setModuleCode("/app");
+        v_OLog.setUserID(Help.NVL(io_RequestData.getSession()));
 		
         this.backWhiteCheck(v_OLog);
         
