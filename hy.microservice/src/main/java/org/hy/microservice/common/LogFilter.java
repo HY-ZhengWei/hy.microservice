@@ -376,6 +376,7 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         else if ( !this.allowUseAPIMinute(v_OLog.getUrl()) )
         {
             v_OLog.setUrlResponse("访问量达到上限");
+            v_OLog.setAttackType("ApiUseMaxCountMinute");
             i_ServletResponse.setCharacterEncoding("UTF-8");
             i_ServletResponse.setContentType("application/json");
             v_Output = i_ServletResponse.getOutputStream();
@@ -387,6 +388,7 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         else if ( !this.allowUseAPIMinute10(v_OLog.getUrl()) )
         {
             v_OLog.setUrlResponse("访问量达到10分钟上限");
+            v_OLog.setAttackType("ApiUseMaxCountMinute10");
             i_ServletResponse.setCharacterEncoding("UTF-8");
             i_ServletResponse.setContentType("application/json");
             v_Output = i_ServletResponse.getOutputStream();
@@ -467,8 +469,9 @@ public class LogFilter extends XSQLFilter implements XRequestListener
 			                    ,AppMessage<?>       io_RequestData 
 			                    ,String              i_Message)
 	{
-		Return<Object> v_Ret  = new Return<Object>(true);
-		OperationLog   v_OLog = new OperationLog();
+		Return<Object> v_Ret    = new Return<Object>(true);
+		OperationLog   v_OLog   = new OperationLog();
+		String         v_UserID = Help.NVL(i_Request.getParameter("userID") ,i_Request.getParameter("createUserID"));
 		
 		v_OLog.setCreateTime(new Date());
         v_OLog.setId(StringHelp.getUUID());
@@ -478,7 +481,7 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         v_OLog.setUserIP(getIpAddress(i_Request));
         v_OLog.setSystemCode(this.systemCode);
         v_OLog.setModuleCode("/app");
-        v_OLog.setUserID(Help.NVL(io_RequestData.getSession()));
+        v_OLog.setUserID(Help.NVL(v_UserID ,Help.NVL(io_RequestData.getSession())));
 		
         this.backWhiteCheck(v_OLog);
         
@@ -491,12 +494,14 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         else if ( !this.allowUseAPIMinute(v_OLog.getUrl()) )
         {
             v_OLog.setUrlResponse("访问量达到上限");
+            v_OLog.setAttackType("ApiUseMaxCountMinute");
             v_Ret.set(false).setParamStr(v_OLog.getUrlResponse());
         }
         // 访问量达到上限（10分钟）
         else if ( !this.allowUseAPIMinute10(v_OLog.getUrl()) )
         {
             v_OLog.setUrlResponse("访问量达到10分钟上限");
+            v_OLog.setAttackType("ApiUseMaxCountMinute10");
             v_Ret.set(false).setParamStr(v_OLog.getUrlResponse());
         }
         
@@ -521,6 +526,24 @@ public class LogFilter extends XSQLFilter implements XRequestListener
 	{
 		OperationLog v_OLog = (OperationLog)i_Other;
 		
+		if ( i_ResponseData != null )
+		{
+			try
+			{
+				v_OLog.setUrlResponse(i_ResponseData.toString());
+			}
+			catch (Exception exce)
+			{
+				v_OLog.setUrlResponse(exce.toString());
+				$Logger.warn(exce);
+			}
+		}
+		else
+		{
+			v_OLog.setUrlResponse("");
+		}
+        v_OLog.setResponseTime(Date.getNowTime().getTime());
+        v_OLog.setTimeLen(v_OLog.getResponseTime() - v_OLog.getRequestTime());
 		v_OLog.setResultCode(BaseResponse.$Succeed);
 		this.operationLogService.update(v_OLog);
 	}
@@ -542,6 +565,16 @@ public class LogFilter extends XSQLFilter implements XRequestListener
 	{
 		OperationLog v_OLog = (OperationLog)i_Other;
 		
+		if ( i_Exception != null )
+		{
+			v_OLog.setUrlResponse(i_Exception.toString());
+		}
+		else
+		{
+			v_OLog.setUrlResponse("");
+		}
+        v_OLog.setResponseTime(Date.getNowTime().getTime());
+        v_OLog.setTimeLen(v_OLog.getResponseTime() - v_OLog.getRequestTime());
 		v_OLog.setResultCode(i_RequestData.getRc());
 		this.operationLogService.update(v_OLog);
 	}
