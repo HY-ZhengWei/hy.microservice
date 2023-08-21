@@ -1,0 +1,9 @@
+{
+  "nodes": [
+    {"id": "库1" ,"shortName": "库01" ,"group": 10 ,"size": 30 ,"bgColor": "red" ,"lineColor": "green" ,"fontColor": "green" ,"fontSize": 20},
+    {"id": "表1" ,"shortName": "表01" ,"group": 10 ,"size": 20}
+  ],
+  "links": [
+    {"source": "表1", "target": "库1", "size": 20 ,"length": 100 ,"lineColor": "green"}
+  ]
+}

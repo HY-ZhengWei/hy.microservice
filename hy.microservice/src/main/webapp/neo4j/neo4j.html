@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Neo4j</title>
+	
+	<script type="text/javascript" charset="utf-8" src="../d3/d3.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../d3/hy.common.d3.js"></script>
+	
+</head>
+<body oncontextmenu="return false">
+
+	<svg width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>
+	
+	<div id="Test">测试</div>
+<script type="module">
+var v_XYDatas = {};
+
+d3.json("neo4j.hy.json")
+.then(function (i_Datas) 
+{
+  console.log("加载数据成功，准备初始化");
+  // Specify the dimensions of the chart.
+  const width  = 928;
+  const height = 600;
+  
+  // Specify the color scale.
+  const color = d3.scaleOrdinal(d3.schemeCategory10);
+  
+  // The force simulation mutates links and nodes, so create a copy
+  // so that re-evaluating this cell produces the same result.
+  const links = i_Datas.links.map(d => ({...d}));
+  const nodes = i_Datas.nodes.map(d => ({...d}));
+  
+  // Create the SVG container.
+  const svg = d3.select("body").select("svg")
+      	.attr("width", width)
+      	.attr("height", height)
+      	.attr("viewBox", [0, 0, width, height])
+      	.attr("style", "max-width: 100%; height: auto;");
+      	
+  // Add a line for each link, and a circle for each node.
+  const link = svg.append("g")
+      	.attr("stroke-opacity", 0.6)
+    	.selectAll()
+    	.data(links)
+    	.join("line")
+    	.attr("id" ,d => "line_" + d.source + "_t_" + d.target)
+      	.attr("stroke-width", d => Math.sqrt(d.size))
+      	.attr("stroke", d => d.lineColor ? d.lineColor : "#999");
+      	
+  const linkAnimation = svg.append("g")
+  		.attr("id" ,"linkAnimation");
+
+  const node = svg.append("g")
+      	.attr("stroke-width", 1.5)
+    	.selectAll()
+    	.data(nodes)
+    	.join("circle")
+      	.attr("r", d => d.size)
+      	.attr("stroke", d => d.lineColor ? d.lineColor : "white")
+      	.attr("fill", d => d.bgColor ? d.bgColor : color(d.group));
+      	
+  const label = svg.append("g")
+      	.attr("text-anchor" ,"middle") 
+      	.attr("dominant-baseline" ,"middle")
+    	.selectAll()
+    	.data(nodes)
+    	.join("text")
+      	.text(d => d.shortName)
+      	.attr("fill", d => d.fontColor ? d.fontColor : "white")
+      	.attr("font-size" ,d => d.fontSize ? d.fontSize : 12);
+  
+  node.append("title")
+  .text(d => d.id);
+
+  // Add a drag behavior.
+  node.call(d3.drag()
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended));
+
+  // Set the position attributes of links and nodes each time the simulation ticks.
+  function ticked() {
+    link
+        .attr("x1", d => d.source.x)
+        .attr("y1", d => d.source.y)
+        .attr("x2", d => d.target.x)
+        .attr("y2", d => d.target.y);
+    
+    let v_LineID = link.attr("id");
+    console.log(v_LineID);
+    v_XYDatas[v_LineID] = {};
+	v_XYDatas[v_LineID].x1 = link.attr("x1");
+	v_XYDatas[v_LineID].y1 = link.attr("y1");
+	v_XYDatas[v_LineID].x2 = link.attr("x2");
+	v_XYDatas[v_LineID].y2 = link.attr("y2");
+
+    node
+        .attr("cx", d => d.x)
+        .attr("cy", d => d.y);
+        
+    label
+    	.attr("x", d => d.x)
+        .attr("y", d => d.y);
+  }
+
+  // Reheat the simulation when drag starts, and fix the subject position.
+  function dragstarted(event) {
+    if (!event.active) simulation.alphaTarget(0.3).restart();
+    event.subject.fx = event.subject.x;
+    event.subject.fy = event.subject.y;
+  }
+
+  // Update the subject (dragged node) position during drag.
+  function dragged(event) {
+    event.subject.fx = event.x;
+    event.subject.fy = event.y;
+  }
+
+  // Restore the target alpha so the simulation cools after dragging ends.
+  // Unfix the subject position now that it’s no longer being dragged.
+  function dragended(event) {
+    if (!event.active) simulation.alphaTarget(0);
+    event.subject.fx = null;
+    event.subject.fy = null;
+  }
+  
+    // Create a simulation with several forces.
+  const simulation = d3.forceSimulation(nodes)
+      .force("link", d3.forceLink(links).id(d => d.id).distance(function(d) {return d.length}).strength(0.1))
+      .force("charge", d3.forceManyBody())
+      .force("center", d3.forceCenter(width / 2, height / 2))
+      .on("tick", ticked);
+      
+  console.log("初始化完成");
+})
+.catch(function (i_Error) 
+{
+	console.log(i_Error);
+});
+
+
+
+/**
+  * 线条的动画
+  *
+  * @author      ZhengWei(HY)
+  * @createDate  2023-08-21
+  * @version     v1.0
+  *
+  * @param i_SourceID  源端ID
+  * @param i_TargetID  目标ID
+  */
+function lineAnimation(i_SourceID ,i_TargetID)
+{
+	let v_SVG    = d3.select("body").select("svg");
+	let v_LineID = "line_" + i_SourceID + "_t_" + i_TargetID;
+	let v_Line   = v_SVG.select("#" + v_LineID);
+	if ( !v_Line )
+	{
+		return;
+	}
+	
+	let v_TimeLen       = 5 * 1000;
+	let v_LineAnimation = d3.select("#linkAnimation");
+	let v_LineA = v_LineAnimation.append("line")
+		.attr("x1", v_XYDatas[v_LineID].x1)
+        .attr("y1", v_XYDatas[v_LineID].y1)
+        .attr("x2", v_XYDatas[v_LineID].x1)
+        .attr("y2", v_XYDatas[v_LineID].y1)
+        .attr("stroke-width", v_Line.attr("stroke-width") / 3 * 2)
+      	.attr("stroke",       "white")
+      	.attr("fill",         "white")
+      	.transition()
+      	.duration(v_TimeLen)
+      	.attr("x1", v_XYDatas[v_LineID].x2)
+        .attr("y1", v_XYDatas[v_LineID].y2)
+        .remove();
+      	
+    let v_LineB = v_LineAnimation.append("line")
+		.attr("x1", v_XYDatas[v_LineID].x1)
+        .attr("y1", v_XYDatas[v_LineID].y1)
+        .attr("x2", v_XYDatas[v_LineID].x1)
+        .attr("y2", v_XYDatas[v_LineID].y1)
+        .attr("stroke-opacity", 0.6)
+        .attr("stroke-width", v_Line.attr("stroke-width"))
+      	.attr("stroke",       v_Line.attr("stroke"))
+      	.attr("fill",         v_Line.attr("stroke"))
+      	.transition()
+      	.delay(300)
+      	.duration(v_TimeLen)
+      	.attr("x1", v_XYDatas[v_LineID].x2)
+        .attr("y1", v_XYDatas[v_LineID].y2)
+        .remove();
+}
+
+
+
+d3.select("#Test").on("click" ,function ()
+{
+	lineAnimation("表1" ,"库1");
+});
+
+</script>
+
+</body>
+</html>
