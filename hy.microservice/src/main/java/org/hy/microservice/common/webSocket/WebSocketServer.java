@@ -181,6 +181,20 @@ public class WebSocketServer
     
     
     
+    
+    /**
+     * 向客户端群发消息。
+     * 
+     * @param i_ServiceType  服务类型
+     * @param i_NewMessage   仅有变化的消息
+     */
+    public static void pushMessages(String i_ServiceType ,String i_NewMessage)
+    {
+        pushMessages(i_ServiceType ,i_NewMessage ,i_NewMessage);
+    }
+    
+    
+    
     /**
      * 向客户端群发消息。
      * 

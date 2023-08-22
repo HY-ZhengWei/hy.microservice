@@ -4,6 +4,6 @@
     {"id": "表1" ,"shortName": "表01" ,"group": 10 ,"size": 20}
   ],
   "links": [
-    {"source": "表1", "target": "库1", "size": 20 ,"length": 100 ,"lineColor": "green"}
+    {"source": "表1", "target": "库1", "width": 20 ,"length": 100 ,"lineColor": "green"}
   ]
 }

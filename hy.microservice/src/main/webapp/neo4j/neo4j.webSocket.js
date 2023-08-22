@@ -1,0 +1,149 @@
+var v_UrlName   = '10.1.20.84:85';
+var v_Url       = 'http://' + v_UrlName + '/msCDC/windows/images/xsqlLog.png';
+var v_SID       = 'cdc';
+var v_WSUrl     = 'ws://' + v_UrlName + '/msCDC/report/' + v_SID + "/ZehngWei";
+var v_Websocket = null;
+
+
+
+function webSocketInit(i_NodeDatas ,i_XYDatas)
+{
+    // 判断当前浏览器是否支持WebSocket
+    if ( 'WebSocket' in window && v_SID != null ) 
+    {
+        v_Websocket = new WebSocket(v_WSUrl);
+    }
+    else 
+    {
+        alert('当前浏览器 Not support websocket')
+    }
+
+    //连接发生错误的回调方法
+    v_Websocket.onerror = function () 
+    {
+        console.log("WebSocket连接发生错误");
+        reconnect();
+    };
+
+    //连接成功建立的回调方法
+    v_Websocket.onopen = function () 
+    {
+        console.log("WebSocket连接成功");
+    };
+
+    //接收到消息的回调方法
+    v_Websocket.onmessage = function (event) 
+    {
+        console.log(event);
+        let v_MData = JSON.parse(event.data);
+        if ( v_MData.hasOwnProperty("sourceID") && v_MData.sourceID )
+        {
+            lineAnimation(i_NodeDatas ,i_XYDatas ,v_MData.sourceID ,v_MData.targetID);
+        }
+    };
+
+    //连接关闭的回调方法
+    v_Websocket.onclose = function () 
+    {
+        console.log("WebSocket连接关闭");
+        reconnect();
+    };
+
+
+    //当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+    //监听页面刷新
+    window.onbeforeunload = function () 
+    {
+        closeWebSocket();
+    };
+    
+    //监听窗口关闭
+    window.onunload=function () 
+    {
+        closeWebSocket();
+    };
+
+    /*
+    setInterval(function () {
+        window.location.reload();
+    },3600000)
+    */
+}
+
+
+function reconnect()
+{
+    setInterval(function () 
+    {
+        //给服务器发送请求，如果发送成功，则说明服务器启动了，那么就关闭websocket连接，刷新页面
+        $.ajax({
+            url: v_Url,
+            type:'POST',
+            async:false,
+            success:function(data) {    //成功回调函数
+                closeWebSocket();
+                window.location.reload();
+            }
+            });
+
+    }, 60000);
+}
+
+
+
+// 关闭WebSocket连接
+function closeWebSocket() 
+{
+    v_Websocket.close();
+};
+
+
+
+// 发送消息
+function send(message) 
+{
+    v_Websocket.send(message);
+};
+
+
+
+
+/**
+  * 线条的动画
+  *
+  * @author      ZhengWei(HY)
+  * @createDate  2023-08-21
+  * @version     v1.0
+  *
+  * @param i_SourceID  源端ID
+  * @param i_TargetID  目标ID
+  */
+function lineAnimation(i_NodeDatas ,i_XYDatas ,i_SourceID ,i_TargetID)
+{
+    let v_SVG    = d3.select("body").select("svg");
+    let v_LineID = "line_" + i_SourceID + "_t_" + i_TargetID;
+    let v_Line   = v_SVG.select("#" + v_LineID);
+    
+    console.log(i_XYDatas ,v_LineID);
+    
+    if ( !v_Line )
+    {
+        return;
+    }
+    
+    let v_TimeLen       = 5 * 1000;
+    let v_LineAnimation = d3.select("#linkAnimation");
+    v_LineAnimation.append("circle")
+        .attr("r", v_Line.attr("stroke-width"))
+        .attr("stroke", i_NodeDatas[i_SourceID].lineColor)
+        .attr("fill", i_NodeDatas[i_SourceID].bgColor)
+        .attr("cx", i_XYDatas[v_LineID].x1)
+        .attr("cy", i_XYDatas[v_LineID].y1)
+        .transition()
+        .duration(v_TimeLen)
+        .attr("stroke", i_NodeDatas[i_TargetID].lineColor)
+        .attr("fill", i_NodeDatas[i_TargetID].bgColor)
+        .attr("cx", i_XYDatas[v_LineID].x2)
+        .attr("cy", i_XYDatas[v_LineID].y2)
+        .remove();
+}

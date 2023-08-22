@@ -2,27 +2,38 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>Neo4j</title>
-	
-	<script type="text/javascript" charset="utf-8" src="../d3/d3.min.js"></script>
+    <title>Neo4j</title>
+    
+    <script type="text/javascript" charset="utf-8" src="../d3/d3.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="../d3/hy.common.d3.js"></script>
-	
+    
+    <style type="text/css">
+    body { 
+        background-color: white; 
+        overflow-x: hidden;
+        overflow-y: hidden;
+        width: 100vw;
+        height: 100vh;
+    }
+    </style>
 </head>
 <body oncontextmenu="return false">
 
-	<svg width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>
-	
-	<div id="Test">测试</div>
+    <svg width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>
+    
+    <div id="Test">测试</div>
+    
 <script type="module">
-var v_XYDatas = {};
-
-d3.json("neo4j.hy.json")
+d3.json("neo4j.cdc.json")
 .then(function (i_Datas) 
 {
-  console.log("加载数据成功，准备初始化");
+  var v_XYDatas   = {};  /* 可用ID定位连接线信息，保存坐标信息 */
+  var v_NodeDatas = {};  /* 可用ID定位节点信息 */
+
   // Specify the dimensions of the chart.
-  const width  = 928;
-  const height = 600;
+  const width  = document.body.clientWidth;
+  const height = document.body.clientHeight;
+  console.log("加载数据成功，准备初始化。w=" + width + " ,h=" + height);
   
   // Specify the color scale.
   const color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -34,45 +45,62 @@ d3.json("neo4j.hy.json")
   
   // Create the SVG container.
   const svg = d3.select("body").select("svg")
-      	.attr("width", width)
-      	.attr("height", height)
-      	.attr("viewBox", [0, 0, width, height])
-      	.attr("style", "max-width: 100%; height: auto;");
-      	
+        .attr("width", width)
+        .attr("height", height)
+        .attr("viewBox", [0, 0, width, height])
+        .attr("style", "max-width: 100%; height: auto;");
+        
   // Add a line for each link, and a circle for each node.
   const link = svg.append("g")
-      	.attr("stroke-opacity", 0.6)
-    	.selectAll()
-    	.data(links)
-    	.join("line")
-    	.attr("id" ,d => "line_" + d.source + "_t_" + d.target)
-      	.attr("stroke-width", d => Math.sqrt(d.size))
-      	.attr("stroke", d => d.lineColor ? d.lineColor : "#999");
-      	
+        .attr("stroke-opacity", 0.6)
+        .selectAll()
+        .data(links)
+        .join("line")
+        .attr("id" ,function(d) 
+        {
+            console.log("line_" + d.source + "_t_" + d.target);
+            return "line_" + d.source + "_t_" + d.target;
+        })
+        .attr("sourceID" ,d => d.source)
+        .attr("targetID" ,d => d.target)
+        .attr("stroke-width", d => Math.sqrt(d.width))
+        .attr("stroke", d => d.lineColor ? d.lineColor : "#999");
+        
   const linkAnimation = svg.append("g")
-  		.attr("id" ,"linkAnimation");
+        .attr("id" ,"linkAnimation");
 
   const node = svg.append("g")
-      	.attr("stroke-width", 1.5)
-    	.selectAll()
-    	.data(nodes)
-    	.join("circle")
-      	.attr("r", d => d.size)
-      	.attr("stroke", d => d.lineColor ? d.lineColor : "white")
-      	.attr("fill", d => d.bgColor ? d.bgColor : color(d.group));
-      	
+        .attr("stroke-width", 1.5)
+        .selectAll()
+        .data(nodes)
+        .join("circle")
+        .attr("r", d => d.size)
+        .attr("stroke", d => d.lineColor ? d.lineColor : "white")
+        .attr("fill", d => d.bgColor ? d.bgColor : color(d.group));
+        
   const label = svg.append("g")
-      	.attr("text-anchor" ,"middle") 
-      	.attr("dominant-baseline" ,"middle")
-    	.selectAll()
-    	.data(nodes)
-    	.join("text")
-      	.text(d => d.shortName)
-      	.attr("fill", d => d.fontColor ? d.fontColor : "white")
-      	.attr("font-size" ,d => d.fontSize ? d.fontSize : 12);
+        .attr("text-anchor" ,"middle") 
+        .attr("dominant-baseline" ,"middle")
+        .selectAll()
+        .data(nodes)
+        .join("text")
+        .text(function (d) 
+        {
+            v_NodeDatas[d.id] = {};
+            v_NodeDatas[d.id].shortName = d.shortName;
+            v_NodeDatas[d.id].group     = d.group;
+            v_NodeDatas[d.id].size      = d.size;
+            v_NodeDatas[d.id].bgColor   = d.bgColor ? d.bgColor : color(d.group);
+            v_NodeDatas[d.id].lineColor = d.lineColor ? d.lineColor : "white";
+            v_NodeDatas[d.id].fontColor = d.fontColor ? d.fontColor : "white";
+            v_NodeDatas[d.id].fontSize  = d.fontSize ? d.fontSize : 12;
+            return d.shortName;
+        })
+        .attr("fill", d => d.fontColor ? d.fontColor : "white")
+        .attr("font-size" ,d => d.fontSize ? d.fontSize : 12);
   
   node.append("title")
-  .text(d => d.id);
+  .text(d => d.name);
 
   // Add a drag behavior.
   node.call(d3.drag()
@@ -88,21 +116,25 @@ d3.json("neo4j.hy.json")
         .attr("x2", d => d.target.x)
         .attr("y2", d => d.target.y);
     
-    let v_LineID = link.attr("id");
-    console.log(v_LineID);
-    v_XYDatas[v_LineID] = {};
-	v_XYDatas[v_LineID].x1 = link.attr("x1");
-	v_XYDatas[v_LineID].y1 = link.attr("y1");
-	v_XYDatas[v_LineID].x2 = link.attr("x2");
-	v_XYDatas[v_LineID].y2 = link.attr("y2");
-
     node
         .attr("cx", d => d.x)
         .attr("cy", d => d.y);
         
     label
-    	.attr("x", d => d.x)
+        .attr("x", d => d.x)
         .attr("y", d => d.y);
+
+    let v_LineID = link.attr("id");
+    if ( !v_XYDatas[v_LineID] )
+    {
+      v_XYDatas[v_LineID] = {};
+    }
+    v_XYDatas[v_LineID].x1       = link.attr("x1");
+    v_XYDatas[v_LineID].y1       = link.attr("y1");
+    v_XYDatas[v_LineID].x2       = link.attr("x2");
+    v_XYDatas[v_LineID].y2       = link.attr("y2");
+    v_XYDatas[v_LineID].sourceID = link.attr("sourceID");
+    v_XYDatas[v_LineID].targetID = link.attr("targetID");
   }
 
   // Reheat the simulation when drag starts, and fix the subject position.
@@ -134,11 +166,131 @@ d3.json("neo4j.hy.json")
       .on("tick", ticked);
       
   console.log("初始化完成");
+  webSocketInit(v_NodeDatas ,v_XYDatas);
 })
 .catch(function (i_Error) 
 {
-	console.log(i_Error);
+    console.log(i_Error);
 });
+
+
+
+d3.select("#Test").on("click" ,function ()
+{
+    lineAnimation("表1" ,"库1");
+});
+
+
+
+
+
+var v_UrlName   = '10.1.20.84:85';
+var v_Url       = 'http://' + v_UrlName + '/msCDC/windows/images/xsqlLog.png';
+var v_SID       = 'cdc';
+var v_WSUrl     = 'ws://' + v_UrlName + '/msCDC/report/' + v_SID + "/ZehngWei";
+var v_Websocket = null;
+
+
+
+function webSocketInit(i_NodeDatas)
+{
+    // 判断当前浏览器是否支持WebSocket
+    if ( 'WebSocket' in window && v_SID != null ) 
+    {
+        v_Websocket = new WebSocket(v_WSUrl);
+    }
+    else 
+    {
+        alert('当前浏览器 Not support websocket')
+    }
+
+    //连接发生错误的回调方法
+    v_Websocket.onerror = function () 
+    {
+        console.log("WebSocket连接发生错误");
+        reconnect();
+    };
+
+    //连接成功建立的回调方法
+    v_Websocket.onopen = function () 
+    {
+        console.log("WebSocket连接成功");
+    };
+
+    //接收到消息的回调方法
+    v_Websocket.onmessage = function (event) 
+    {
+        console.log(event);
+        let v_MData = JSON.parse(event.data);
+        if ( v_MData.hasOwnProperty("sourceID") && v_MData.sourceID )
+        {
+            lineAnimation(i_NodeDatas ,v_MData.sourceID ,v_MData.targetID);
+        }
+    };
+
+    //连接关闭的回调方法
+    v_Websocket.onclose = function () 
+    {
+        console.log("WebSocket连接关闭");
+        reconnect();
+    };
+
+
+    //当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+    //监听页面刷新
+    window.onbeforeunload = function () 
+    {
+        closeWebSocket();
+    };
+    
+    //监听窗口关闭
+    window.onunload=function () 
+    {
+        closeWebSocket();
+    };
+
+    /*
+    setInterval(function () {
+        window.location.reload();
+    },3600000)
+    */
+}
+
+
+function reconnect()
+{
+    setInterval(function () 
+    {
+        //给服务器发送请求，如果发送成功，则说明服务器启动了，那么就关闭websocket连接，刷新页面
+        $.ajax({
+            url: v_Url,
+            type:'POST',
+            async:false,
+            success:function(data) {    //成功回调函数
+                closeWebSocket();
+                window.location.reload();
+            }
+            });
+
+    }, 60000);
+}
+
+
+
+// 关闭WebSocket连接
+function closeWebSocket() 
+{
+    v_Websocket.close();
+};
+
+
+
+// 发送消息
+function send(message) 
+{
+    v_Websocket.send(message);
+};
+
 
 
 
@@ -152,55 +304,33 @@ d3.json("neo4j.hy.json")
   * @param i_SourceID  源端ID
   * @param i_TargetID  目标ID
   */
-function lineAnimation(i_SourceID ,i_TargetID)
+function lineAnimation(i_NodeDatas ,i_SourceID ,i_TargetID)
 {
-	let v_SVG    = d3.select("body").select("svg");
-	let v_LineID = "line_" + i_SourceID + "_t_" + i_TargetID;
-	let v_Line   = v_SVG.select("#" + v_LineID);
-	if ( !v_Line )
-	{
-		return;
-	}
-	
-	let v_TimeLen       = 5 * 1000;
-	let v_LineAnimation = d3.select("#linkAnimation");
-	let v_LineA = v_LineAnimation.append("line")
-		.attr("x1", v_XYDatas[v_LineID].x1)
-        .attr("y1", v_XYDatas[v_LineID].y1)
-        .attr("x2", v_XYDatas[v_LineID].x1)
-        .attr("y2", v_XYDatas[v_LineID].y1)
-        .attr("stroke-width", v_Line.attr("stroke-width") / 3 * 2)
-      	.attr("stroke",       "white")
-      	.attr("fill",         "white")
-      	.transition()
-      	.duration(v_TimeLen)
-      	.attr("x1", v_XYDatas[v_LineID].x2)
-        .attr("y1", v_XYDatas[v_LineID].y2)
-        .remove();
-      	
-    let v_LineB = v_LineAnimation.append("line")
-		.attr("x1", v_XYDatas[v_LineID].x1)
-        .attr("y1", v_XYDatas[v_LineID].y1)
-        .attr("x2", v_XYDatas[v_LineID].x1)
-        .attr("y2", v_XYDatas[v_LineID].y1)
-        .attr("stroke-opacity", 0.6)
-        .attr("stroke-width", v_Line.attr("stroke-width"))
-      	.attr("stroke",       v_Line.attr("stroke"))
-      	.attr("fill",         v_Line.attr("stroke"))
-      	.transition()
-      	.delay(300)
-      	.duration(v_TimeLen)
-      	.attr("x1", v_XYDatas[v_LineID].x2)
-        .attr("y1", v_XYDatas[v_LineID].y2)
+    let v_SVG    = d3.select("body").select("svg");
+    let v_LineID = "line_" + i_SourceID + "_t_" + i_TargetID;
+    let v_Line   = v_SVG.select("#" + v_LineID);
+    
+    if ( !v_Line )
+    {
+        return;
+    }
+    
+    let v_TimeLen       = 5 * 1000;
+    let v_LineAnimation = d3.select("#linkAnimation");
+    v_LineAnimation.append("circle")
+        .attr("r", v_Line.attr("stroke-width"))
+        .attr("stroke", i_NodeDatas[i_SourceID].lineColor)
+        .attr("fill", i_NodeDatas[i_SourceID].bgColor)
+        .attr("cx", v_Line.attr("x1"))
+        .attr("cy", v_Line.attr("y1"))
+        .transition()
+        .duration(v_TimeLen)
+        .attr("stroke", i_NodeDatas[i_TargetID].lineColor)
+        .attr("fill", i_NodeDatas[i_TargetID].bgColor)
+        .attr("cx", v_Line.attr("x2"))
+        .attr("cy", v_Line.attr("y2"))
         .remove();
 }
-
-
-
-d3.select("#Test").on("click" ,function ()
-{
-	lineAnimation("表1" ,"库1");
-});
 
 </script>
 
