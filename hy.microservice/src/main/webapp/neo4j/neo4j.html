@@ -6,6 +6,7 @@
     
     <script type="text/javascript" charset="utf-8" src="../d3/d3.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="../d3/hy.common.d3.js"></script>
+    <script type="text/javascript" charset="utf-8" src="neo4j.webSocket.js"></script>
     
     <style type="text/css">
     body { 
@@ -27,9 +28,6 @@
 d3.json("neo4j.cdc.json")
 .then(function (i_Datas) 
 {
-  var v_XYDatas   = {};  /* 可用ID定位连接线信息，保存坐标信息 */
-  var v_NodeDatas = {};  /* 可用ID定位节点信息 */
-
   // Specify the dimensions of the chart.
   const width  = document.body.clientWidth;
   const height = document.body.clientHeight;
@@ -58,7 +56,6 @@ d3.json("neo4j.cdc.json")
         .join("line")
         .attr("id" ,function(d) 
         {
-            console.log("line_" + d.source + "_t_" + d.target);
             return "line_" + d.source + "_t_" + d.target;
         })
         .attr("sourceID" ,d => d.source)
@@ -74,6 +71,7 @@ d3.json("neo4j.cdc.json")
         .selectAll()
         .data(nodes)
         .join("circle")
+        .attr("id" ,d => "node_" + d.id)
         .attr("r", d => d.size)
         .attr("stroke", d => d.lineColor ? d.lineColor : "white")
         .attr("fill", d => d.bgColor ? d.bgColor : color(d.group));
@@ -84,18 +82,9 @@ d3.json("neo4j.cdc.json")
         .selectAll()
         .data(nodes)
         .join("text")
-        .text(function (d) 
-        {
-            v_NodeDatas[d.id] = {};
-            v_NodeDatas[d.id].shortName = d.shortName;
-            v_NodeDatas[d.id].group     = d.group;
-            v_NodeDatas[d.id].size      = d.size;
-            v_NodeDatas[d.id].bgColor   = d.bgColor ? d.bgColor : color(d.group);
-            v_NodeDatas[d.id].lineColor = d.lineColor ? d.lineColor : "white";
-            v_NodeDatas[d.id].fontColor = d.fontColor ? d.fontColor : "white";
-            v_NodeDatas[d.id].fontSize  = d.fontSize ? d.fontSize : 12;
-            return d.shortName;
-        })
+        .attr("id" ,d => "label_" + d.id)
+        .attr("shortName" ,d => d.shortName)
+        .text("")
         .attr("fill", d => d.fontColor ? d.fontColor : "white")
         .attr("font-size" ,d => d.fontSize ? d.fontSize : 12);
   
@@ -123,18 +112,6 @@ d3.json("neo4j.cdc.json")
     label
         .attr("x", d => d.x)
         .attr("y", d => d.y);
-
-    let v_LineID = link.attr("id");
-    if ( !v_XYDatas[v_LineID] )
-    {
-      v_XYDatas[v_LineID] = {};
-    }
-    v_XYDatas[v_LineID].x1       = link.attr("x1");
-    v_XYDatas[v_LineID].y1       = link.attr("y1");
-    v_XYDatas[v_LineID].x2       = link.attr("x2");
-    v_XYDatas[v_LineID].y2       = link.attr("y2");
-    v_XYDatas[v_LineID].sourceID = link.attr("sourceID");
-    v_XYDatas[v_LineID].targetID = link.attr("targetID");
   }
 
   // Reheat the simulation when drag starts, and fix the subject position.
@@ -166,7 +143,7 @@ d3.json("neo4j.cdc.json")
       .on("tick", ticked);
       
   console.log("初始化完成");
-  webSocketInit(v_NodeDatas ,v_XYDatas);
+  webSocketInit();
 })
 .catch(function (i_Error) 
 {
@@ -179,159 +156,6 @@ d3.select("#Test").on("click" ,function ()
 {
     lineAnimation("表1" ,"库1");
 });
-
-
-
-
-
-var v_UrlName   = '10.1.20.84:85';
-var v_Url       = 'http://' + v_UrlName + '/msCDC/windows/images/xsqlLog.png';
-var v_SID       = 'cdc';
-var v_WSUrl     = 'ws://' + v_UrlName + '/msCDC/report/' + v_SID + "/ZehngWei";
-var v_Websocket = null;
-
-
-
-function webSocketInit(i_NodeDatas)
-{
-    // 判断当前浏览器是否支持WebSocket
-    if ( 'WebSocket' in window && v_SID != null ) 
-    {
-        v_Websocket = new WebSocket(v_WSUrl);
-    }
-    else 
-    {
-        alert('当前浏览器 Not support websocket')
-    }
-
-    //连接发生错误的回调方法
-    v_Websocket.onerror = function () 
-    {
-        console.log("WebSocket连接发生错误");
-        reconnect();
-    };
-
-    //连接成功建立的回调方法
-    v_Websocket.onopen = function () 
-    {
-        console.log("WebSocket连接成功");
-    };
-
-    //接收到消息的回调方法
-    v_Websocket.onmessage = function (event) 
-    {
-        console.log(event);
-        let v_MData = JSON.parse(event.data);
-        if ( v_MData.hasOwnProperty("sourceID") && v_MData.sourceID )
-        {
-            lineAnimation(i_NodeDatas ,v_MData.sourceID ,v_MData.targetID);
-        }
-    };
-
-    //连接关闭的回调方法
-    v_Websocket.onclose = function () 
-    {
-        console.log("WebSocket连接关闭");
-        reconnect();
-    };
-
-
-    //当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
-    //监听页面刷新
-    window.onbeforeunload = function () 
-    {
-        closeWebSocket();
-    };
-    
-    //监听窗口关闭
-    window.onunload=function () 
-    {
-        closeWebSocket();
-    };
-
-    /*
-    setInterval(function () {
-        window.location.reload();
-    },3600000)
-    */
-}
-
-
-function reconnect()
-{
-    setInterval(function () 
-    {
-        //给服务器发送请求，如果发送成功，则说明服务器启动了，那么就关闭websocket连接，刷新页面
-        $.ajax({
-            url: v_Url,
-            type:'POST',
-            async:false,
-            success:function(data) {    //成功回调函数
-                closeWebSocket();
-                window.location.reload();
-            }
-            });
-
-    }, 60000);
-}
-
-
-
-// 关闭WebSocket连接
-function closeWebSocket() 
-{
-    v_Websocket.close();
-};
-
-
-
-// 发送消息
-function send(message) 
-{
-    v_Websocket.send(message);
-};
-
-
-
-
-/**
-  * 线条的动画
-  *
-  * @author      ZhengWei(HY)
-  * @createDate  2023-08-21
-  * @version     v1.0
-  *
-  * @param i_SourceID  源端ID
-  * @param i_TargetID  目标ID
-  */
-function lineAnimation(i_NodeDatas ,i_SourceID ,i_TargetID)
-{
-    let v_SVG    = d3.select("body").select("svg");
-    let v_LineID = "line_" + i_SourceID + "_t_" + i_TargetID;
-    let v_Line   = v_SVG.select("#" + v_LineID);
-    
-    if ( !v_Line )
-    {
-        return;
-    }
-    
-    let v_TimeLen       = 5 * 1000;
-    let v_LineAnimation = d3.select("#linkAnimation");
-    v_LineAnimation.append("circle")
-        .attr("r", v_Line.attr("stroke-width"))
-        .attr("stroke", i_NodeDatas[i_SourceID].lineColor)
-        .attr("fill", i_NodeDatas[i_SourceID].bgColor)
-        .attr("cx", v_Line.attr("x1"))
-        .attr("cy", v_Line.attr("y1"))
-        .transition()
-        .duration(v_TimeLen)
-        .attr("stroke", i_NodeDatas[i_TargetID].lineColor)
-        .attr("fill", i_NodeDatas[i_TargetID].bgColor)
-        .attr("cx", v_Line.attr("x2"))
-        .attr("cy", v_Line.attr("y2"))
-        .remove();
-}
-
 </script>
 
 </body>

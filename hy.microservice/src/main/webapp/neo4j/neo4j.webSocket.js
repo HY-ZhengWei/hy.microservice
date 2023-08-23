@@ -6,7 +6,7 @@ var v_Websocket = null;
 
 
 
-function webSocketInit(i_NodeDatas ,i_XYDatas)
+function webSocketInit()
 {
     // 判断当前浏览器是否支持WebSocket
     if ( 'WebSocket' in window && v_SID != null ) 
@@ -34,11 +34,10 @@ function webSocketInit(i_NodeDatas ,i_XYDatas)
     //接收到消息的回调方法
     v_Websocket.onmessage = function (event) 
     {
-        console.log(event);
         let v_MData = JSON.parse(event.data);
         if ( v_MData.hasOwnProperty("sourceID") && v_MData.sourceID )
         {
-            lineAnimation(i_NodeDatas ,i_XYDatas ,v_MData.sourceID ,v_MData.targetID);
+            lineAnimation(v_MData.sourceID ,v_MData.targetID ,v_MData.sourceTotal ,v_MData.targetTotal ,v_MData.type);
         }
     };
 
@@ -115,17 +114,23 @@ function send(message)
   * @createDate  2023-08-21
   * @version     v1.0
   *
-  * @param i_SourceID  源端ID
-  * @param i_TargetID  目标ID
+  * @param i_SourceID     源端ID
+  * @param i_TargetID     目标ID
+  * @param i_SourceTotal  源ID对象的统计数量
+  * @param i_TargetTotal  目标ID对象的统计数量
+  * @param i_Type         操作类型
   */
-function lineAnimation(i_NodeDatas ,i_XYDatas ,i_SourceID ,i_TargetID)
+function lineAnimation(i_SourceID ,i_TargetID ,i_SourceTotal ,i_TargetTotal ,i_Type)
 {
-    let v_SVG    = d3.select("body").select("svg");
-    let v_LineID = "line_" + i_SourceID + "_t_" + i_TargetID;
-    let v_Line   = v_SVG.select("#" + v_LineID);
+    let v_SVG         = d3.select("body").select("svg");
+    let v_LineID      = "line_" + i_SourceID + "_t_" + i_TargetID;
+    let v_Line        = v_SVG.select("#"       + v_LineID);
+    let v_SourceNode  = v_SVG.select("#node_"  + i_SourceID);
+    let v_TargetNode  = v_SVG.select("#node_"  + i_TargetID);
+    let v_SourceLabel = v_SVG.select("#label_" + i_SourceID);
+    let v_TargetLabel = v_SVG.select("#label_" + i_TargetID);
     
-    console.log(i_XYDatas ,v_LineID);
-    
+    console.log(i_Type);
     if ( !v_Line )
     {
         return;
@@ -135,15 +140,18 @@ function lineAnimation(i_NodeDatas ,i_XYDatas ,i_SourceID ,i_TargetID)
     let v_LineAnimation = d3.select("#linkAnimation");
     v_LineAnimation.append("circle")
         .attr("r", v_Line.attr("stroke-width"))
-        .attr("stroke", i_NodeDatas[i_SourceID].lineColor)
-        .attr("fill", i_NodeDatas[i_SourceID].bgColor)
-        .attr("cx", i_XYDatas[v_LineID].x1)
-        .attr("cy", i_XYDatas[v_LineID].y1)
+        .attr("stroke", v_SourceNode.attr("stroke"))
+        .attr("fill",   i_Type == "create" ? "green" : (i_Type == "update" ? "orange" : "red"))
+        .attr("cx",     v_Line.attr("x1"))
+        .attr("cy",     v_Line.attr("y1"))
         .transition()
         .duration(v_TimeLen)
-        .attr("stroke", i_NodeDatas[i_TargetID].lineColor)
-        .attr("fill", i_NodeDatas[i_TargetID].bgColor)
-        .attr("cx", i_XYDatas[v_LineID].x2)
-        .attr("cy", i_XYDatas[v_LineID].y2)
+        .attr("stroke", v_TargetNode.attr("stroke"))
+        .attr("fill",   i_Type == "create" ? "green" : (i_Type == "update" ? "orange" : "red"))
+        .attr("cx",     v_Line.attr("x2"))
+        .attr("cy",     v_Line.attr("y2"))
         .remove();
+        
+    v_SourceLabel.transition().duration(v_TimeLen).text(i_SourceTotal);
+    v_TargetLabel.transition().duration(v_TimeLen).text(i_TargetTotal);
 }
