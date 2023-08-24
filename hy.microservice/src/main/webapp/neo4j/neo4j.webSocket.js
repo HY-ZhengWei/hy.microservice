@@ -39,6 +39,11 @@ function webSocketInit()
         {
             lineAnimation(v_MData.sourceID ,v_MData.targetID ,v_MData.sourceTotal ,v_MData.targetTotal ,v_MData.type);
         }
+        
+        if ( v_MData.hasOwnProperty("objectTotal") && v_MData.objectTotal )
+        {
+            initTotal(v_MData.objectTotal);
+        }
     };
 
     //连接关闭的回调方法
@@ -154,4 +159,25 @@ function lineAnimation(i_SourceID ,i_TargetID ,i_SourceTotal ,i_TargetTotal ,i_T
         
     v_SourceLabel.text(i_SourceTotal);
     v_TargetLabel.text(i_TargetTotal);
+}
+
+
+
+/**
+  * 初始化对象统计数据
+  *
+  * @author      ZhengWei(HY)
+  * @createDate  2023-08-24
+  * @version     v1.0
+  *
+  * @param i_Datas  对象统计数据
+  */
+function initTotal(i_Datas)
+{
+    let v_SVG = d3.select("body").select("svg");
+    
+    for (let x=0; x<i_Datas.length; x++)
+    {
+        v_SVG.select("#label_" + i_Datas[x].totalID).text(i_Datas[x].total);
+    }
 }
