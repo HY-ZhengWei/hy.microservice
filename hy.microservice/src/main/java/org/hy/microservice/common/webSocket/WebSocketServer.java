@@ -211,16 +211,6 @@ public class WebSocketServer
             return;
         }
         
-        if ( Help.isNull(i_NewMessage) )
-        {
-            return;
-        }
-        
-        if ( Help.isNull(i_AllMessage) )
-        {
-            return;
-        }
-        
         Map<String ,WebSocketClient> v_Clients = $WebSocketMap.get(i_ServiceType);
         if ( Help.isNull(v_Clients) )
         {
@@ -229,7 +219,57 @@ public class WebSocketServer
         
         for (WebSocketClient v_Client : v_Clients.values())
         {
-            v_Client.pushMessage(v_Client.getSendCount() <= 0 ? i_AllMessage : i_NewMessage);
+            if ( v_Client.getSendCount() <= 0 )
+            {
+                v_Client.pushMessage(Help.NVL(i_AllMessage));
+            }
+            else
+            {
+                v_Client.pushMessage(Help.NVL(i_NewMessage));
+            }
+        }
+    }
+    
+    
+    
+    /**
+     * 向客户端群发消息。
+     * 
+     * 首次接入的客户端，将发送全部消息，之后将只发有变化的消息
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2023-08-24
+     * @version     v1.0
+     *
+     * @param i_Message  消息接口
+     */
+    public static void pushMessages(WebSocketMessage i_Message)
+    {
+        if ( i_Message == null )
+        {
+            return;
+        }
+        if ( Help.isNull(i_Message.getServiceType()) )
+        {
+            return;
+        }
+        
+        Map<String ,WebSocketClient> v_Clients = $WebSocketMap.get(i_Message.getServiceType());
+        if ( Help.isNull(v_Clients) )
+        {
+            return;
+        }
+        
+        for (WebSocketClient v_Client : v_Clients.values())
+        {
+            if ( v_Client.getSendCount() <= 0 )
+            {
+                v_Client.pushMessage(Help.NVL(i_Message.getAllMessage()));
+            }
+            else
+            {
+                v_Client.pushMessage(Help.NVL(i_Message.getMessage()));
+            }
         }
     }
     

@@ -152,6 +152,6 @@ function lineAnimation(i_SourceID ,i_TargetID ,i_SourceTotal ,i_TargetTotal ,i_T
         .attr("cy",     v_Line.attr("y2"))
         .remove();
         
-    v_SourceLabel.transition().duration(v_TimeLen).text(i_SourceTotal);
-    v_TargetLabel.transition().duration(v_TimeLen).text(i_TargetTotal);
+    v_SourceLabel.text(i_SourceTotal);
+    v_TargetLabel.text(i_TargetTotal);
 }

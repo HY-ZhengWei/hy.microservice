@@ -16,6 +16,12 @@
         width: 100vw;
         height: 100vh;
     }
+
+    #Test {
+        position: fixed;
+        top: 0px;
+        left: 0px;
+    }
     </style>
 </head>
 <body oncontextmenu="return false">
@@ -154,7 +160,7 @@ d3.json("neo4j.cdc.json")
 
 d3.select("#Test").on("click" ,function ()
 {
-    lineAnimation("表1" ,"库1");
+    
 });
 </script>
 
