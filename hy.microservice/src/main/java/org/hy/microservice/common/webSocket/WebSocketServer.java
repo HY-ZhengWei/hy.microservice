@@ -1,5 +1,6 @@
 package org.hy.microservice.common.webSocket;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.websocket.OnClose;
@@ -26,14 +27,18 @@ import org.springframework.stereotype.Component;
  * @createDate  2022-07-28
  * @version     v1.0
  *              v2.0  2023-04-17  添加：用户编号 & 访问票据
+ *              v3.0  2023-08-25  添加：客户端首次初始化数据的事件监听器机制
  */
 @ServerEndpoint("/report/{serviceType}/{userID}")
 @Component
 public class WebSocketServer
 {
-    private static Logger                                     $Logger       = Logger.getLogger(WebSocketServer.class);
+    private static Logger                                     $Logger          = Logger.getLogger(WebSocketServer.class);
     
-    private static TablePartitionRID<String ,WebSocketClient> $WebSocketMap = new TablePartitionRID<String ,WebSocketClient>();
+    private static TablePartitionRID<String ,WebSocketClient> $WebSocketMap    = new TablePartitionRID<String ,WebSocketClient>();
+    
+    /** onOpen() 方法时触发执行的事件。方便客户端初始化数据 */
+    private static Map<String ,WebSocketMessage>              $WebSocketEvents = new HashMap<String ,WebSocketMessage>();
 
     
     
@@ -76,6 +81,13 @@ public class WebSocketServer
         $WebSocketMap.putRow(i_ServiceType ,this.client.getSessionID() ,this.client);
         
         $Logger.info("WebSocket onOpen：" + this.client.getServiceType() + ":" + this.client.getSessionID() + ":" + this.client.getUserID());
+        
+        // 连接成功后，主动向客户端发送首次消息，初始化数据
+        WebSocketMessage v_WebSocketMessage = $WebSocketEvents.get(i_ServiceType);
+        if ( v_WebSocketMessage != null )
+        {
+            this.client.pushMessage(Help.NVL(v_WebSocketMessage.getInitMessage()));
+        }
     }
     
     
@@ -159,6 +171,60 @@ public class WebSocketServer
                        ,@PathParam("userID")      String i_UserID)
     {
         $Logger.error("WebSocket error：" + this.client.getServiceType() + ":" + this.client.getSessionID() + ":" + this.client.getUserID() ,i_Error);
+    }
+    
+    
+    
+    /**
+     * 添加初始化的事件监听器
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2023-08-25
+     * @version     v1.0
+     *
+     * @param i_WebSocketMessage  消息对象
+     * @return
+     */
+    public static boolean addInitEventListener(WebSocketMessage i_WebSocketMessage)
+    {
+        if ( i_WebSocketMessage == null )
+        {
+            return false;
+        }
+        
+        if ( Help.isNull(i_WebSocketMessage.getServiceType()) )
+        {
+            return false;
+        }
+        
+        $WebSocketEvents.put(i_WebSocketMessage.getServiceType() ,i_WebSocketMessage);
+        return true;
+    }
+    
+    
+    
+    /**
+     * 删除初始化的事件监听器
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2023-08-25
+     * @version     v1.0
+     *
+     * @param i_WebSocketMessage
+     */
+    public static void removeInitEventListener(WebSocketMessage i_WebSocketMessage)
+    {
+        if ( i_WebSocketMessage == null )
+        {
+            return;
+        }
+        
+        if ( Help.isNull(i_WebSocketMessage.getServiceType()) )
+        {
+            return;
+        }
+        
+        $WebSocketEvents.remove(i_WebSocketMessage.getServiceType());
     }
     
     

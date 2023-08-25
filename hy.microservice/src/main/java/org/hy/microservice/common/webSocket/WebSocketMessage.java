@@ -51,4 +51,19 @@ public interface WebSocketMessage
      */
     public String getAllMessage();
     
+    
+    
+    /**
+     * 获取首次的初始化消息。需配合WebSocketServer事件监听器一同使用。
+     * 
+     * 注：当本方法生效时，getAllMessage() 方法将不会被执行
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2023-08-25
+     * @version     v1.0
+     *
+     * @return
+     */
+    public String getInitMessage();
+    
 }
