@@ -4,6 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Neo4j</title>
     
+    <script type="text/javascript" charset="utf-8" src="../jquery/jquery.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="../d3/d3.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="../d3/hy.common.d3.js"></script>
     <script type="text/javascript" charset="utf-8" src="neo4j.webSocket.js"></script>
@@ -90,7 +91,7 @@ d3.json("neo4j.cdc.json")
         .join("text")
         .attr("id" ,d => "label_" + d.id)
         .attr("shortName" ,d => d.shortName)
-        .text("")
+        .text("0")
         .attr("fill", d => d.fontColor ? d.fontColor : "white")
         .attr("font-size" ,d => d.fontSize ? d.fontSize : 12);
   

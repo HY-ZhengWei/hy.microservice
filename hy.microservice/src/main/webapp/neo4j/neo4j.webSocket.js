@@ -37,7 +37,12 @@ function webSocketInit()
         let v_MData = JSON.parse(event.data);
         if ( v_MData.hasOwnProperty("sourceID") && v_MData.sourceID )
         {
-            lineAnimation(v_MData.sourceID ,v_MData.targetID ,v_MData.sourceTotal ,v_MData.targetTotal ,v_MData.type);
+            lineAnimation(v_MData.sourceID 
+                         ,v_MData.targetID 
+                         ,v_MData.sourceTotal 
+                         ,v_MData.targetTotal 
+                         ,v_MData.operation 
+                         ,v_MData.stType);
         }
         
         if ( v_MData.hasOwnProperty("objectTotal") && v_MData.objectTotal )
@@ -82,7 +87,7 @@ function reconnect()
         //给服务器发送请求，如果发送成功，则说明服务器启动了，那么就关闭websocket连接，刷新页面
         $.ajax({
             url: v_Url,
-            type:'POST',
+            type:'GET',
             async:false,
             success:function(data) {    //成功回调函数
                 closeWebSocket();
@@ -123,9 +128,10 @@ function send(message)
   * @param i_TargetID     目标ID
   * @param i_SourceTotal  源ID对象的统计数量
   * @param i_TargetTotal  目标ID对象的统计数量
-  * @param i_Type         操作类型
+  * @param i_Operation    操作类型
+  * @param i_STType       源端到目标端的类型
   */
-function lineAnimation(i_SourceID ,i_TargetID ,i_SourceTotal ,i_TargetTotal ,i_Type)
+function lineAnimation(i_SourceID ,i_TargetID ,i_SourceTotal ,i_TargetTotal ,i_Operation ,i_STType)
 {
     let v_SVG         = d3.select("body").select("svg");
     let v_LineID      = "line_" + i_SourceID + "_t_" + i_TargetID;
@@ -135,7 +141,6 @@ function lineAnimation(i_SourceID ,i_TargetID ,i_SourceTotal ,i_TargetTotal ,i_T
     let v_SourceLabel = v_SVG.select("#label_" + i_SourceID);
     let v_TargetLabel = v_SVG.select("#label_" + i_TargetID);
     
-    console.log(i_Type);
     if ( !v_Line )
     {
         return;
@@ -146,13 +151,13 @@ function lineAnimation(i_SourceID ,i_TargetID ,i_SourceTotal ,i_TargetTotal ,i_T
     v_LineAnimation.append("circle")
         .attr("r", v_Line.attr("stroke-width"))
         .attr("stroke", v_SourceNode.attr("stroke"))
-        .attr("fill",   i_Type == "create" ? "green" : (i_Type == "update" ? "orange" : "red"))
+        .attr("fill",   i_Operation == "create" ? "green" : (i_Operation == "update" ? "orange" : "red"))
         .attr("cx",     v_Line.attr("x1"))
         .attr("cy",     v_Line.attr("y1"))
         .transition()
         .duration(v_TimeLen)
         .attr("stroke", v_TargetNode.attr("stroke"))
-        .attr("fill",   i_Type == "create" ? "green" : (i_Type == "update" ? "orange" : "red"))
+        .attr("fill",   i_Operation == "create" ? "green" : (i_Operation == "update" ? "orange" : "red"))
         .attr("cx",     v_Line.attr("x2"))
         .attr("cy",     v_Line.attr("y2"))
         .remove();
