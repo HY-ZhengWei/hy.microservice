@@ -79,7 +79,7 @@ d3.json("neo4j.cdc.json")
         .data(nodes)
         .join("circle")
         .attr("id" ,d => "node_" + d.id)
-        .attr("r", d => d.size)
+        .attr("r", d => d.size / 2)
         .attr("stroke", d => d.lineColor ? d.lineColor : "white")
         .attr("fill", d => d.bgColor ? d.bgColor : color(d.group));
         
