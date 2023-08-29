@@ -62,13 +62,13 @@ public class OperationLogCache
     @Xjava
     private IOperationLogDAO  operationLogDAO;
     
-    private int               saveLogsFlag;
+    private int               isRunning;
     
     
     
     public OperationLogCache()
     {
-        this.saveLogsFlag = 0;
+        this.isRunning = 0;
     }
     
     
@@ -108,13 +108,13 @@ public class OperationLogCache
     {
         synchronized (this)
         {
-            if ( this.saveLogsFlag >= 1 )
+            if ( this.isRunning >= 1 )
             {
                 return;
             }
             else
             {
-                this.saveLogsFlag = 1;
+                this.isRunning = 1;
             }
         }
         
@@ -169,7 +169,7 @@ public class OperationLogCache
         }
         finally
         {
-            this.saveLogsFlag = 0;
+            this.isRunning = 0;
         }
     }
     
