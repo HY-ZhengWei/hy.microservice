@@ -49,6 +49,7 @@ import org.hy.microservice.common.operationLog.OperationLog;
  *              v3.0  2023-08-11  添加：延时单线程队列周期性的处理日志的持久化
  *              v4.0  2023-08-16  添加：Web请求接口 @XRequest 的事件监监听器接口，支持它接口的日志、黑白名单等功能
  *                                修正：小概率未记录 "访问量达到上限" 的日志
+ *              v5.0  2023-09-01  添加：没有配置 @RequestMapping(name) 的方法不记录访问日志
  */
 @WebFilter(filterName="logFilter" ,urlPatterns="/*" ,initParams={
         @WebInitParam(name="exclusions" ,value="*.js,*.gif,*.jpg,*.png,*.css,*.ico,*.swf")
