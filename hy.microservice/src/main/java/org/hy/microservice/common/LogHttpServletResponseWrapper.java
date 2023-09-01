@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.WriteListener;
@@ -38,7 +39,7 @@ public class LogHttpServletResponseWrapper extends HttpServletResponseWrapper
         super(i_Response);
         this.buffer = new ByteArrayOutputStream();      // 真正存储数据的流
         this.out    = new WapperedOutputStream(this.buffer);
-        this.writer = new PrintWriter(new OutputStreamWriter(this.buffer ,this.getCharacterEncoding()));
+        this.writer = new PrintWriter(new OutputStreamWriter(this.buffer ,Charset.forName("UTF-8")));
     }
 
 
