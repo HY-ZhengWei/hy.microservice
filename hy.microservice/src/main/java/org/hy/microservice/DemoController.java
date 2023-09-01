@@ -70,7 +70,7 @@ public class DemoController extends BaseController
         }
         
         // 跳转页面为：classpath:/pages/demo/demo_01.ftl
-        return "/demo/demo_01";
+        return "/common/demo/demo_01";
     }
     
     
@@ -93,7 +93,7 @@ public class DemoController extends BaseController
         System.out.println(i_User.getUserName());
         
         // 跳转页面为：classpath:/pages/demo/demo_02.ftl
-        return "/demo/demo_02";
+        return "/common/demo/demo_02";
     }
     
     
@@ -123,7 +123,7 @@ public class DemoController extends BaseController
         io_Model.put("data" ,v_New);             // 响应页面返回传参
         
         // 跳转页面为：classpath:/pages/demo/demo_03.ftl
-        return "/demo/demo_03";
+        return "/common/demo/demo_03";
     }
     
     
@@ -153,7 +153,7 @@ public class DemoController extends BaseController
         io_Model.put("data" ,v_New);              // 响应页面返回传参
         
         // 跳转页面为：classpath:/pages/demo/demo_ajax.ftl
-        return "/demo/demo_ajax";
+        return "/common/demo/demo_ajax";
     }
     
     

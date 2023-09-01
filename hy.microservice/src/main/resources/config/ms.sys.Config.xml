@@ -93,6 +93,14 @@
             </item>
             
             
+            <item id="MS_Common_Freemarker_TemplateLoaderPath">
+                <name>MS_Common_Freemarker_TemplateLoaderPath</name>
+                <value>/pages/</value>
+                <comment>Freemarker模板页面的顶级路径（*.ftl的路径）</comment>
+                <onlyRead>false</onlyRead>
+            </item>
+            
+            
             
             <item id="MS_Common_TPool_MaxThread">
                 <name>MS_Common_TPool_MaxThread</name>

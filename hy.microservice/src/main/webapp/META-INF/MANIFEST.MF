@@ -1,6 +1,6 @@
-Manifest-Version: 1.3.4
+Manifest-Version: 1.3.5
 Created-By: HY.ZhengWei@qq.com  2023-05
-Specification-Version: 1.3.4  2023-09-01
+Specification-Version: 1.3.5  2023-09-01
 SourceCode: https://github.com/HY-ZhengWei/hy.microservice
 SourceCodeChina: https://gitee.com/HY-ZhengWei/hy.microservice
 Build-JDK: 11
