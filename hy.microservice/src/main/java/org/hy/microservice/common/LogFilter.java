@@ -320,7 +320,15 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         String    v_Url  = ((HttpServletRequest) i_ServletRequest).getServletPath();
         String [] v_Urls = v_Url.split("/");
         
+        // 分析中心、静态资源，不记录访问日志
         if ( StringHelp.isContains(v_Url ,"analyse" ,".") || v_Urls.length < 3 )
+        {
+            i_FilterChain.doFilter(i_ServletRequest ,i_ServletResponse);
+            return;
+        }
+        
+        // 没有配置 @RequestMapping(name) 的方法不记录访问日志
+        if ( ProjectStartBase.$RequestMappingMethods.getRow(v_Urls[1] ,v_Url) == null )
         {
             i_FilterChain.doFilter(i_ServletRequest ,i_ServletResponse);
             return;
@@ -398,13 +406,14 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         }
         
         this.operationLogService.insert(v_OLog);
+        
         super.doFilter(v_Request ,v_Response ,i_FilterChain);
         // 原始的方式 i_FilterChain.doFilter(v_Request ,v_Response);
         
         try
         {
             byte [] v_ResponseBody = v_Response.getResponseData();
-            v_OLog.setUrlResponse(new String(v_ResponseBody));
+            v_OLog.setUrlResponse(new String(v_ResponseBody ,"UTF-8"));
             v_OLog.setResponseTime(Date.getNowTime().getTime());
             v_OLog.setTimeLen(v_OLog.getResponseTime() - v_OLog.getRequestTime());
             
@@ -461,19 +470,20 @@ public class LogFilter extends XSQLFilter implements XRequestListener
      * @param i_Response     响应对象
      * @param io_RequestData 请求数据
      * @param i_Message      请求数据的原始报文
-	 * @return               当返回 false 时，中断 "执行"。
-	 *                       当返回 true  时，执行接口调用
-	 */
-	public Return<Object> before(HttpServletRequest  i_Request
-			                    ,HttpServletResponse i_Response 
-			                    ,AppMessage<?>       io_RequestData 
-			                    ,String              i_Message)
-	{
-		Return<Object> v_Ret    = new Return<Object>(true);
-		OperationLog   v_OLog   = new OperationLog();
-		String         v_UserID = Help.NVL(i_Request.getParameter("userID") ,i_Request.getParameter("createUserID"));
-		
-		v_OLog.setCreateTime(new Date());
+     * @return               当返回 false 时，中断 "执行"。
+     *                       当返回 true  时，执行接口调用
+     */
+    @Override
+    public Return<Object> before(HttpServletRequest  i_Request
+                                ,HttpServletResponse i_Response
+                                ,AppMessage<?>       io_RequestData
+                                ,String              i_Message)
+    {
+        Return<Object> v_Ret    = new Return<Object>(true);
+        OperationLog   v_OLog   = new OperationLog();
+        String         v_UserID = Help.NVL(i_Request.getParameter("userID") ,i_Request.getParameter("createUserID"));
+        
+        v_OLog.setCreateTime(new Date());
         v_OLog.setId(StringHelp.getUUID());
         v_OLog.setUrl("/app/" + io_RequestData.getSid());
         v_OLog.setUrlRequest(i_Request.getQueryString());
@@ -482,7 +492,7 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         v_OLog.setSystemCode(this.systemCode);
         v_OLog.setModuleCode("/app");
         v_OLog.setUserID(Help.NVL(v_UserID ,Help.NVL(io_RequestData.getSession())));
-		
+        
         this.backWhiteCheck(v_OLog);
         
         // 阻止访问
@@ -490,7 +500,7 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         {
             v_Ret.set(false).setParamStr(v_OLog.getUrlResponse());
         }
-	    // 访问量达到上限
+        // 访问量达到上限
         else if ( !this.allowUseAPIMinute(v_OLog.getUrl()) )
         {
             v_OLog.setUrlResponse("访问量达到上限");
@@ -506,12 +516,12 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         }
         
         this.operationLogService.insert(v_OLog);
-		return v_Ret.setParamObj(v_OLog);
-	}
-	
-	
-	
-	/**
+        return v_Ret.setParamObj(v_OLog);
+    }
+    
+    
+    
+    /**
      * 执行成功后被触发。
      * 
      * @author      ZhengWei(HY)
@@ -521,36 +531,37 @@ public class LogFilter extends XSQLFilter implements XRequestListener
      * @param i_RequestData   请求数据
      * @param i_ResponseData  响应数据
      * @param i_Other         用户自定义的数据
-	 */
-	public void succeed(AppMessage<?> i_RequestData ,AppMessage<?> i_ResponseData ,Object i_Other)
-	{
-		OperationLog v_OLog = (OperationLog)i_Other;
-		
-		if ( i_ResponseData != null )
-		{
-			try
-			{
-				v_OLog.setUrlResponse(i_ResponseData.toString());
-			}
-			catch (Exception exce)
-			{
-				v_OLog.setUrlResponse(exce.toString());
-				$Logger.warn(exce);
-			}
-		}
-		else
-		{
-			v_OLog.setUrlResponse("");
-		}
+     */
+    @Override
+    public void succeed(AppMessage<?> i_RequestData ,AppMessage<?> i_ResponseData ,Object i_Other)
+    {
+        OperationLog v_OLog = (OperationLog)i_Other;
+        
+        if ( i_ResponseData != null )
+        {
+            try
+            {
+                v_OLog.setUrlResponse(i_ResponseData.toString());
+            }
+            catch (Exception exce)
+            {
+                v_OLog.setUrlResponse(exce.toString());
+                $Logger.warn(exce);
+            }
+        }
+        else
+        {
+            v_OLog.setUrlResponse("");
+        }
         v_OLog.setResponseTime(Date.getNowTime().getTime());
         v_OLog.setTimeLen(v_OLog.getResponseTime() - v_OLog.getRequestTime());
-		v_OLog.setResultCode(BaseResponse.$Succeed);
-		this.operationLogService.update(v_OLog);
-	}
-	
-	
-	
-	/**
+        v_OLog.setResultCode(BaseResponse.$Succeed);
+        this.operationLogService.update(v_OLog);
+    }
+    
+    
+    
+    /**
      * 执行异常后被触发。
      * 
      * @author      ZhengWei(HY)
@@ -560,24 +571,25 @@ public class LogFilter extends XSQLFilter implements XRequestListener
      * @param i_RequestData   请求数据
      * @param i_Exception     异常数据
      * @param i_Other         用户自定义的数据
-	 */
-	public void fail(AppMessage<?> i_RequestData ,Exception i_Exception ,Object i_Other)
-	{
-		OperationLog v_OLog = (OperationLog)i_Other;
-		
-		if ( i_Exception != null )
-		{
-			v_OLog.setUrlResponse(i_Exception.toString());
-		}
-		else
-		{
-			v_OLog.setUrlResponse("");
-		}
+     */
+    @Override
+    public void fail(AppMessage<?> i_RequestData ,Exception i_Exception ,Object i_Other)
+    {
+        OperationLog v_OLog = (OperationLog)i_Other;
+        
+        if ( i_Exception != null )
+        {
+            v_OLog.setUrlResponse(i_Exception.toString());
+        }
+        else
+        {
+            v_OLog.setUrlResponse("");
+        }
         v_OLog.setResponseTime(Date.getNowTime().getTime());
         v_OLog.setTimeLen(v_OLog.getResponseTime() - v_OLog.getRequestTime());
-		v_OLog.setResultCode(i_RequestData.getRc());
-		this.operationLogService.update(v_OLog);
-	}
+        v_OLog.setResultCode(i_RequestData.getRc());
+        this.operationLogService.update(v_OLog);
+    }
 
 
 

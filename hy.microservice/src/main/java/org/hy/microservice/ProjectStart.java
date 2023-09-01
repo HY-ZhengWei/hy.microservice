@@ -145,5 +145,27 @@ public class ProjectStart extends SpringBootServletInitializer
     {
         return ProjectStartBase.analyseObjectServlet();
     }
-
+    
+    
+    
+    /**
+     * 设置匹配的请求后缀。不设置的话，后缀为空，也没有"点"。
+     *
+     * @author      ZhengWei(HY)
+     * @createDate  2022-10-25
+     * @version     v1.0
+     * 
+     * @param i_DispatcherServlet
+     * @return
+     */
+    /*
+    @Bean
+    public ServletRegistrationBean<DispatcherServlet> servletRegistrationBean(DispatcherServlet i_DispatcherServlet)
+    {
+        ServletRegistrationBean<DispatcherServlet> v_Bean = new ServletRegistrationBean<DispatcherServlet>(i_DispatcherServlet);
+        v_Bean.addUrlMappings("*.page");
+        return v_Bean;
+    }
+    */
+    
 }

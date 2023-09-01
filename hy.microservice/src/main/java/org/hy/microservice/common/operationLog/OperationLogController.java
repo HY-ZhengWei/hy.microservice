@@ -1,6 +1,7 @@
 package org.hy.microservice.common.operationLog;
 
 import java.util.List;
+import java.util.Map;
 
 import org.hy.common.Help;
 import org.hy.common.app.Param;
@@ -235,11 +236,11 @@ public class OperationLogController extends BaseController
             }
             else
             {
-                List<OperationLogApi> v_Apis = ProjectStartBase.$RequestMappingMethods.get(i_OperationLog.getModuleCode());
+                Map<String ,OperationLogApi> v_Apis = ProjectStartBase.$RequestMappingMethods.get(i_OperationLog.getModuleCode());
                 if ( !Help.isNull(v_Apis) )
                 {
                     v_Count = ProjectStartBase.$RequestMappingMethods.get(i_OperationLog.getModuleCode()).size();
-                    return v_RetResp.setData(ProjectStartBase.$RequestMappingMethods.get(i_OperationLog.getModuleCode())).setDataCount(v_Count);
+                    return v_RetResp.setData(Help.toList(ProjectStartBase.$RequestMappingMethods.get(i_OperationLog.getModuleCode()))).setDataCount(v_Count);
                 }
                 else
                 {

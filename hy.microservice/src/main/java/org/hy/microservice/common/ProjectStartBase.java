@@ -5,9 +5,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hy.common.Help;
-import org.hy.common.PartitionMap;
 import org.hy.common.StringHelp;
-import org.hy.common.TablePartition;
+import org.hy.common.TablePartitionRID;
 import org.hy.common.xml.XJava;
 import org.hy.common.xml.plugins.AppBaseServlet;
 import org.hy.common.xml.plugins.XJavaSpringAnnotationConfigServletWebServerApplicationContext;
@@ -42,9 +41,15 @@ import com.google.common.collect.ImmutableMap;
  */
 public class ProjectStartBase
 {
-    public static final Map<String ,OperationLogModule>       $RequestMappingModules = new HashMap<String ,OperationLogModule>();
+    /** 系统模块的集合。Map.key 为模块编码，即配置了 @RequestMapping(value="模块编码" ,name="模块名称") name属性的映射类 */
+    public static final Map<String ,OperationLogModule>            $RequestMappingModules = new HashMap<String ,OperationLogModule>();
     
-    public static final PartitionMap<String ,OperationLogApi> $RequestMappingMethods = new TablePartition<String ,OperationLogApi>();
+    /**
+     * 系统接口的集合。
+     * Map.分区 为模块编码，即配置了 @RequestMapping(value="接口编码" ,name="接口名称") name属性的映射方法
+     * Map.key  为/模块编码/接口编码，即 URL访问路径
+     **/
+    public static final TablePartitionRID<String ,OperationLogApi> $RequestMappingMethods = new TablePartitionRID<String ,OperationLogApi>();
     
     
     
@@ -116,7 +121,7 @@ public class ProjectStartBase
                 v_OApi.setUrl(v_Pattern);
                 v_OApi.setUrlName(v_Names[1]);
                 
-                $RequestMappingMethods.putRow(v_OApi.getModuleCode() ,v_OApi);
+                $RequestMappingMethods.putRow(v_OApi.getModuleCode() ,v_OApi.getUrl() ,v_OApi);
             }
         });
 
