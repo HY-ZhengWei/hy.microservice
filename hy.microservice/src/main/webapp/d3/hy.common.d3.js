@@ -2,7 +2,7 @@
 var v_HtmlX    = 0;
 var v_HtmlY    = 0;
 var v_HtmlDrag = d3.drag()
-.on("start" ,function()
+.on("start" ,function(event)
 { 
 	v_HtmlX = d3.select(this).style("left").replace('px' ,'');
 	v_HtmlY = d3.select(this).style("top") .replace('px' ,'');
@@ -19,14 +19,14 @@ var v_HtmlDrag = d3.drag()
 		v_HtmlY = document.body.clientHeight * v_HtmlY.replace('%' ,'') / 100;
 	}
 	
-	v_HtmlX = d3.event.x - v_HtmlX;
-	v_HtmlY = d3.event.y - v_HtmlY;
+	v_HtmlX = event.x - v_HtmlX;
+	v_HtmlY = event.y - v_HtmlY;
 })
-.on("drag", function()
+.on("drag", function(event)
 {
 	d3.select(this)
-	.style("left", (d3.event.x - v_HtmlX) + "px")
-	.style("top" , (d3.event.y - v_HtmlY) + "px");                    
+	.style("left", (event.x - v_HtmlX) + "px")
+	.style("top" , (event.y - v_HtmlY) + "px");                    
 });
 
 
