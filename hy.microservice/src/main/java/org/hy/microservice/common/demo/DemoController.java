@@ -1,4 +1,4 @@
-package org.hy.microservice;
+package org.hy.microservice.common.demo;
 
 import java.util.HashMap;
 import java.util.Map;
