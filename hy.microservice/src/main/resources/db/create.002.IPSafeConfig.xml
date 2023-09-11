@@ -23,7 +23,7 @@
                 ,ip                         VARCHAR2(128)  NOT NULL
                 ,moduleCode                 VARCHAR2(64)
                 ,url                        VARCHAR2(256)
-                ,comment                    VARCHAR2(4000)
+                ,"COMMENT"                  VARCHAR2(4000)
                 ,isDel                      NUMBER(1)      NOT NULL
                 ,createUserID               VARCHAR(64)    NOT NULL
                 ,createTime                 DATE           NOT NULL
@@ -38,7 +38,7 @@
                 COMMENT ON COLUMN TIPSafeConfig.ip                 IS 'IP地址';/
                 COMMENT ON COLUMN TIPSafeConfig.moduleCode         IS '接口模块编号';/
                 COMMENT ON COLUMN TIPSafeConfig.url                IS '接口URL地址';/
-                COMMENT ON COLUMN TIPSafeConfig.comment            IS '备注说明';/
+                COMMENT ON COLUMN TIPSafeConfig."COMMENT"          IS '备注说明';/
                 COMMENT ON COLUMN TIPSafeConfig.isDel              IS '删除标记。1删除；0未删除';/
                 COMMENT ON COLUMN TIPSafeConfig.createUserID       IS '数据创建人ID';/
                 COMMENT ON COLUMN TIPSafeConfig.createTime         IS '创建时间';/

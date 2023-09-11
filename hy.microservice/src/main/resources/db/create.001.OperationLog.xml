@@ -36,9 +36,9 @@
                 );/
                 
                 ALTER TABLE TOperationLog ADD CONSTRAINT PK_OperationLog PRIMARY KEY (id);/
-                CREATE INDEX IDX_TOperationLog_Url          USING BTREE ON TOperationLog (systemCode ,moduleCode ,url);/
-                CREATE INDEX IDX_TOperationLog_ResultCode   USING BTREE ON TOperationLog (resultCode);/
-                CREATE INDEX IDX_TOperationLog_CreateTime   USING BTREE ON TOperationLog (createTime);/
+                CREATE INDEX IDX_TOperationLog_Url        ON TOperationLog (systemCode ,moduleCode ,url);/
+                CREATE INDEX IDX_TOperationLog_ResultCode ON TOperationLog (resultCode);/
+                CREATE INDEX IDX_TOperationLog_CreateTime ON TOperationLog (createTime);/
                 
                 COMMENT ON TABLE  TOperationLog                    IS '系统操作日志';/
                 COMMENT ON COLUMN TOperationLog.id                 IS '主键';/
