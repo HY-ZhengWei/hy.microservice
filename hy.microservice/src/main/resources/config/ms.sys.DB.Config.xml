@@ -24,6 +24,7 @@
             <timeBetweenEvictionRunsMillis>60000</timeBetweenEvictionRunsMillis>
             <minEvictableIdleTimeMillis>300000</minEvictableIdleTimeMillis>
             <validationQuery>SELECT 1</validationQuery>
+            <validationQuery if="oracle.jdbc.OracleDriver == this.getDriverClassName">SELECT 1 FROM DUAL</validationQuery>
             <testWhileIdle>true</testWhileIdle>
             <testOnBorrow>false</testOnBorrow>
             <testOnReturn>false</testOnReturn>
