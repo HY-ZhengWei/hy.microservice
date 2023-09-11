@@ -14,7 +14,24 @@
         
             <dataSourceGroup ref="DSG_MS_Common" />
             
-            <content>
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT INTO TUpgrade20230808 (id,createTime) VALUES ('黑白名单支持接口及接口模块的监控' ,SYSDATE);/
+                
+                ALTER TABLE TIPSafeConfig ADD    moduleCode VARCHAR2(64);/
+                ALTER TABLE TIPSafeConfig ADD    url        VARCHAR2(256);/
+                
+                ALTER TABLE TOperationLog MODIFY url        VARCHAR2(256);/
+                
+                COMMENT ON COLUMN TIPSafeConfig.moduleCode IS '接口模块编号';/
+                COMMENT ON COLUMN TIPSafeConfig.url        IS '接口URL地址';/
+                COMMENT ON COLUMN TOperationLog.url        IS '操作的URL地址';/
+                
+                UPDATE TUpgrade20230808 SET updateTime = SYSDATE WHERE id = '黑白名单支持接口及接口模块的监控';/
+                ]]>
+            </content>
+            
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 INSERT INTO TUpgrade20230808 (id,createTime) VALUES ('黑白名单支持接口及接口模块的监控' ,NOW());/
                 
@@ -37,7 +54,25 @@
         
             <dataSourceGroup ref="DSG_MS_Common" />
             
-            <content>
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TUpgrade20230808
+                (
+                 id                         VARCHAR2(64)   NOT NULL
+                ,createTime                 DATE           NOT NULL
+                ,updateTime                 DATE
+                );/
+                
+                ALTER TABLE TUpgrade20230808 ADD CONSTRAINT PK_TUpgrade20230808 PRIMARY KEY (id);/
+                
+                COMMENT ON TABLE  TUpgrade20230808                    IS '2023-08-08升级版本';/
+                COMMENT ON COLUMN TUpgrade20230808.id                 IS '主键';/
+                COMMENT ON COLUMN TUpgrade20230808.createTime         IS '创建时间';/
+                COMMENT ON COLUMN TUpgrade20230808.updateTime         IS '修改时间';/
+                ]]>
+            </content>
+            
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 CREATE TABLE TUpgrade20230808
                 (

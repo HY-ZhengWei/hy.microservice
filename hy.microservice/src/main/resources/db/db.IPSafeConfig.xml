@@ -15,7 +15,37 @@
         
             <dataSourceGroup ref="DSG_MS_Common" />
             
-            <content>
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT  INTO TIPSafeConfig
+                       (
+                         id          
+                        ,ipType      
+                        ,ip
+                        ,moduleCode
+                        ,url
+                        ,comment     
+                        ,isDel       
+                        ,createUserID
+                        ,createTime  
+                        ,updateTime  
+                       )
+                VALUES (
+                         ':id'
+                        ,':ipType'
+                        ,':ip'
+                        ,':moduleCode'
+                        ,':url'
+                        ,':comment'
+                        ,':isDel'
+                        ,':createUserID'
+                        ,SYSDATE
+                        ,SYSDATE
+                       )
+                ]]>
+            </content>
+            
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 INSERT  INTO TIPSafeConfig
                        (
@@ -53,7 +83,21 @@
         
             <dataSourceGroup ref="DSG_MS_Common" />
             
-            <content>
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                UPDATE  TIPSafeConfig
+                   SET  updateTime = SYSDATE
+              <[       ,ipType     = ':ipType'      ]>
+              <[       ,ip         = ':ip'          ]>
+              <[       ,moduleCode = ':moduleCode'  ]>
+              <[       ,url        = ':url'         ]>
+              <[       ,comment    = ':comment'     ]>
+              <[       ,isDel      = ':isDel'       ]>
+                 WHERE  id         = ':id'
+                ]]>
+            </content>
+            
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 UPDATE  TIPSafeConfig
                    SET  updateTime = NOW()

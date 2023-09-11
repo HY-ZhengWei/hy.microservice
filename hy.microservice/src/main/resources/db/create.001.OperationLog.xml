@@ -14,7 +14,59 @@
         
             <dataSourceGroup ref="DSG_MS_Common" />
             
-            <content>
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TOperationLog
+                (
+                 id                         VARCHAR2(64)   NOT NULL
+                ,systemCode                 VARCHAR2(64)   NOT NULL
+                ,moduleCode                 VARCHAR2(64)   NOT NULL
+                ,url                        VARCHAR2(256)  NOT NULL
+                ,urlRequest                 VARCHAR2(4000)
+                ,urlRequestBody             VARCHAR2(4000)
+                ,urlResponse                VARCHAR2(4000)
+                ,resultCode                 VARCHAR2(64)
+                ,userID                     VARCHAR2(64)   NOT NULL
+                ,userIP                     VARCHAR2(64)   NOT NULL
+                ,requestTime                NUMBER(15)     NOT NULL
+                ,responseTime               NUMBER(15)
+                ,timeLen                    NUMBER(15)
+                ,attackType                 VARCHAR2(64)
+                ,createTime                 DATE
+                );/
+                
+                ALTER TABLE TOperationLog ADD CONSTRAINT PK_OperationLog PRIMARY KEY (id);/
+                CREATE INDEX IDX_TOperationLog_Url          USING BTREE ON TOperationLog (systemCode ,moduleCode ,url);/
+                CREATE INDEX IDX_TOperationLog_ResultCode   USING BTREE ON TOperationLog (resultCode);/
+                CREATE INDEX IDX_TOperationLog_CreateTime   USING BTREE ON TOperationLog (createTime);/
+                
+                COMMENT ON TABLE  TOperationLog                    IS '系统操作日志';/
+                COMMENT ON COLUMN TOperationLog.id                 IS '主键';/
+                COMMENT ON COLUMN TOperationLog.systemCode         IS '系统编号';/ 
+                COMMENT ON COLUMN TOperationLog.moduleCode         IS '模块编号';/
+                COMMENT ON COLUMN TOperationLog.url                IS '操作的URL地址';/
+                COMMENT ON COLUMN TOperationLog.urlRequest         IS '操作的请求参数';/
+                COMMENT ON COLUMN TOperationLog.urlRequestBody     IS '操作的请求体数据';/
+                COMMENT ON COLUMN TOperationLog.urlResponse        IS '操作的响应信息';/
+                COMMENT ON COLUMN TOperationLog.resultCode         IS '操作的响应结果编号';/
+                COMMENT ON COLUMN TOperationLog.userID             IS '操作人ID';/
+                COMMENT ON COLUMN TOperationLog.userIP             IS '操作人IP地址';/
+                COMMENT ON COLUMN TOperationLog.requestTime        IS '请求时间';/
+                COMMENT ON COLUMN TOperationLog.responseTime       IS '响应时间';/
+                COMMENT ON COLUMN TOperationLog.timeLen            IS '操作时长（单位：毫秒）';/
+                COMMENT ON COLUMN TOperationLog.attackType         IS '攻击类型';/
+                COMMENT ON COLUMN TOperationLog.createTime         IS '数据库的创建时间';/
+                
+                CREATE TABLE TUpgrade20230526
+                (
+                 id                         VARCHAR2(64)   NOT NULL
+                ,createTime                 DATE           NOT NULL
+                ,updateTime                 DATE
+                );/
+                ]]>
+            </content>
+        
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 CREATE TABLE TOperationLog
                 (

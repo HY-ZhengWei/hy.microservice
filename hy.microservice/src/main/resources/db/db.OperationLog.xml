@@ -86,7 +86,38 @@
             
             <dataSourceGroup ref="DSG_MS_Common" />
             
-            <content>
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT   id
+                        ,systemCode
+                        ,moduleCode
+                        ,url
+                        ,urlRequest
+                        ,urlRequestBody
+                        ,urlResponse
+                        ,resultCode
+                        ,userID
+                        ,userIP
+                        ,requestTime
+                        ,responseTime
+                        ,timeLen
+                        ,createTime
+                        ,attackType
+                  FROM  TOperationLog
+                 WHERE  createTime >= SYSDATE - 10
+                   AND  userID      = ':userID'          
+              <[   AND  userIP      = ':userIP'            ]>
+              <[   AND  systemCode  = ':systemCode'        ]>
+              <[   AND  moduleCode  = ':moduleCode'        ]>
+              <[   AND  url         = ':url'               ]>
+              <[   AND  resultCode  = ':resultCode'        ]>
+              <[   AND  createTime >= ':createTime'        ]>
+              <[   AND  timeLen    >= ':timeLen'           ]>
+                 ORDER  BY createTime DESC
+                ]]>
+            </content>
+            
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 SELECT   id
                         ,systemCode

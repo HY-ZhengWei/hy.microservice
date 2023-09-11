@@ -14,7 +14,46 @@
         
             <dataSourceGroup ref="DSG_MS_Common" />
             
-            <content>
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TIPSafeConfig
+                (
+                 id                         VARCHAR2(64)   NOT NULL
+                ,ipType                     VARCHAR2(64)   NOT NULL
+                ,ip                         VARCHAR2(128)  NOT NULL
+                ,moduleCode                 VARCHAR2(64)
+                ,url                        VARCHAR2(256)
+                ,comment                    VARCHAR2(4000)
+                ,isDel                      NUMBER(1)      NOT NULL
+                ,createUserID               VARCHAR(64)    NOT NULL
+                ,createTime                 DATE           NOT NULL
+                ,updateTime                 DATE           NOT NULL
+                );/
+                
+                ALTER TABLE TIPSafeConfig ADD CONSTRAINT PK_IPSafeConfig PRIMARY KEY (id);/
+                
+                COMMENT ON TABLE  TIPSafeConfig                    IS '系统安全访问IP黑白名单';/
+                COMMENT ON COLUMN TIPSafeConfig.id                 IS '主键';/
+                COMMENT ON COLUMN TIPSafeConfig.ipType             IS 'IP类型';/
+                COMMENT ON COLUMN TIPSafeConfig.ip                 IS 'IP地址';/
+                COMMENT ON COLUMN TIPSafeConfig.moduleCode         IS '接口模块编号';/
+                COMMENT ON COLUMN TIPSafeConfig.url                IS '接口URL地址';/
+                COMMENT ON COLUMN TIPSafeConfig.comment            IS '备注说明';/
+                COMMENT ON COLUMN TIPSafeConfig.isDel              IS '删除标记。1删除；0未删除';/
+                COMMENT ON COLUMN TIPSafeConfig.createUserID       IS '数据创建人ID';/
+                COMMENT ON COLUMN TIPSafeConfig.createTime         IS '创建时间';/
+                COMMENT ON COLUMN TIPSafeConfig.updateTime         IS '修改时间';/
+                
+                CREATE TABLE TUpgrade20230808
+                (
+                 id                         VARCHAR2(64)   NOT NULL
+                ,createTime                 DATE          NOT NULL
+                ,updateTime                 DATE
+                );/
+                ]]>
+            </content>
+            
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 CREATE TABLE TIPSafeConfig
                 (

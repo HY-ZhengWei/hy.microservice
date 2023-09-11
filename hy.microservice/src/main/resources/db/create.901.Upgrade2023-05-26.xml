@@ -14,7 +14,18 @@
         
             <dataSourceGroup ref="DSG_MS_Common" />
             
-            <content>
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT INTO TUpgrade20230526 (id,createTime) VALUES ('攻击类型' ,SYSDATE);/
+                
+                ALTER TABLE TOperationLog ADD attackType VARCHAR2(64);/
+                COMMENT ON COLUMN TOperationLog.attackType IS '攻击类型';/
+                
+                UPDATE TUpgrade20230526 SET updateTime = SYSDATE WHERE id = '攻击类型';/
+                ]]>
+            </content>
+            
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 INSERT INTO TUpgrade20230526 (id,createTime) VALUES ('攻击类型' ,NOW());/
                 
@@ -34,7 +45,25 @@
         
             <dataSourceGroup ref="DSG_MS_Common" />
             
-            <content>
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TUpgrade20230526
+                (
+                 id                         VARCHAR2(64)   NOT NULL
+                ,createTime                 DATE           NOT NULL
+                ,updateTime                 DATE
+                );/
+                
+                ALTER TABLE TUpgrade20230526 ADD CONSTRAINT PK_TUpgrade20230526 PRIMARY KEY (id);/
+                
+                COMMENT ON TABLE  TUpgrade20230526                    IS '2023-05-26升级版本';/
+                COMMENT ON COLUMN TUpgrade20230526.id                 IS '主键';/
+                COMMENT ON COLUMN TUpgrade20230526.createTime         IS '创建时间';/
+                COMMENT ON COLUMN TUpgrade20230526.updateTime         IS '修改时间';/
+                ]]>
+            </content>
+            
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 CREATE TABLE TUpgrade20230526
                 (
