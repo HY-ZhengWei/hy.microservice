@@ -34,6 +34,11 @@
                 <value>db/</value>
             </item>
             
+            <!-- 加载数据库目录所有配置文件 -->
+            <item>
+                <value>dbGroup/</value>
+            </item>
+            
         </startupConfig>
         
     </xconfig>
