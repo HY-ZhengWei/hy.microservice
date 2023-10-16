@@ -71,6 +71,11 @@ public class ProjectStartBase
         i_Application.setApplicationContextFactory(ApplicationContextFactory.ofContextClass(XJavaSpringAnnotationConfigServletWebServerApplicationContext.class));
         
         WebApplicationContext v_WebAppContext = (WebApplicationContext) i_Application.run();
+        XJava.putObject("MS_Common_WebApplicationContext" ,v_WebAppContext);
+        
+        // RequestMappingHandlerMapping v_RequestMappingHandler = v_WebAppContext.getBean(RequestMappingHandlerMapping.class);
+        // RequestMappingInfo requestMappingInfo = RequestMappingInfo.paths("/lmcTest").methods(RequestMethod.GET).build();
+        // v_RequestMappingHandler.registerMapping(requestMappingInfo, "adapterController", AdapterController.class.getDeclaredMethod("myTest"));
         
         // 获取Spring所有RequestMapping类
         Map<String ,Object> v_Beans = v_WebAppContext.getBeansWithAnnotation(RequestMapping.class);
@@ -124,7 +129,7 @@ public class ProjectStartBase
                 $RequestMappingMethods.putRow(v_OApi.getModuleCode() ,v_OApi.getUrl() ,v_OApi);
             }
         });
-
+        
         return v_WebAppContext;
     }
     
