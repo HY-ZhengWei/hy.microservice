@@ -58,13 +58,16 @@ import org.hy.microservice.common.operationLog.OperationLog;
 })
 public class LogFilter extends XSQLFilter implements XRequestListener
 {
-    private static final Logger                      $Logger           = new Logger(LogFilter.class);
+    private static final Logger                      $Logger            = new Logger(LogFilter.class);
     
     /** 接口的时间分组统计（每分钟） */
-    private static final Map<String ,TimeGroupTotal> $APITotalMinute   = new HashMap<String ,TimeGroupTotal>();
+    private static final Map<String ,TimeGroupTotal> $APITotalMinute    = new HashMap<String ,TimeGroupTotal>();
     
     /** 接口的时间分组统计（每10分钟） */
-    private static final Map<String ,TimeGroupTotal> $APITotalMinute10 = new HashMap<String ,TimeGroupTotal>();
+    private static final Map<String ,TimeGroupTotal> $APITotalMinute10  = new HashMap<String ,TimeGroupTotal>();
+    
+    /** 字符集 */
+    public  static       String                      $CharacterEncoding = "UTF-8";
     
     
     
@@ -324,6 +327,7 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         // 分析中心、静态资源，不记录访问日志
         if ( StringHelp.isContains(v_Url ,"analyse" ,".") || v_Urls.length < 3 )
         {
+            i_ServletResponse.setCharacterEncoding($CharacterEncoding);
             i_FilterChain.doFilter(i_ServletRequest ,i_ServletResponse);
             return;
         }
@@ -374,7 +378,7 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         // 阻止访问
         if ( !Help.isNull(v_OLog.getUrlResponse()) )
         {
-            i_ServletResponse.setCharacterEncoding("UTF-8");
+            i_ServletResponse.setCharacterEncoding($CharacterEncoding);
             i_ServletResponse.setContentType("application/json");
             v_Output = i_ServletResponse.getOutputStream();
             v_Output.write(v_OLog.getUrlResponse().getBytes());
@@ -386,7 +390,7 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         {
             v_OLog.setUrlResponse("访问量达到上限");
             v_OLog.setAttackType("ApiUseMaxCountMinute");
-            i_ServletResponse.setCharacterEncoding("UTF-8");
+            i_ServletResponse.setCharacterEncoding($CharacterEncoding);
             i_ServletResponse.setContentType("application/json");
             v_Output = i_ServletResponse.getOutputStream();
             v_Output.write(v_OLog.getUrlResponse().getBytes());
@@ -398,7 +402,7 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         {
             v_OLog.setUrlResponse("访问量达到10分钟上限");
             v_OLog.setAttackType("ApiUseMaxCountMinute10");
-            i_ServletResponse.setCharacterEncoding("UTF-8");
+            i_ServletResponse.setCharacterEncoding($CharacterEncoding);
             i_ServletResponse.setContentType("application/json");
             v_Output = i_ServletResponse.getOutputStream();
             v_Output.write(v_OLog.getUrlResponse().getBytes());
@@ -414,7 +418,7 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         try
         {
             byte [] v_ResponseBody = v_Response.getResponseData();
-            v_OLog.setUrlResponse(new String(v_ResponseBody ,"UTF-8"));
+            v_OLog.setUrlResponse(new String(v_ResponseBody ,$CharacterEncoding));
             v_OLog.setResponseTime(Date.getNowTime().getTime());
             v_OLog.setTimeLen(v_OLog.getResponseTime() - v_OLog.getRequestTime());
             

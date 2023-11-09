@@ -3,6 +3,8 @@ package org.hy.microservice.common.operationLog;
 import java.io.Serializable;
 import java.util.List;
 
+import org.hy.common.Help;
+import org.hy.common.StringHelp;
 import org.hy.common.xml.annotation.Xjava;
 
 
@@ -44,6 +46,7 @@ public class OperationLogService implements IOperationLogService ,Serializable
     @Override
     public boolean insert(OperationLog i_OperationLog)
     {
+        i_OperationLog.setId(Help.NVL(i_OperationLog.getId() ,StringHelp.getUUID()));
         i_OperationLog.appendCacheToDBFlag(OperationLogCache.$C2DB_Append_Insert);
         this.operationLogCache.putLog(i_OperationLog);
         return true;
