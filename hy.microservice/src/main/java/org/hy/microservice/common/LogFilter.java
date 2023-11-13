@@ -349,7 +349,7 @@ public class LogFilter extends XSQLFilter implements XRequestListener
             {
                 XJSON        v_XJson = new XJSON();
                 BaseViewMode v_BMode = (BaseViewMode) v_XJson.toJava(v_Request.getBodyString() ,BaseViewMode.class);
-                v_OLog.setUserID(Help.NVL(v_BMode.getCreateUserID() ,v_BMode.getUserID()));
+                v_OLog.setUserID(Help.NVL(v_BMode.getUpdateUserID() ,Help.NVL(v_BMode.getCreateUserID() ,Help.NVL(v_BMode.getUserID()))));
             }
             else
             {
