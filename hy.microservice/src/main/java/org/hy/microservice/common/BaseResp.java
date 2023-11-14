@@ -13,6 +13,7 @@ import org.hy.common.xml.SerializableDef;
  * @author      ZhengWei(HY)
  * @createDate  2021-05-06
  * @version     v1.0
+ *              v2.0  添加：响应用时时长
  */
 public class BaseResp extends SerializableDef
 {
@@ -30,6 +31,9 @@ public class BaseResp extends SerializableDef
     
     /** 响应时间 */
     protected Date   respTime;
+    
+    /** 响应用时时长（单位：毫秒） */
+    private Long     respTimeLen;
     
     
     
@@ -102,6 +106,26 @@ public class BaseResp extends SerializableDef
     {
         this.respTime = respTime;
         return this;
+    }
+
+    
+    /**
+     * 获取：响应用时时长（单位：毫秒）
+     */
+    public Long getRespTimeLen()
+    {
+        return respTimeLen;
+    }
+
+    
+    /**
+     * 设置：响应用时时长（单位：毫秒）
+     * 
+     * @param i_RespTimeLen 响应用时时长（单位：毫秒）
+     */
+    public void setRespTimeLen(Long i_RespTimeLen)
+    {
+        this.respTimeLen = i_RespTimeLen;
     }
     
 }
