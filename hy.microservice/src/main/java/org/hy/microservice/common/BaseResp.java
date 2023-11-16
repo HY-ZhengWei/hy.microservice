@@ -123,9 +123,10 @@ public class BaseResp extends SerializableDef
      * 
      * @param i_RespTimeLen 响应用时时长（单位：毫秒）
      */
-    public void setRespTimeLen(Long i_RespTimeLen)
+    public BaseResp setRespTimeLen(Long i_RespTimeLen)
     {
         this.respTimeLen = i_RespTimeLen;
+        return this;
     }
     
 }
