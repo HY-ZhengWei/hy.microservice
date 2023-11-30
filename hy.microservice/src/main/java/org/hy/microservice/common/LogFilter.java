@@ -22,6 +22,7 @@ import org.hy.common.Help;
 import org.hy.common.Return;
 import org.hy.common.StringHelp;
 import org.hy.common.TimeGroupTotal;
+import org.hy.common.app.Param;
 import org.hy.common.xml.XJSON;
 import org.hy.common.xml.XJava;
 import org.hy.common.xml.event.XRequestListener;
@@ -50,6 +51,7 @@ import org.hy.microservice.common.operationLog.OperationLog;
  *              v4.0  2023-08-16  添加：Web请求接口 @XRequest 的事件监监听器接口，支持它接口的日志、黑白名单等功能
  *                                修正：小概率未记录 "访问量达到上限" 的日志
  *              v5.0  2023-09-01  添加：没有配置 @RequestMapping(name) 的方法不记录访问日志
+ *              v6.0  2023-11-30  添加：接口的个性化 "访问量达到上限" 的限制
  */
 @WebFilter(filterName="logFilter" ,urlPatterns="/*" ,initParams={
         @WebInitParam(name="exclusions" ,value="*.js,*.gif,*.jpg,*.png,*.css,*.ico,*.swf")
@@ -75,21 +77,33 @@ public class LogFilter extends XSQLFilter implements XRequestListener
     
     private IOperationLogService operationLogService;
     
+    /** 每个API接口每分钟最大允许的请求量（全体接口的默认值） */
     private long                 apiUseMaxCountMinute;
     
+    /** 每个API接口每10分钟最大允许的请求量（全体接口的默认值） */
     private long                 apiUseMaxCountMinute10;
     
+    /** 每个API接口每分钟最大允许的请求量（接口的个性化配置，当没有时用默认值） */
+    private Map<String ,Param>   apiUseMaxCountMinuteMap;
+    
+    /** 每个API接口每10分钟最大允许的请求量（接口的个性化配置，当没有时用默认值） */
+    private Map<String ,Param>   apiUseMaxCountMinute10Map;
+    
+    /** 服务名称，产品运维时使用 */
     private String               systemCode;
     
     
     
+    @SuppressWarnings("unchecked")
     public LogFilter()
     {
-        this.ipSafeConfigService    = (IIPSafeConfigService) XJava.getObject("IPSafeConfigService");
-        this.operationLogService    = (IOperationLogService) XJava.getObject("OperationLogService");
-        this.apiUseMaxCountMinute   = Long.valueOf(XJava.getParam("MS_Common_ApiUseMaxCountMinute").getValue());
-        this.apiUseMaxCountMinute10 = Long.valueOf(XJava.getParam("MS_Common_ApiUseMaxCountMinute10").getValue());
-        this.systemCode             = XJava.getParam("MS_Common_ServiceName").getValue();
+        this.ipSafeConfigService       = (IIPSafeConfigService) XJava.getObject("IPSafeConfigService");
+        this.operationLogService       = (IOperationLogService) XJava.getObject("OperationLogService");
+        this.apiUseMaxCountMinute      = Long.valueOf(XJava.getParam("MS_Common_ApiUseMaxCountMinute").getValue());
+        this.apiUseMaxCountMinute10    = Long.valueOf(XJava.getParam("MS_Common_ApiUseMaxCountMinute10").getValue());
+        this.apiUseMaxCountMinuteMap   = (Map<String ,Param>) XJava.getObject("MS_Common_ApiUseMaxCountMinuteMap");
+        this.apiUseMaxCountMinute10Map = (Map<String ,Param>) XJava.getObject("MS_Common_ApiUseMaxCountMinute10Map");
+        this.systemCode                = XJava.getParam("MS_Common_ServiceName").getValue();
         
         AppInterfaces.setListener(this);
     }
@@ -122,7 +136,17 @@ public class LogFilter extends XSQLFilter implements XRequestListener
             Long v_TimeCount = v_APITimeTotal.get(v_Now);
             if ( v_TimeCount != null )
             {
-                if ( v_TimeCount > this.apiUseMaxCountMinute )
+                Long v_MaxCount = this.apiUseMaxCountMinute;
+                if ( !Help.isNull(this.apiUseMaxCountMinuteMap) )
+                {
+                    Param v_MyMaxCount = this.apiUseMaxCountMinuteMap.get(i_APIUrl);
+                    if ( v_MyMaxCount != null )
+                    {
+                        v_MaxCount = v_MyMaxCount.getValueLong();
+                    }
+                }
+                
+                if ( v_TimeCount > v_MaxCount && v_MaxCount > 0 )
                 {
                     return false;
                 }
@@ -161,7 +185,17 @@ public class LogFilter extends XSQLFilter implements XRequestListener
             Long v_TimeCount = v_APITimeTotal.get(v_Now);
             if ( v_TimeCount != null )
             {
-                if ( v_TimeCount > this.apiUseMaxCountMinute10 )
+                Long v_MaxCount = this.apiUseMaxCountMinute10;
+                if ( !Help.isNull(this.apiUseMaxCountMinute10Map) )
+                {
+                    Param v_MyMaxCount = this.apiUseMaxCountMinute10Map.get(i_APIUrl);
+                    if ( v_MyMaxCount != null )
+                    {
+                        v_MaxCount = v_MyMaxCount.getValueLong();
+                    }
+                }
+                
+                if ( v_TimeCount > v_MaxCount && v_MaxCount > 0 )
                 {
                     return false;
                 }

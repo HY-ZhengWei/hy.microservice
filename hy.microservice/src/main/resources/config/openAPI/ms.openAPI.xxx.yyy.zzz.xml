@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="xconfig"         class="java.util.ArrayList" />
+    <import name="openapis"        class="java.util.Hashtable" />
+    <import name="openapi"         class="org.hy.common.app.Param" />
+    
+    
+    
+    <!-- 配置接口的最大允许的请求量 -->
+    <!-- 接口路径，如 /message/sendMQ 。接口路径不包含服务名称 -->
+    <!-- valueLong = 0 表示不限制访问量 -->
+    <xconfig>
+
+        <!-- 每分钟最大允许的请求量。当没有对接口个性化配置时，默认使用 ms.sys.Config.xml 中的默认值 -->
+        <openapis id="MS_Common_ApiUseMaxCountMinuteMap" this="MS_Common_ApiUseMaxCountMinuteMap" key="name">
+            
+            <openapi>
+                <name>接口路径</name>
+                <valueLong>0</valueLong>
+            </openapi>
+            
+        </openapis>
+        
+        
+        
+        <!-- 每10分钟最大允许的请求量。当没有对接口个性化配置时，默认使用 ms.sys.Config.xml 中的默认值 -->
+        <openapis id="MS_Common_ApiUseMaxCountMinute10Map" this="MS_Common_ApiUseMaxCountMinute10Map" key="name">
+            
+            <openapi>
+                <name>接口路径</name>
+                <value>0</value>
+            </openapi>
+            
+        </openapis>
+        
+    </xconfig>
+    
+</config>
