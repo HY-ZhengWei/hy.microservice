@@ -30,7 +30,7 @@
             
             <openapi>
                 <name>接口路径</name>
-                <value>0</value>
+                <valueLong>0</valueLong>
             </openapi>
             
         </openapis>
