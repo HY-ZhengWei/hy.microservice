@@ -60,6 +60,14 @@ public class BaseViewMode extends SerializableDef
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,timezone = "GMT+8")
     private Date    updateTime;
     
+    /** 开始时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,timezone = "GMT+8")
+    private Date    startTime;
+    
+    /** 结束时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,timezone = "GMT+8")
+    private Date    endTime;
+    
     /** 创建人编号 */
     private String  createUserID;
     
@@ -712,6 +720,48 @@ public class BaseViewMode extends SerializableDef
     public void setComment(String i_Comment)
     {
         this.comment = i_Comment;
+    }
+
+    
+    /**
+     * 获取：开始时间
+     */
+    public Date getStartTime()
+    {
+        return startTime;
+    }
+
+    
+    /**
+     * 设置：开始时间
+     * 
+     * @param i_StartTime 开始时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,timezone = "GMT+8")
+    public void setStartTime(Date i_StartTime)
+    {
+        this.startTime = i_StartTime;
+    }
+
+    
+    /**
+     * 获取：结束时间
+     */
+    public Date getEndTime()
+    {
+        return endTime;
+    }
+
+    
+    /**
+     * 设置：结束时间
+     * 
+     * @param i_EndTime 结束时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,timezone = "GMT+8")
+    public void setEndTime(Date i_EndTime)
+    {
+        this.endTime = i_EndTime;
     }
 
 }
