@@ -1,0 +1,1 @@
+# 规则文件的根目录。此目录不用在 ms.startup.Config.xml 中配置加载，它是由XSQL初始化时自动加载的
