@@ -89,6 +89,9 @@ public class ProjectStartBase
                 continue;
             }
             
+            // 将Spring的Web接口注入到XJava中
+            XJava.putObject(v_Item.getKey(), v_Item.getValue());
+            
             OperationLogModule v_OModule = new OperationLogModule();
             v_OModule.setModuleCode(v_RequestMapping.value()[0]);
             v_OModule.setModuleName(v_RequestMapping.name());
