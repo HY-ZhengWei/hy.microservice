@@ -75,6 +75,36 @@
                 ]]>
             </content>
             
+            <content if="SQLITE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT  INTO TIPSafeConfig
+                       (
+                         id          
+                        ,ipType      
+                        ,ip
+                        ,moduleCode
+                        ,url
+                        ,comment     
+                        ,isDel       
+                        ,createUserID
+                        ,createTime  
+                        ,updateTime  
+                       )
+                VALUES (
+                         ':id'
+                        ,':ipType'
+                        ,':ip'
+                        ,':moduleCode'
+                        ,':url'
+                        ,':comment'
+                        ,':isDel'
+                        ,':createUserID'
+                        ,DATETIME('now')
+                        ,DATETIME('now')
+                       )
+                ]]>
+            </content>
+            
         </sql>
         
         
@@ -101,6 +131,20 @@
                 <![CDATA[
                 UPDATE  TIPSafeConfig
                    SET  updateTime = NOW()
+              <[       ,ipType     = ':ipType'      ]>
+              <[       ,ip         = ':ip'          ]>
+              <[       ,moduleCode = ':moduleCode'  ]>
+              <[       ,url        = ':url'         ]>
+              <[       ,comment    = ':comment'     ]>
+              <[       ,isDel      = ':isDel'       ]>
+                 WHERE  id         = ':id'
+                ]]>
+            </content>
+            
+            <content if="SQLITE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                UPDATE  TIPSafeConfig
+                   SET  updateTime = DATETIME('now')
               <[       ,ipType     = ':ipType'      ]>
               <[       ,ip         = ':ip'          ]>
               <[       ,moduleCode = ':moduleCode'  ]>

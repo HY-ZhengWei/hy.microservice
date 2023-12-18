@@ -16,7 +16,7 @@
             
             <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
-                INSERT INTO TUpgrade20230526 (id,createTime) VALUES ('攻击类型' ,SYSDATE);/
+                INSERT INTO TUpgrade20230526 (id ,createTime) VALUES ('攻击类型' ,SYSDATE);/
                 
                 ALTER TABLE TOperationLog ADD attackType VARCHAR2(64);/
                 COMMENT ON COLUMN TOperationLog.attackType IS '攻击类型';/
@@ -27,11 +27,21 @@
             
             <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
-                INSERT INTO TUpgrade20230526 (id,createTime) VALUES ('攻击类型' ,NOW());/
+                INSERT INTO TUpgrade20230526 (id ,createTime) VALUES ('攻击类型' ,NOW());/
                 
                 ALTER TABLE TOperationLog ADD attackType VARCHAR(64) NULL COMMENT '攻击类型';/
                 
                 UPDATE TUpgrade20230526 SET updateTime = NOW() WHERE id = '攻击类型';/
+                ]]>
+            </content>
+            
+            <content if="SQLITE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT INTO TUpgrade20230526 (id ,createTime) VALUES ('攻击类型' ,DATETIME('now'));/
+                
+                ALTER TABLE TOperationLog ADD attackType TEXT(64) NULL;/
+                
+                UPDATE TUpgrade20230526 SET updateTime = DATETIME('now') WHERE id = '攻击类型';/
                 ]]>
             </content>
             
@@ -75,6 +85,19 @@
                 ALTER TABLE TUpgrade20230526 ADD CONSTRAINT PK_TUpgrade20230526 PRIMARY KEY (id);/
                 
                 Alter TABLE TUpgrade20230526 COMMENT = '2023-05-26升级版本';/
+                ]]>
+            </content>
+            
+            <content if="SQLITE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TUpgrade20230526
+                (
+                 id                         TEXT(64)   NOT NULL
+                ,createTime                 TEXT(32)   NOT NULL
+                ,updateTime                 TEXT(32)   
+                );/
+                
+                CREATE UNIQUE INDEX PK_TUpgrade20230526 ON TUpgrade20230526 (id);/
                 ]]>
             </content>
             

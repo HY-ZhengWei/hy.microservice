@@ -16,7 +16,7 @@
             
             <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
-                INSERT INTO TUpgrade20230808 (id,createTime) VALUES ('黑白名单支持接口及接口模块的监控' ,SYSDATE);/
+                INSERT INTO TUpgrade20230808 (id ,createTime) VALUES ('黑白名单支持接口及接口模块的监控' ,SYSDATE);/
                 
                 ALTER TABLE TIPSafeConfig ADD    moduleCode VARCHAR2(64);/
                 ALTER TABLE TIPSafeConfig ADD    url        VARCHAR2(256);/
@@ -33,7 +33,7 @@
             
             <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
-                INSERT INTO TUpgrade20230808 (id,createTime) VALUES ('黑白名单支持接口及接口模块的监控' ,NOW());/
+                INSERT INTO TUpgrade20230808 (id ,createTime) VALUES ('黑白名单支持接口及接口模块的监控' ,NOW());/
                 
                 ALTER TABLE TIPSafeConfig ADD           moduleCode VARCHAR(64)      NULL COMMENT '接口模块编号';/
                 ALTER TABLE TIPSafeConfig ADD           url        VARCHAR(256)     NULL COMMENT '接口URL地址';/
@@ -41,6 +41,17 @@
                 ALTER TABLE TOperationLog MODIFY COLUMN url        VARCHAR(256) NOT NULL COMMENT '操作的URL地址';/
                 
                 UPDATE TUpgrade20230808 SET updateTime = NOW() WHERE id = '黑白名单支持接口及接口模块的监控';/
+                ]]>
+            </content>
+            
+            <content if="SQLITE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT INTO TUpgrade20230526 (id ,createTime) VALUES ('黑白名单支持接口及接口模块的监控' ,DATETIME('now'));/
+                
+                ALTER TABLE TIPSafeConfig ADD           moduleCode TEXT(64)      NULL;/
+                ALTER TABLE TIPSafeConfig ADD           url        TEXT(256)     NULL;/
+                
+                UPDATE TUpgrade20230808 SET updateTime = DATETIME('now') WHERE id = '黑白名单支持接口及接口模块的监控';/
                 ]]>
             </content>
             
@@ -84,6 +95,19 @@
                 ALTER TABLE TUpgrade20230808 ADD CONSTRAINT PK_TUpgrade20230808 PRIMARY KEY (id);/
                 
                 Alter TABLE TUpgrade20230808 COMMENT = '2023-08-08升级版本';/
+                ]]>
+            </content>
+            
+            <content if="SQLITE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TUpgrade20230808
+                (
+                 id                         TEXT(64)   NOT NULL
+                ,createTime                 TEXT(32)   NOT NULL
+                ,updateTime                 TEXT(32)   
+                );/
+                
+                CREATE UNIQUE INDEX PK_TUpgrade20230808 ON TUpgrade20230808 (id);/
                 ]]>
             </content>
             

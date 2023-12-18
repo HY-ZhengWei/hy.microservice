@@ -103,6 +103,42 @@
                 ]]>
             </content>
             
+            <content if="SQLITE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+				CREATE TABLE TOperationLog
+				(
+				 id                         TEXT(64)   NOT NULL 
+				,systemCode                 TEXT(64)   NOT NULL 
+				,moduleCode                 TEXT(64)   NOT NULL
+				,url                        TEXT(256)  NOT NULL 
+				,urlRequest                 TEXT                  
+				,urlRequestBody             TEXT                  
+				,urlResponse                TEXT               
+				,resultCode                 TEXT(64)           
+				,userID                     TEXT(64)   NOT NULL
+				,userIP                     TEXT(64)   NOT NULL
+				,requestTime                NUMERIC    NOT NULL
+				,responseTime               NUMERIC            
+				,timeLen                    NUMERIC            
+				,attackType                 TEXT(64)           
+				,createTime                 TEXT(32)               
+				);/
+                
+                CREATE UNIQUE INDEX PK_OperationLog       ON TOperationLog (id);/
+                
+                CREATE INDEX IDX_TOperationLog_Url        ON TOperationLog (systemCode ,moduleCode ,url);/
+                CREATE INDEX IDX_TOperationLog_ResultCode ON TOperationLog (resultCode);/
+                CREATE INDEX IDX_TOperationLog_CreateTime ON TOperationLog (createTime);/
+                
+                CREATE TABLE TUpgrade20230526
+                (
+                 id                         TEXT(64)   NOT NULL
+                ,createTime                 TEXT(32)   NOT NULL
+                ,updateTime                 TEXT(32)
+                );/
+                ]]>
+            </content>
+            
             <comment>系统操作日志</comment>
             <create if="启用 == IsCreateDB_MS_Common.getValue">TOperationLog</create>
             
