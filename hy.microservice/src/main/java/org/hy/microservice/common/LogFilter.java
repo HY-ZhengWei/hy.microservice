@@ -22,7 +22,6 @@ import org.hy.common.Help;
 import org.hy.common.Return;
 import org.hy.common.StringHelp;
 import org.hy.common.TimeGroupTotal;
-import org.hy.common.app.Param;
 import org.hy.common.xml.XJSON;
 import org.hy.common.xml.XJava;
 import org.hy.common.xml.event.XRequestListener;
@@ -32,6 +31,7 @@ import org.hy.common.xml.plugins.AppMessage;
 import org.hy.common.xml.plugins.XSQLFilter;
 import org.hy.microservice.common.ipSafe.IIPSafeConfigService;
 import org.hy.microservice.common.ipSafe.IPSafeConfig;
+import org.hy.microservice.common.openapi.OpenApiConfig;
 import org.hy.microservice.common.operationLog.IOperationLogService;
 import org.hy.microservice.common.operationLog.OperationLog;
 
@@ -73,24 +73,27 @@ public class LogFilter extends XSQLFilter implements XRequestListener
     
     
     
-    private IIPSafeConfigService ipSafeConfigService;
+    private IIPSafeConfigService       ipSafeConfigService;
     
-    private IOperationLogService operationLogService;
+    private IOperationLogService       operationLogService;
     
     /** 每个API接口每分钟最大允许的请求量（全体接口的默认值） */
-    private long                 apiUseMaxCountMinute;
+    private long                       apiUseMaxCountMinute;
     
     /** 每个API接口每10分钟最大允许的请求量（全体接口的默认值） */
-    private long                 apiUseMaxCountMinute10;
+    private long                       apiUseMaxCountMinute10;
     
     /** 每个API接口每分钟最大允许的请求量（接口的个性化配置，当没有时用默认值） */
-    private Map<String ,Param>   apiUseMaxCountMinuteMap;
+    private Map<String ,OpenApiConfig> apiUseMaxCountMinuteMap;
     
     /** 每个API接口每10分钟最大允许的请求量（接口的个性化配置，当没有时用默认值） */
-    private Map<String ,Param>   apiUseMaxCountMinute10Map;
+    private Map<String ,OpenApiConfig> apiUseMaxCountMinute10Map;
+    
+    /** 减轻数据库日志压力，简单信息的配置 */
+    private Map<String ,OpenApiConfig> apiSimpleMap;
     
     /** 服务名称，产品运维时使用 */
-    private String               systemCode;
+    private String                     systemCode;
     
     
     
@@ -99,10 +102,11 @@ public class LogFilter extends XSQLFilter implements XRequestListener
     {
         this.ipSafeConfigService       = (IIPSafeConfigService) XJava.getObject("IPSafeConfigService");
         this.operationLogService       = (IOperationLogService) XJava.getObject("OperationLogService");
-        this.apiUseMaxCountMinute      = Long.valueOf(XJava.getParam("MS_Common_ApiUseMaxCountMinute").getValue());
-        this.apiUseMaxCountMinute10    = Long.valueOf(XJava.getParam("MS_Common_ApiUseMaxCountMinute10").getValue());
-        this.apiUseMaxCountMinuteMap   = (Map<String ,Param>) XJava.getObject("MS_Common_ApiUseMaxCountMinuteMap");
-        this.apiUseMaxCountMinute10Map = (Map<String ,Param>) XJava.getObject("MS_Common_ApiUseMaxCountMinute10Map");
+        this.apiUseMaxCountMinute      = Integer.valueOf(XJava.getParam("MS_Common_ApiUseMaxCountMinute").getValue());
+        this.apiUseMaxCountMinute10    = Integer.valueOf(XJava.getParam("MS_Common_ApiUseMaxCountMinute10").getValue());
+        this.apiUseMaxCountMinuteMap   = (Map<String ,OpenApiConfig>) XJava.getObject("MS_Common_ApiUseMaxCountMinuteMap");
+        this.apiUseMaxCountMinute10Map = (Map<String ,OpenApiConfig>) XJava.getObject("MS_Common_ApiUseMaxCountMinute10Map");
+        this.apiSimpleMap              = (Map<String ,OpenApiConfig>) XJava.getObject("MS_Common_ApiSimpleMap");
         this.systemCode                = XJava.getParam("MS_Common_ServiceName").getValue();
         
         AppInterfaces.setListener(this);
@@ -139,10 +143,13 @@ public class LogFilter extends XSQLFilter implements XRequestListener
                 Long v_MaxCount = this.apiUseMaxCountMinute;
                 if ( !Help.isNull(this.apiUseMaxCountMinuteMap) )
                 {
-                    Param v_MyMaxCount = this.apiUseMaxCountMinuteMap.get(i_APIUrl);
-                    if ( v_MyMaxCount != null )
+                	OpenApiConfig v_OpenApiConfig = this.apiUseMaxCountMinuteMap.get(i_APIUrl);
+                    if ( v_OpenApiConfig != null && v_OpenApiConfig.getMaxCountMinute() != null)
                     {
-                        v_MaxCount = v_MyMaxCount.getValueLong();
+                        if ( v_OpenApiConfig.getMaxCountMinute() >= 0 )
+                		{
+                        	v_MaxCount = v_OpenApiConfig.getMaxCountMinute();
+                		}
                     }
                 }
                 
@@ -188,10 +195,13 @@ public class LogFilter extends XSQLFilter implements XRequestListener
                 Long v_MaxCount = this.apiUseMaxCountMinute10;
                 if ( !Help.isNull(this.apiUseMaxCountMinute10Map) )
                 {
-                    Param v_MyMaxCount = this.apiUseMaxCountMinute10Map.get(i_APIUrl);
-                    if ( v_MyMaxCount != null )
+                    OpenApiConfig v_OpenApiConfig = this.apiUseMaxCountMinute10Map.get(i_APIUrl);
+                    if ( v_OpenApiConfig != null && v_OpenApiConfig.getMaxCountMinute10() != null)
                     {
-                        v_MaxCount = v_MyMaxCount.getValueLong();
+                        if ( v_OpenApiConfig.getMaxCountMinute10() >= 0 )
+                		{
+                        	v_MaxCount = v_OpenApiConfig.getMaxCountMinute10();
+                		}
                     }
                 }
                 
@@ -351,7 +361,48 @@ public class LogFilter extends XSQLFilter implements XRequestListener
     }
     
     
-
+    
+    /**
+     * 减轻数据库日志压力，简单信息 或是 正常信息
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2023-12-27
+     * @version     v1.0
+     * 
+     * @param i_Url          接口URL
+     * @param i_RequestBody  原先的请求消息Body的内容
+     * @return
+     */
+    private String getUrlRequestBody(String i_Url ,String i_RequestBody)
+    {
+    	if ( Help.isNull(this.apiSimpleMap) )
+    	{
+    		return i_RequestBody;
+    	}
+    	
+    	OpenApiConfig v_OpenApiConfig = this.apiSimpleMap.get(i_Url);
+    	if ( v_OpenApiConfig == null || Help.isNull(v_OpenApiConfig.getSimpleClassName()) )
+    	{
+    		return i_RequestBody;
+    	}
+    	
+    	try
+    	{
+    		XJSON          v_XJson  = new XJSON();
+    		BaseSimpleInfo v_Simple = (BaseSimpleInfo) v_XJson.toJava(i_RequestBody ,Help.forName(v_OpenApiConfig.getSimpleClassName()));
+    		
+    		return v_Simple.toSimpleInfo();
+    	}
+    	catch (Exception exce)
+    	{
+    		$Logger.error(exce);
+    	}
+    	
+    	return i_RequestBody;
+    }
+    
+    
+    
     @Override
     public void doFilter(ServletRequest i_ServletRequest ,ServletResponse i_ServletResponse ,FilterChain i_FilterChain) throws IOException ,ServletException
     {
@@ -394,10 +445,10 @@ public class LogFilter extends XSQLFilter implements XRequestListener
             v_OLog.setId(StringHelp.getUUID());
             v_OLog.setUrl(v_Url);
             v_OLog.setUrlRequest(v_Request.getQueryString());
-            v_OLog.setUrlRequestBody(v_Request.getBodyString());
             v_OLog.setUserIP(getIpAddress(v_Request));
             v_OLog.setSystemCode(this.systemCode);
             v_OLog.setModuleCode(v_Urls[1]);
+            v_OLog.setUrlRequestBody(this.getUrlRequestBody(v_OLog.getUrl() ,v_Request.getBodyString()));
             
             this.backWhiteCheck(v_OLog);
         }
