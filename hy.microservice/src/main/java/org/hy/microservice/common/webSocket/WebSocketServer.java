@@ -86,7 +86,11 @@ public class WebSocketServer
         WebSocketMessage v_WebSocketMessage = $WebSocketEvents.get(i_ServiceType);
         if ( v_WebSocketMessage != null )
         {
-            this.client.pushMessage(Help.NVL(v_WebSocketMessage.getInitMessage()));
+            String v_InitMsg = v_WebSocketMessage.getInitMessage();
+            if ( !Help.isNull(v_InitMsg) )
+            {
+                this.client.pushMessage(v_InitMsg);
+            }
         }
     }
     

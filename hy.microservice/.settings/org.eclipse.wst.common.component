@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
     
     
     
@@ -131,8 +131,10 @@
     
     
     
-    <wb-module deploy-name="hy.microservice-1.5.5">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+    
+    <wb-module deploy-name="hy.microservice-1.5.6">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+        
         
         
         
@@ -265,7 +267,8 @@
         
         
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+        
         
         
         
@@ -398,7 +401,8 @@
         
         
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+        
         
         
         
@@ -531,7 +535,8 @@
         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+        
         
         
         
@@ -664,7 +669,7 @@
         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <dependent-module archiveName="hy.common.base-1.0.175.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/hy.common.base/hy.common.base">
+        <dependent-module archiveName="hy.common.base-1.0.176.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/hy.common.base/hy.common.base">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="hy.common.file-1.2.9.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/hy.common.file/hy.common.file">
@@ -685,7 +690,7 @@
         <dependent-module archiveName="hy.common.license-1.1.7.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/hy.common.license/hy.common.license">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="hy.common.xjava-4.4.5.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/hy.common.xjava/hy.common.xjava">
+        <dependent-module archiveName="hy.common.xjava-4.4.6.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/hy.common.xjava/hy.common.xjava">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="hy.common.ldap-1.0.8.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/hy.common.ldap/hy.common.ldap">
@@ -709,7 +714,8 @@
         <dependent-module archiveName="hy.common.solr-1.1.5.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/hy.common.solr/hy.common.solr">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+        
         
         
         
@@ -842,7 +848,8 @@
         
         
         <property name="java-output-path" value="/hy.microservice/target/classes"/>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+        
         
         
         
@@ -905,7 +912,8 @@
         
         
         <property name="context-root" value="hy.microservice"/>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+    
     
     
     
@@ -1038,7 +1046,8 @@
     
     
     </wb-module>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+
 
 
 
