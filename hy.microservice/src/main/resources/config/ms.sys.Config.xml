@@ -71,7 +71,7 @@
             
             <item id="MS_Common_SessionTimeOut">
                 <name>MS_Common_SessionTimeOut</name>
-                <value>36000</value>
+                <valueLong>36000</valueLong>
                 <comment>会话的有效时长（单位：秒）</comment>
                 <onlyRead>false</onlyRead>
             </item>
@@ -79,7 +79,7 @@
             
             <item id="MS_Common_ApiUseMaxCountMinute">
                 <name>MS_Common_ApiUseMaxCountMinute</name>
-                <value>300</value>
+                <valueInt>300</valueInt>
                 <comment>每个API接口每分钟最大允许的请求量（全体接口的默认值）</comment>
                 <onlyRead>false</onlyRead>
             </item>
@@ -87,8 +87,16 @@
             
             <item id="MS_Common_ApiUseMaxCountMinute10">
                 <name>MS_Common_ApiUseMaxCountMinute10</name>
-                <value>1500</value>
+                <valueInt>1500</valueInt>
                 <comment>每个API接口每10分钟最大允许的请求量（全体接口的默认值）</comment>
+                <onlyRead>false</onlyRead>
+            </item>
+            
+            
+            <item id="MS_Common_OperationLog_WriteSleep">
+                <name>MS_Common_OperationLog_WriteSleep</name>
+                <valueInt>1</valueInt>
+                <comment>每次写入操作日志后释放CPU资源的间隔时长（单位：毫秒），小于等于0时无效</comment>
                 <onlyRead>false</onlyRead>
             </item>
             

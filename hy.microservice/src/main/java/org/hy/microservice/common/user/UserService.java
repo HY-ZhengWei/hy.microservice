@@ -84,7 +84,7 @@ public class UserService
      */
     public long getMaxExpireTimeLen()
     {
-        return Long.parseLong(sessionTimeOut.getValue());
+        return sessionTimeOut.getValueLong();
     }
     
     

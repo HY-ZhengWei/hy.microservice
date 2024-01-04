@@ -1,8 +1,10 @@
 package org.hy.microservice.common.operationLog;
 
 import org.hy.common.Queue;
+import org.hy.common.app.Param;
 import org.hy.common.xml.XJava;
 import org.hy.common.xml.annotation.Xjava;
+import org.hy.common.xml.log.Logger;
 
 
 
@@ -14,10 +16,13 @@ import org.hy.common.xml.annotation.Xjava;
  * @author      ZhengWei(HY)
  * @createDate  2023-08-11
  * @version     v1.0
+ *              v2.0  2024-01-04  添加：每次写入操作日志后释放CPU资源的间隔时长（单位：毫秒）
  */
 @Xjava
 public class OperationLogCache
 {
+    
+    private static final Logger              $Logger                    = new Logger(OperationLogCache.class);
     
     /** 日志缓存 */
     private static final Queue<OperationLog> $LogCaches                 = new Queue<OperationLog>();
@@ -58,6 +63,9 @@ public class OperationLogCache
     }
     
     
+    /** 每次写入操作日志后释放CPU资源的间隔时长（单位：毫秒），小于等于0时无效 */
+    @Xjava(ref="MS_Common_OperationLog_WriteSleep")
+    Param                     writeSleep;
     
     @Xjava
     private IOperationLogDAO  operationLogDAO;
@@ -164,8 +172,16 @@ public class OperationLogCache
                     }
                 }
                 
+                if ( this.writeSleep.getValueInt() > 0 )
+                {
+                    Thread.sleep(this.writeSleep.getValueInt());
+                }
                 v_OLog = $LogCaches.get();
             }
+        }
+        catch (Exception exce)
+        {
+            $Logger.error(exce);
         }
         finally
         {

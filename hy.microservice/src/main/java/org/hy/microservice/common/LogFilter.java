@@ -54,7 +54,7 @@ import org.hy.microservice.common.operationLog.OperationLog;
  *              v6.0  2023-11-30  添加：接口的个性化 "访问量达到上限" 的限制
  */
 @WebFilter(filterName="logFilter" ,urlPatterns="/*" ,initParams={
-        @WebInitParam(name="exclusions" ,value="*.js,*.gif,*.jpg,*.png,*.css,*.ico,*.swf")
+        @WebInitParam(name="exclusions" ,value="*.js,*.gif,*.jpg,*.png,*.css,*.ico,*.swf,*.txt,*.log,*.xml,*.md")
        ,@WebInitParam(name="cachesize"  ,value="1000")
        ,@WebInitParam(name="timeout"    ,value="60")
 })
@@ -102,8 +102,8 @@ public class LogFilter extends XSQLFilter implements XRequestListener
     {
         this.ipSafeConfigService       = (IIPSafeConfigService) XJava.getObject("IPSafeConfigService");
         this.operationLogService       = (IOperationLogService) XJava.getObject("OperationLogService");
-        this.apiUseMaxCountMinute      = Integer.valueOf(XJava.getParam("MS_Common_ApiUseMaxCountMinute").getValue());
-        this.apiUseMaxCountMinute10    = Integer.valueOf(XJava.getParam("MS_Common_ApiUseMaxCountMinute10").getValue());
+        this.apiUseMaxCountMinute      = XJava.getParam("MS_Common_ApiUseMaxCountMinute").getValueInt();
+        this.apiUseMaxCountMinute10    = XJava.getParam("MS_Common_ApiUseMaxCountMinute10").getValueInt();
         this.apiUseMaxCountMinuteMap   = (Map<String ,OpenApiConfig>) XJava.getObject("MS_Common_ApiUseMaxCountMinuteMap");
         this.apiUseMaxCountMinute10Map = (Map<String ,OpenApiConfig>) XJava.getObject("MS_Common_ApiUseMaxCountMinute10Map");
         this.apiSimpleMap              = (Map<String ,OpenApiConfig>) XJava.getObject("MS_Common_ApiSimpleMap");
@@ -143,13 +143,13 @@ public class LogFilter extends XSQLFilter implements XRequestListener
                 Long v_MaxCount = this.apiUseMaxCountMinute;
                 if ( !Help.isNull(this.apiUseMaxCountMinuteMap) )
                 {
-                	OpenApiConfig v_OpenApiConfig = this.apiUseMaxCountMinuteMap.get(i_APIUrl);
+                    OpenApiConfig v_OpenApiConfig = this.apiUseMaxCountMinuteMap.get(i_APIUrl);
                     if ( v_OpenApiConfig != null && v_OpenApiConfig.getMaxCountMinute() != null)
                     {
                         if ( v_OpenApiConfig.getMaxCountMinute() >= 0 )
-                		{
-                        	v_MaxCount = v_OpenApiConfig.getMaxCountMinute();
-                		}
+                        {
+                            v_MaxCount = v_OpenApiConfig.getMaxCountMinute();
+                        }
                     }
                 }
                 
@@ -199,9 +199,9 @@ public class LogFilter extends XSQLFilter implements XRequestListener
                     if ( v_OpenApiConfig != null && v_OpenApiConfig.getMaxCountMinute10() != null)
                     {
                         if ( v_OpenApiConfig.getMaxCountMinute10() >= 0 )
-                		{
-                        	v_MaxCount = v_OpenApiConfig.getMaxCountMinute10();
-                		}
+                        {
+                            v_MaxCount = v_OpenApiConfig.getMaxCountMinute10();
+                        }
                     }
                 }
                 
@@ -375,30 +375,30 @@ public class LogFilter extends XSQLFilter implements XRequestListener
      */
     private String getUrlRequestBody(String i_Url ,String i_RequestBody)
     {
-    	if ( Help.isNull(this.apiSimpleMap) )
-    	{
-    		return i_RequestBody;
-    	}
-    	
-    	OpenApiConfig v_OpenApiConfig = this.apiSimpleMap.get(i_Url);
-    	if ( v_OpenApiConfig == null || Help.isNull(v_OpenApiConfig.getSimpleClassName()) )
-    	{
-    		return i_RequestBody;
-    	}
-    	
-    	try
-    	{
-    		XJSON          v_XJson  = new XJSON();
-    		BaseSimpleInfo v_Simple = (BaseSimpleInfo) v_XJson.toJava(i_RequestBody ,Help.forName(v_OpenApiConfig.getSimpleClassName()));
-    		
-    		return v_Simple.toSimpleInfo();
-    	}
-    	catch (Exception exce)
-    	{
-    		$Logger.error(exce);
-    	}
-    	
-    	return i_RequestBody;
+        if ( Help.isNull(this.apiSimpleMap) )
+        {
+            return i_RequestBody;
+        }
+        
+        OpenApiConfig v_OpenApiConfig = this.apiSimpleMap.get(i_Url);
+        if ( v_OpenApiConfig == null || Help.isNull(v_OpenApiConfig.getSimpleClassName()) )
+        {
+            return i_RequestBody;
+        }
+        
+        try
+        {
+            XJSON          v_XJson  = new XJSON();
+            BaseSimpleInfo v_Simple = (BaseSimpleInfo) v_XJson.toJava(i_RequestBody ,Help.forName(v_OpenApiConfig.getSimpleClassName()));
+            
+            return v_Simple.toSimpleInfo();
+        }
+        catch (Exception exce)
+        {
+            $Logger.error(exce);
+        }
+        
+        return i_RequestBody;
     }
     
     
@@ -442,11 +442,11 @@ public class LogFilter extends XSQLFilter implements XRequestListener
             }
             
             v_OLog.setCreateTime(new Date());
+            v_OLog.setSystemCode(this.systemCode);
             v_OLog.setId(StringHelp.getUUID());
             v_OLog.setUrl(v_Url);
             v_OLog.setUrlRequest(v_Request.getQueryString());
             v_OLog.setUserIP(getIpAddress(v_Request));
-            v_OLog.setSystemCode(this.systemCode);
             v_OLog.setModuleCode(v_Urls[1]);
             v_OLog.setUrlRequestBody(this.getUrlRequestBody(v_OLog.getUrl() ,v_Request.getBodyString()));
             
