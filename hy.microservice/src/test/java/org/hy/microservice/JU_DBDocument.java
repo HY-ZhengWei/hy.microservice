@@ -21,7 +21,7 @@ public class JU_DBDocument extends BaseJunit
     @Test
     public void makeDoc() throws InterruptedException
     {
-        DBDocument.makeDatabaseDoc("DS_MS_Common" ,"2.0.0");
+        DBDocument.makeDatabaseDoc("DS_MS_Common" ,"V2.0");
     }
     
 }
