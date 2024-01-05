@@ -13,9 +13,9 @@
 
         <dataSource id="DS_MS_Common" >
             <driverClassName>com.mysql.cj.jdbc.Driver</driverClassName>
-            <url><![CDATA[jdbc:mysql://10.1.50.130:3306/common?keepAlive=true&autoReconnect=true&autoReconnectForPools=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8]]></url>
-            <username encrypt="org.hy.common.StringHelp">root</username>
-            <password encrypt="org.hy.common.StringHelp">wzybVM9114</password>
+            <url><![CDATA[jdbc:mysql://10.1.50.126:3306/common?keepAlive=true&autoReconnect=true&autoReconnectForPools=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8]]></url>
+            <username encrypt="org.hy.common.StringHelp">data</username>
+            <password encrypt="org.hy.common.StringHelp">DATA@20231102wzyb</password>
             <filters>stat,wall,log4j2</filters>
             <initialSize>5</initialSize>
             <minIdle>5</minIdle>

@@ -38,24 +38,18 @@ public class XJavaInit extends AppInitConfig
     
     public XJavaInit()
     {
-        this(true);
+        this(true ,null);
     }
     
     
     
-    public XJavaInit(boolean i_IsStartJobs)
+    public XJavaInit(boolean i_IsStartJobs ,String i_ClassHomePath)
     {
         super(i_IsStartJobs);
-        this.xmlRoot = Help.getClassHomePath();
+        this.xmlRoot = Help.NVL(i_ClassHomePath ,Help.getClassHomePath());
         init(i_IsStartJobs);
 
     }
-
-    public XJavaInit(boolean i_IsLog ,String i_EnCode)
-    {
-        super(i_IsLog,i_EnCode);
-    }
-    
     
     
     @SuppressWarnings("unchecked")
