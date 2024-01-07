@@ -5,7 +5,7 @@
     
     <groupId>cn.openapis</groupId>
     <artifactId>hy.microservice</artifactId>
-    <version>1.5.9</version>
+    <version>1.6.0</version>
     <packaging>war</packaging>
     
     <name>cn.openapis.hy.microservice</name>
@@ -188,6 +188,7 @@
             <groupId>cn.smallbun.screw</groupId>
             <artifactId>screw-core</artifactId>
             <version>1.0.5</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     

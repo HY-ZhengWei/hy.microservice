@@ -1,4 +1,4 @@
-package org.hy.microservice.common.openapi;
+package org.hy.microservice;
 
 import java.util.ArrayList;
 
@@ -62,10 +62,29 @@ public class DBDocument
      */
     public static void makeDatabaseDoc(String i_DataSourceXID ,String i_Version ,String i_TablePrefix)
     {
-        String v_SaveDir       = Help.getClassHomePath() + ".." + Help.getSysPathSeparator() + ".." + Help.getSysPathSeparator() + "doc";
         String v_SaveShortName = "OpenApi.数据库设计";
         
-        makeDatabaseDoc(i_DataSourceXID ,i_Version ,i_TablePrefix ,v_SaveDir ,v_SaveShortName);
+        makeDatabaseDoc(i_DataSourceXID ,i_Version ,i_TablePrefix ,v_SaveShortName);
+    }
+    
+    
+    
+    /**
+     * 数据库设计文档的生成
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2024-01-05
+     * @version     v1.0
+     *
+     * @param i_DataSourceXID  数据源XID
+     * @param i_Version        文档版本号：如 V1.0
+     * @param i_TablePrefix    根据表前缀生成
+     */
+    public static void makeDatabaseDoc(String i_DataSourceXID ,String i_Version ,String i_TablePrefix ,String i_SaveShortName)
+    {
+        String v_SaveDir = Help.getClassHomePath() + ".." + Help.getSysPathSeparator() + ".." + Help.getSysPathSeparator() + "doc";
+        
+        makeDatabaseDoc(i_DataSourceXID ,i_Version ,i_TablePrefix ,v_SaveDir ,i_SaveShortName);
     }
 
     

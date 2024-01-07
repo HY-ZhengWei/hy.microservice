@@ -1,7 +1,6 @@
 package org.hy.microservice;
 
 import org.hy.microservice.common.BaseJunit;
-import org.hy.microservice.common.openapi.DBDocument;
 import org.junit.Test;
 
 
@@ -21,7 +20,7 @@ public class JU_DBDocument extends BaseJunit
     @Test
     public void makeDoc()
     {
-        DBDocument.makeDatabaseDoc("DS_MS_Common" ,"V2.0");
+        DBDocument.makeDatabaseDoc("DS_MS_Common" ,"V2.0" ,null ,"OpenApi.数据库设计-公共");
     }
     
 }
