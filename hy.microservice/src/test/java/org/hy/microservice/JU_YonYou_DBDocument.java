@@ -39,7 +39,7 @@ public class JU_YonYou_DBDocument
     @Test
     public void makeDoc()
     {
-        DBDocument.makeDatabaseDoc("DS_MS_YonYou_FinancialDataCenter" ,"V1.0" ,"TYY_" ,"OpenApi.数据库设计-YonYou数据同步");
+        DBDocument.makeDatabaseDoc("DS_MS_YonYou" ,"V1.0" ,null ,"OpenApi.数据库设计-YonYou数据同步");
     }
     
 }
