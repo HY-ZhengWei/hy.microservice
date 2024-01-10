@@ -105,24 +105,24 @@
             
             <content if="SQLITE == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
-				CREATE TABLE TOperationLog
-				(
-				 id                         TEXT(64)   NOT NULL 
-				,systemCode                 TEXT(64)   NOT NULL 
-				,moduleCode                 TEXT(64)   NOT NULL
-				,url                        TEXT(256)  NOT NULL 
-				,urlRequest                 TEXT                  
-				,urlRequestBody             TEXT                  
-				,urlResponse                TEXT               
-				,resultCode                 TEXT(64)           
-				,userID                     TEXT(64)   NOT NULL
-				,userIP                     TEXT(64)   NOT NULL
-				,requestTime                NUMERIC    NOT NULL
-				,responseTime               NUMERIC            
-				,timeLen                    NUMERIC            
-				,attackType                 TEXT(64)           
-				,createTime                 TEXT(32)               
-				);/
+                CREATE TABLE TOperationLog
+                (
+                 id                         TEXT(64)   NOT NULL 
+                ,systemCode                 TEXT(64)   NOT NULL 
+                ,moduleCode                 TEXT(64)   NOT NULL
+                ,url                        TEXT(256)  NOT NULL 
+                ,urlRequest                 TEXT                  
+                ,urlRequestBody             TEXT                  
+                ,urlResponse                TEXT               
+                ,resultCode                 TEXT(64)           
+                ,userID                     TEXT(64)   NOT NULL
+                ,userIP                     TEXT(64)   NOT NULL
+                ,requestTime                NUMERIC    NOT NULL
+                ,responseTime               NUMERIC            
+                ,timeLen                    NUMERIC            
+                ,attackType                 TEXT(64)           
+                ,createTime                 TEXT(32)               
+                );/
                 
                 CREATE UNIQUE INDEX PK_OperationLog       ON TOperationLog (id);/
                 
