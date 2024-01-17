@@ -20,7 +20,14 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public class BaseViewMode extends SerializableDef
 {
     private static final long serialVersionUID = -3998918924300953503L;
+    
+    
+    
+    /** 服务启动时间 */
+    public final static Date $StartupTime = new Date();
+    
 
+    
     /** 应用appKey */
     private String  appKey;
     
