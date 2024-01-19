@@ -43,6 +43,9 @@ public class BaseViewMode extends SerializableDef
     /** 业务类型（值内容由业务决定） */
     private String  serviceType;
     
+    /** 项目ID */
+    private String  projectID;
+    
     /** 用户编号 */
     private String  userID;
     
@@ -769,6 +772,26 @@ public class BaseViewMode extends SerializableDef
     public void setEndTime(Date i_EndTime)
     {
         this.endTime = i_EndTime;
+    }
+
+    
+    /**
+     * 获取：项目ID
+     */
+    public String getProjectID()
+    {
+        return projectID;
+    }
+
+    
+    /**
+     * 设置：项目ID
+     * 
+     * @param i_ProjectID 项目ID
+     */
+    public void setProjectID(String i_ProjectID)
+    {
+        this.projectID = i_ProjectID;
     }
 
 }
