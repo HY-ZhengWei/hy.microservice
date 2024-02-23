@@ -157,15 +157,14 @@ public class ProjectStart extends SpringBootServletInitializer
      * 
      * @param i_DispatcherServlet
      * @return
+     * @see SuffixRequestMappingHandlerMapping 还需启用它
      */
-    /*
-    @Bean
-    public ServletRegistrationBean<DispatcherServlet> servletRegistrationBean(DispatcherServlet i_DispatcherServlet)
-    {
-        ServletRegistrationBean<DispatcherServlet> v_Bean = new ServletRegistrationBean<DispatcherServlet>(i_DispatcherServlet);
-        v_Bean.addUrlMappings("*.page");
-        return v_Bean;
-    }
-    */
+//    @Bean
+//    public ServletRegistrationBean<DispatcherServlet> servletRegistrationBean(DispatcherServlet i_DispatcherServlet)
+//    {
+//        ServletRegistrationBean<DispatcherServlet> v_Bean = new ServletRegistrationBean<DispatcherServlet>(i_DispatcherServlet);
+//        v_Bean.addUrlMappings("*.page");
+//        return v_Bean;
+//    }
     
 }

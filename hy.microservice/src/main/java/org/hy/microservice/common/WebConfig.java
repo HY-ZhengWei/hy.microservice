@@ -66,5 +66,20 @@ public class WebConfig implements WebMvcConfigurer
         // i_Registry.addResourceHandler("/ms/**").addResourceLocations("file:./ms/" ,"file:/ms/" ,"/ms/" ,"classpath:/ms/");
         WebMvcConfigurer.super.addResourceHandlers(i_Registry);
     }
+    
+
+    
+//    在Spring MVC 5.3 之后不生效
+//    @Override
+//    public void configurePathMatch(PathMatchConfigurer configurer)
+//    {
+//        configurer.setUseSuffixPatternMatch(false);
+//        configurer.setUseRegisteredSuffixPatternMatch(true);
+//    }
+//
+//    @Override
+//    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+//        configurer.favorPathExtension(false);
+//    }
 
 }
