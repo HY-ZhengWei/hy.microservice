@@ -183,7 +183,7 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         
         if ( v_APITimeTotal == null )
         {
-            v_APITimeTotal = new TimeGroupTotal(15);
+            v_APITimeTotal = new TimeGroupTotal(10);
             v_APITimeTotal.setMaxSize(8);
             $APITotalMinute10.put(i_APIUrl ,v_APITimeTotal);
         }
