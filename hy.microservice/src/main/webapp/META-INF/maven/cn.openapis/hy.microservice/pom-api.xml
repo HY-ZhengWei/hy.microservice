@@ -5,12 +5,11 @@
     
     <groupId>org</groupId>
     <artifactId>hy.microservice-api</artifactId>
-    <version>1.7.6</version>
+    <version>1.7.7</version>
     <packaging>jar</packaging>
     
-    <name>cn.openapis.hy.microservice</name>
-    <url>https://github.com/HY-ZhengWei/hy.microservice</url>
-    <description>cn.openapis.hy.microservice</description>
+    <name>org.hy.microservice</name>
+    <description>org.hy.microservice</description>
     
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -18,20 +17,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <distributionManagement>
-        <snapshotRepository>
-            <id>maven-public</id>
-            <name>oss sonatype snapshots</name>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
-        </snapshotRepository>
-
-        <repository>
-            <id>maven-public</id>
-            <name>oss sonatype releases</name>
-            <url>https://s01.oss.sonatype.org/content/repositories/releases/</url>
-        </repository>
-    </distributionManagement>
-    
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -47,13 +32,6 @@
             <url>https://github.com/HY-ZhengWei</url>
         </developer>
     </developers>
-    
-    <scm>
-        <tag>master</tag>
-        <url>git@github.com:HY-ZhengWei/hy.microservice.git</url>
-        <connection>git@github.com:HY-ZhengWei/hy.microservice.git</connection>
-        <developerConnection>git@github.com:HY-ZhengWei/hy.microservice.git</developerConnection>
-    </scm>
     
     <!-- spring boot基本环境 -->
     <parent>
@@ -166,9 +144,9 @@
         </dependency>
         
         <dependency>
-            <groupId>cn.openapis</groupId>
+            <groupId>org</groupId>
             <artifactId>hy.common</artifactId>
-            <version>3.1.1</version>
+            <version>3.1.2</version>
             <type>pom</type>
             <scope>provided</scope>
         </dependency>
