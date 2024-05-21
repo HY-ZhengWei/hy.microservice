@@ -10,7 +10,7 @@
     <!-- 系统安全访问IP黑白名单的相关SQL -->
     <sqls>
     
-        <sql id="XSQL_Create_IPSafeConfig">
+        <sql id="XSQL_Common_Create_IPSafeConfig">
         
             <dataSourceGroup ref="DSG_MS_Common" />
             

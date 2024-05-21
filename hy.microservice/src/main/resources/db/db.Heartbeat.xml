@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="sqls"            class="java.util.ArrayList" />
+    <import name="sqlGroup"        class="org.hy.common.xml.plugins.XSQLGroup" />
+    <import name="sql"             class="org.hy.common.xml.XSQL" />
+
+
+
+    <!-- 心跳信息的相关SQL -->
+    <sqls>
+    
+    	<sql id="XSQL_Common_Heartbeat_Insert"> 
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                INSERT  INTO THeartbeat
+                       (
+                        edgeIP
+                       ,hostIP
+                       ,osType
+                       ,edgeStartTime
+                       ,osTime
+                       ,claimCount
+                       ,taskOKCount
+                       ,isValid
+                       ,invalidTime
+                       ,projectID
+                       ,comment
+                       ,createTime
+                       ,updateTime
+                       )
+                VALUES (
+                        ':edgeIP'
+                       ,':hostIP'
+                       ,':osType'
+                       ,':edgeStartTime'
+                       ,':osTime'
+                       ,':claimCount'
+                       ,':taskOKCount'
+                       ,':isValid'
+                       ,NULL
+                       ,':projectID'
+                       ,':comment'
+                       ,NOW()
+                       ,NOW()
+                       )
+                ]]>
+            </content>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_Heartbeat_Update"> 
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                UPDATE  THeartbeat
+                   SET  hostIP        = ':hostIP'
+                       ,osType        = ':osType'
+                       ,edgeStartTime = ':edgeStartTime'
+                       ,osTime        = ':osTime'
+                       ,claimCount    = ':claimCount'
+                       ,taskOKCount   = ':taskOKCount'
+                       ,isValid       = ':isValid'
+               <[      ,invalidTime   = IFNULL(invalidTime ,':invalidTime')    ]>
+                       ,updateTime    = NOW()
+                 WHERE  edgeIP        = ':edgeIP'
+                ]]>
+            </content>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_Heartbeat_Del"> 
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                DELETE FROM THeartbeat WHERE edgeIP = ':edgeIP'
+                ]]>
+            </content>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_Heartbeat_IsExists"> 
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                SELECT  COUNT(1) AS Edge_IsExists
+                  FROM  THeartbeat  A
+                 WHERE  A.edgeIP = ':edgeIP'
+                ]]>
+            </content>
+            
+            <result>
+                <row>java.util.HashMap</row>
+                <cfill>put(colName ,colValue)</cfill>
+                <cstyle>UPPER</cstyle>
+            </result>
+            
+        </sql>
+        
+        
+    
+        <sql id="XSQL_Common_Heartbeat_Query"> 
+            
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                SELECT  A.edgeIP
+                       ,A.hostIP
+                       ,A.osType
+                       ,A.edgeStartTime
+                       ,A.osTime
+                       ,A.claimCount
+                       ,A.taskOKCount
+                       ,A.isValid
+                       ,A.invalidTime
+                       ,A.projectID
+                       ,A.comment
+                       ,A.createTime   
+                       ,A.updateTime   
+                  FROM  THeartbeat  A
+                 WHERE  A.isValid     = 1
+             <[    AND  A.updateTime >= Date_Add(Now() ,Interval :second Second)   ]>
+             <[    AND  A.osTime     >= Date_Add(Now() ,Interval :second Second)   ]>
+             <[    AND  A.edgeIP      = ':edgeIP'                                  ]>
+             <[    AND  A.projectID   = ':projectID'                               ]>
+                 ORDER  BY A.edgeStartTime 
+                          ,A.edgeIP
+                ]]>
+            </content>
+            
+            <result>
+                <row>org.hy.microservice.common.heartbeat.Heartbeat</row>
+                <cfill>setter(colValue)</cfill>
+            </result>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_Heartbeat_Query_DistinctHostIP"> 
+            
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                SELECT  XB.edgeIP
+                       ,XB.hostIP
+                       ,XB.osType
+                       ,XB.edgeStartTime
+                       ,XB.osTime
+                       ,XB.claimCount
+                       ,XB.taskOKCount
+                       ,XB.isValid
+                       ,XB.invalidTime
+                       ,XB.projectID
+                       ,XB.comment
+                       ,XB.createTime   
+                       ,XB.updateTime 
+                  FROM (
+                        SELECT  WA.hostIP
+                               ,MIN(WA.edgeStartTime) AS edgeStartTime
+                          FROM  (
+                                SELECT  A.hostIP
+                                       ,A.edgeStartTime 
+                                  FROM  THeartbeat  A
+                                 WHERE  A.isValid     = 1
+                             <[    AND  A.updateTime >= Date_Add(Now() ,Interval :second Second)   ]>
+                             <[    AND  A.osTime     >= Date_Add(Now() ,Interval :second Second)   ]>
+                             <[    AND  A.edgeIP      = ':edgeIP'                                  ]>
+                             <[    AND  A.projectID   = ':projectID'                               ]>
+                                 ORDER  BY A.edgeStartTime 
+                                          ,A.edgeIP
+                                )  WA
+                          GROUP  BY WA.hostIP
+                       )  XA
+                       ,THeartbeat  XB
+                 WHERE  XA.hostIP        = XB.hostIP
+                   AND  XA.edgeStartTime = XB.edgeStartTime
+                 ORDER  BY XB.edgeStartTime 
+                          ,XB.edgeIP
+                ]]>
+            </content>
+            
+            <result>
+                <row>org.hy.microservice.common.heartbeat.Heartbeat</row>
+                <cfill>setter(colValue)</cfill>
+            </result>
+            
+            <comment>心跳列表（去除重复的Host IP）</comment>
+            
+        </sql>
+        
+    </sqls>
+
+<!--
+监控服务运行情况
+
+SELECT  * 
+  FROM  THeartbeat 
+ ORDER  BY FROM_UNIXTIME(FLOOR(UNIX_TIMESTAMP(updateTime) / (5 * 60)) * (5 * 60)) DESC 
+       ,edgeStartTime DESC 
+       ,edgeIP DESC;
+
+SELECT * FROM data.TOperationLog A ORDER BY A.createTime DESC  
+ -->
+</config>

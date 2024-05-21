@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="sqls"            class="java.util.ArrayList" />
+    <import name="sql"             class="org.hy.common.xml.XSQL" />
+
+
+
+    <!-- 心跳信息的相关SQL -->
+    <sqls>
+    
+        <sql id="XSQL_Common_Create_Heartbeat">
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                CREATE TABLE THeartbeat
+                (
+                 edgeIP                     VARCHAR(128)  NOT NULL        COMMENT '边缘服务IP地址'
+                ,hostIP                     VARCHAR(128)  NOT NULL        COMMENT '宿主服务IP地址'
+                ,osType                     VARCHAR(200)  NOT NULL        COMMENT '操作系统的类型'
+                ,edgeStartTime              DATETIME      NOT NULL        COMMENT '边缘计算服务的启动时间'
+                ,osTime                     DATETIME      NOT NULL        COMMENT '操作系统的当前时间'
+                ,claimCount                 INT           NOT NULL        COMMENT '认领任务数量'
+                ,taskOKCount                INT           NOT NULL        COMMENT '任务执行正常的数量'
+                ,isValid                    INT           NOT NULL        COMMENT '是否有效'
+                ,invalidTime                DATETIME                      COMMENT '失效时间'
+                ,projectID                  VARCHAR(64)                   COMMENT '项目ID'
+                ,comment                    VARCHAR(4000)                 COMMENT '注释说明'
+                ,createTime                 DATETIME      NOT NULL        COMMENT '创建时间'
+                ,updateTime                 DATETIME      NOT NULL        COMMENT '修改时间'
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;/
+                
+                ALTER TABLE THeartbeat ADD CONSTRAINT PK_Heartbeat        PRIMARY KEY (edgeIP);/
+                
+                ALTER TABLE THeartbeat COMMENT = '心跳信息';/
+                ]]>
+            </content>
+            
+            <comment>心跳信息</comment>
+            <create if="启用 == IsCreateDB_MS_Common.getValue">THeartbeat</create>
+            
+        </sql>
+        
+    </sqls>
+    
+</config>

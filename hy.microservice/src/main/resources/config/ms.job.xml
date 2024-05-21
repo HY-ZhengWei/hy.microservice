@@ -23,9 +23,37 @@
         </job>
         
         
+        <job id="JOB_MS_Common_Heartbeat">
+            <code>JOB_MS_Common_Heartbeat</code>
+            <name>定时心跳任务</name>
+            <comment>定时心跳任务</comment>
+            <intervalType ref="this.$IntervalType_Second"/>
+            <intervalLen>30</intervalLen>
+            <startTime>2023-12-11 00:00:00</startTime>
+            <xid>HeartbeatService</xid>
+            <methodName>heartbeat</methodName>
+            <initExecute>true</initExecute>
+        </job>
+        
+        
+        <job id="JOB_MS_Common_HeartbeatRedisDelExpire">
+            <code>JOB_MS_Common_HeartbeatRedisDelExpire</code>
+            <name>删除记录在Redis中过期心跳</name>
+            <comment>删除记录在Redis中过期心跳</comment>
+            <intervalType ref="this.$IntervalType_Day"/>
+            <intervalLen>1</intervalLen>
+            <startTime>2024-03-26 00:00:00</startTime>
+            <xid>HeartbeatCache</xid>
+            <methodName>delExpire</methodName>
+        </job>
+        
+        
         
         <jobs id="JOBS_MS_Common" this="JOBS_MS_Common">
             <addJob ref="JOB_MS_Common_SaveOperationLogs" />
+            
+            <addJob ref="JOB_MS_Common_Heartbeat"               if="MS_Common_IsHeartbeat.getValue == 启用" />
+            <addJob ref="JOB_MS_Common_HeartbeatRedisDelExpire" if="MS_Common_IsHeartbeat.getValue == 启用" />
         
             <call name="startup" />
         </jobs>

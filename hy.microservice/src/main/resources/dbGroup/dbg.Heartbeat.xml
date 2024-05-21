@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="sqls"            class="java.util.ArrayList" />
+    <import name="sqlGroup"        class="org.hy.common.xml.plugins.XSQLGroup" />
+    <import name="sql"             class="org.hy.common.xml.XSQL" />
+
+
+
+    <!-- 边缘服务心跳的相关SQL组 -->
+    <sqls>
+        
+        <sqlGroup id="GXSQL_Common_Heartbeat_Save">
+            <comment>保存边缘服务的心跳信息</comment>
+            
+            <sqlNode>
+                <sql  ref="XSQL_Common_Heartbeat_IsExists" />
+                <type ref="this.$Type_Query" />
+            </sqlNode>
+            
+            <sqlNode>
+                <sql  ref="XSQL_Common_Heartbeat_Insert" />
+                <type ref="this.$Type_ExecuteUpdate" />
+                <condition><![CDATA[:Edge_IsExists <= 0]]></condition>
+            </sqlNode>
+            
+            <sqlNode>
+                <sql  ref="XSQL_Common_Heartbeat_Update" />
+                <type ref="this.$Type_ExecuteUpdate" />
+                <condition><![CDATA[:Edge_IsExists >= 1]]></condition>
+            </sqlNode>
+        </sqlGroup>
+        
+    </sqls>
+    
+</config>

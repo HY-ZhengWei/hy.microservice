@@ -10,7 +10,7 @@
     <!-- 系统操作日志的相关SQL -->
     <sqls>
     
-        <sql id="XSQL_Create_OperationLog">
+        <sql id="XSQL_Common_Create_OperationLog">
         
             <dataSourceGroup ref="DSG_MS_Common" />
             

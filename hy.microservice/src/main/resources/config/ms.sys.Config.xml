@@ -69,6 +69,40 @@
             </item>
             
             
+            <!-- 边缘心跳相关配置 Start -->
+            <item id="MS_Common_IsHeartbeat">
+                <name>MS_Common_IsHeartbeat</name>
+                <value>停用</value>
+                <comment>是否启用心跳服务。当启用时，必须配置Redis</comment>
+                <onlyRead>false</onlyRead>
+            </item>
+            
+            
+            <item id="MS_Common_Version">
+                <name>MS_Common_Version</name>
+                <value>1.7.8</value>
+                <comment>边缘计算服务的版本号</comment>
+                <onlyRead>false</onlyRead>
+            </item>
+            
+            
+            <item id="MS_Common_Heartbeat_CheckCount">
+                <name>MS_Common_Heartbeat_CheckCount</name>
+                <valueInt>2</valueInt>
+                <comment>边缘计算心跳检测次数，但数次均为检测到心跳时，标记为失联</comment>
+                <onlyRead>false</onlyRead>
+            </item>
+            
+            
+            <item id="MS_Common_Heartbeat_RedisDelExpire">
+                <name>MS_Common_Heartbeat_RedisDelExpire</name>
+                <valueInt>10</valueInt>
+                <comment>记录在Redis中的边缘计算心跳，删除过期心跳（单位：天）</comment>
+                <onlyRead>false</onlyRead>
+            </item>
+            <!-- 边缘心跳相关配置 End -->
+            
+            
             <item id="MS_Common_SessionTimeOut">
                 <name>MS_Common_SessionTimeOut</name>
                 <valueLong>36000</valueLong>
