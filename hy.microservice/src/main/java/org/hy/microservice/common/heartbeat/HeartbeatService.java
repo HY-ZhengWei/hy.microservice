@@ -10,6 +10,7 @@ import java.util.Map;
 import org.hy.common.Date;
 import org.hy.common.Help;
 import org.hy.common.PartitionMap;
+import org.hy.common.Return;
 import org.hy.common.StringHelp;
 import org.hy.common.app.Param;
 import org.hy.common.thread.Job;
@@ -20,6 +21,7 @@ import org.hy.common.xml.log.Logger;
 import org.hy.microservice.common.BaseViewMode;
 import org.hy.microservice.common.heartbeat.task.ITask;
 import org.hy.microservice.common.heartbeat.task.ITaskService;
+import org.hy.microservice.common.heartbeat.task.ITaskX;
 
 
 
@@ -68,7 +70,7 @@ public class HeartbeatService implements IHeartbeatService ,Serializable
     private Map<String ,String>                            claimTasks  = new HashMap<String ,String>();
     
     /** 认领任务的XPull对象集合 */
-    private List<ITask>                                    claimTaskList;
+    private List<ITaskX>                                   claimTaskList;
     
     /** 服务所在的主机IP地址 */
     private String                                         myIP;
@@ -93,7 +95,7 @@ public class HeartbeatService implements IHeartbeatService ,Serializable
     public HeartbeatService()
     {
         this.myIP          = Help.getIP();
-        this.claimTaskList = new ArrayList<ITask>();
+        this.claimTaskList = new ArrayList<ITaskX>();
         
         try
         {
@@ -207,13 +209,13 @@ public class HeartbeatService implements IHeartbeatService ,Serializable
             this.claimTaskList.clear();
             for (ITask v_Task : v_MyTasks)
             {
-                boolean v_IsChange = v_Task.refresh();
+                Return<ITaskX> v_IsChange = v_TaskService.refresh(v_Task);
                 
-                this.claimTaskList.add(v_Task);
+                this.claimTaskList.add(v_IsChange.getParamObj());
                 this.jobXIDs.put(v_Task.getXid() ,v_NowTime);
-                $Logger.info("认领任务(" + (++v_Index) + "/" + v_MyTasks.size() + ")：" + (v_IsChange ? "有更新的：" : "保持不变：") + v_Task.getXid());
+                $Logger.info("认领任务(" + (++v_Index) + "/" + v_MyTasks.size() + ")：" + (v_IsChange.booleanValue() ? "有更新的：" : "保持不变：") + v_Task.getXid());
                 
-                if ( v_IsChange )
+                if ( v_IsChange.booleanValue() )
                 {
                     v_IsChangeByAll = true;
                 }
@@ -321,9 +323,9 @@ public class HeartbeatService implements IHeartbeatService ,Serializable
         {
             v_ClaimCount = this.claimTaskList.size();
             
-            for (ITask v_Task : this.claimTaskList)
+            for (ITaskX v_TaskX : this.claimTaskList)
             {
-                v_TaskOKCount += v_Task.isRunOK() ? 1 : 0;
+                v_TaskOKCount += v_TaskX.isRunOK() ? 1 : 0;
             }
         }
         
@@ -382,8 +384,9 @@ public class HeartbeatService implements IHeartbeatService ,Serializable
      */
     private void releaseAddClaimTasks(Long i_NowTime ,Jobs i_Jobs)
     {
-        Map<String ,String> v_ClaimTasks = new HashMap<String ,String>();
-        boolean             v_IsChange   = false;
+        ITaskService        v_TaskService = (ITaskService) XJava.getObject("MS_Common_Heartbeat_TaskService");
+        Map<String ,String> v_ClaimTasks  = new HashMap<String ,String>();
+        boolean             v_IsChange    = false;
         
         if ( !Help.isNull(this.jobXIDs) )
         {
@@ -418,66 +421,73 @@ public class HeartbeatService implements IHeartbeatService ,Serializable
                 // 添加&更新定时任务
                 else
                 {
-                    ITask   v_Task    = (ITask) XJava.getObject(v_TaskXID);
+                    ITaskX  v_TaskX    = (ITaskX) XJava.getObject(v_TaskXID);
                     boolean v_IsSaveIP = false;        // 避免重复写库
                     
-                    if ( v_Task.isWebPush() )
+                    if ( v_TaskX.isWebPush() )
                     {
                         Job v_JobWS = (Job)XJava.getObject(v_JobXID_WS);
                         if ( v_JobWS == null )
                         {
-                            this.addJobWebSocketByJobs(i_Jobs ,v_JobXID_WS ,v_Task);
+                            this.addJobWebSocketByJobs(i_Jobs ,v_JobXID_WS ,v_TaskX);
                             v_IsChange = true;
                             v_IsSaveIP = true;
                             
-                            v_Task.updateClaimIP(this.myKubernetesIP);
+                            if ( v_TaskService != null )
+                            {
+                                // 这里只能是K8s的IP，因为前端页面还要通过此IP访问WebSocket服务
+                                v_TaskService.updateClaimIP(v_TaskX ,this.myKubernetesIP);
+                            }
                         }
                         else
                         {
-                            if ( v_JobWS.getIntervalLen() != v_Task.getWebPushInterval().intValue() )
+                            if ( v_JobWS.getIntervalLen() != v_TaskX.getWebPushInterval().intValue() )
                             {
-                                v_JobWS.setIntervalLen(v_Task.getWebPushInterval());
+                                v_JobWS.setIntervalLen(v_TaskX.getWebPushInterval());
                                 v_IsChange = true;
                             }
                         }
                         
-                        String v_FirstTime = this.claimTasks.get(v_Task.getWebPushName());
+                        String v_FirstTime = this.claimTasks.get(v_TaskX.getWebPushName());
                         if ( Help.isNull(v_FirstTime) )
                         {
                             v_FirstTime = Date.getNowTime().getFull();
                         }
-                        v_ClaimTasks.put(v_Task.getWebPushName() ,v_FirstTime);
+                        v_ClaimTasks.put(v_TaskX.getWebPushName() ,v_FirstTime);
                     }
                     
-                    if ( v_Task.isXsql() )
+                    if ( v_TaskX.isXsql() )
                     {
                         Job v_JobDB = (Job)XJava.getObject(v_JobXID_DB);
                         if ( v_JobDB == null )
                         {
-                            this.addJobDatabaseByJobs(i_Jobs ,v_JobXID_DB ,v_Task);
+                            this.addJobDatabaseByJobs(i_Jobs ,v_JobXID_DB ,v_TaskX);
                             v_IsChange = true;
                             
                             if ( !v_IsSaveIP )
                             {
-                                // 这里只能是K8s的IP，因为前端页面还要通过此IP访问WebSocket服务
-                                v_Task.updateClaimIP(this.myKubernetesIP);
+                                if ( v_TaskService != null )
+                                {
+                                    // 这里只能是K8s的IP，因为前端页面还要通过此IP访问WebSocket服务
+                                    v_TaskService.updateClaimIP(v_TaskX ,this.myKubernetesIP);
+                                }
                             }
                         }
                         else
                         {
-                            if ( v_JobDB.getIntervalLen() != v_Task.getXsqlInterval().intValue() )
+                            if ( v_JobDB.getIntervalLen() != v_TaskX.getXsqlInterval().intValue() )
                             {
-                                v_JobDB.setIntervalLen(v_Task.getXsqlInterval());
+                                v_JobDB.setIntervalLen(v_TaskX.getXsqlInterval());
                                 v_IsChange = true;
                             }
                         }
                         
-                        String v_FirstTime = this.claimTasks.get(v_Task.getXsqlXID());
+                        String v_FirstTime = this.claimTasks.get(v_TaskX.getXsqlXID());
                         if ( Help.isNull(v_FirstTime) )
                         {
                             v_FirstTime = Date.getNowTime().getFull();
                         }
-                        v_ClaimTasks.put(v_Task.getXsqlXID() ,v_FirstTime);
+                        v_ClaimTasks.put(v_TaskX.getXsqlXID() ,v_FirstTime);
                     }
                 }
             }
@@ -505,20 +515,20 @@ public class HeartbeatService implements IHeartbeatService ,Serializable
      *
      * @param i_Jobs
      * @param i_Code
-     * @param i_Task
+     * @param i_TaskX
      */
-    private void addJobWebSocketByJobs(Jobs i_Jobs ,String i_Code ,ITask i_Task)
+    private void addJobWebSocketByJobs(Jobs i_Jobs ,String i_Code ,ITaskX i_TaskX)
     {
         Job v_Job = new Job();
         
         v_Job.setXJavaID(     i_Code);
         v_Job.setCode   (     i_Code);
-        v_Job.setName   (     i_Task.getXid());
+        v_Job.setName   (     i_TaskX.getXid());
         v_Job.setIntervalType(Job.$IntervalType_Second);
-        v_Job.setIntervalLen( i_Task.getWebPushInterval());
-        v_Job.setXid(         i_Task.getXid());
-        v_Job.setMethodName(  i_Task.getWebPushExecuteName());
-        v_Job.setComment(     i_Task.getComment());
+        v_Job.setIntervalLen( i_TaskX.getWebPushInterval());
+        v_Job.setXid(         i_TaskX.getXid());
+        v_Job.setMethodName(  i_TaskX.getWebPushExecuteName());
+        v_Job.setComment(     i_TaskX.getComment());
         v_Job.setStartTime(   Date.getNowTime().getFirstTimeOfDay().getFull());
         
         XJava.putObject(i_Code ,v_Job);
@@ -536,20 +546,20 @@ public class HeartbeatService implements IHeartbeatService ,Serializable
      *
      * @param i_Jobs
      * @param i_Code
-     * @param i_Task
+     * @param i_TaskX
      */
-    private void addJobDatabaseByJobs(Jobs i_Jobs ,String i_Code ,ITask i_Task)
+    private void addJobDatabaseByJobs(Jobs i_Jobs ,String i_Code ,ITaskX i_TaskX)
     {
         Job v_Job = new Job();
         
         v_Job.setXJavaID(     i_Code);
         v_Job.setCode   (     i_Code);
-        v_Job.setName   (     i_Task.getXid());
+        v_Job.setName   (     i_TaskX.getXid());
         v_Job.setIntervalType(Job.$IntervalType_Minute);
-        v_Job.setIntervalLen( i_Task.getXsqlInterval());
-        v_Job.setXid(         i_Task.getXid());
-        v_Job.setMethodName(  i_Task.getXsqlExecuteName());
-        v_Job.setComment(     i_Task.getComment());
+        v_Job.setIntervalLen( i_TaskX.getXsqlInterval());
+        v_Job.setXid(         i_TaskX.getXid());
+        v_Job.setMethodName(  i_TaskX.getXsqlExecuteName());
+        v_Job.setComment(     i_TaskX.getComment());
         v_Job.setStartTime(   Date.getNowTime().getFirstTimeOfDay().getFull());
         
         XJava.putObject(i_Code ,v_Job);
