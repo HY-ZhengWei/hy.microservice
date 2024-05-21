@@ -28,12 +28,12 @@
             <redisVersion>6</redisVersion>            <!-- 可选配置：Redis协议版本 -->
             <maxRedirects>5</maxRedirects>            <!-- 可选配置：最大重定向次数 -->
             
-            <add><redis><init ref="Redis_MS_Common"/><host>10.1.85.23</host><port>18501</port></redis></add>
-            <add><redis><init ref="Redis_MS_Common"/><host>10.1.85.23</host><port>18502</port></redis></add>
-            <add><redis><init ref="Redis_MS_Common"/><host>10.1.85.22</host><port>18503</port></redis></add>
-            <add><redis><init ref="Redis_MS_Common"/><host>10.1.85.22</host><port>18504</port></redis></add>
-            <add><redis><init ref="Redis_MS_Common"/><host>10.1.85.21</host><port>18505</port></redis></add>
-            <add><redis><init ref="Redis_MS_Common"/><host>10.1.85.21</host><port>18506</port></redis></add>
+            <add><redis><init ref="Redis_MS_Common"/><host>127.0.0.1</host><port>18501</port></redis></add>
+            <add><redis><init ref="Redis_MS_Common"/><host>127.0.0.1</host><port>18502</port></redis></add>
+            <add><redis><init ref="Redis_MS_Common"/><host>127.0.0.2</host><port>18503</port></redis></add>
+            <add><redis><init ref="Redis_MS_Common"/><host>127.0.0.2</host><port>18504</port></redis></add>
+            <add><redis><init ref="Redis_MS_Common"/><host>127.0.0.3</host><port>18505</port></redis></add>
+            <add><redis><init ref="Redis_MS_Common"/><host>127.0.0.3</host><port>18506</port></redis></add>
         </redisCluster>
         
         
