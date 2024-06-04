@@ -39,7 +39,7 @@ public class JU_Data_DBDocument
     @Test
     public void makeDoc()
     {
-        DBDocument.makeDatabaseDoc("DS_MS_Data" ,"V9.0" ,null ,"OpenApi.数据库设计-数据服务");
+        DBDocument.makeDatabaseDoc("DS_MS_Data" ,"V10.0" ,null ,"OpenApi.数据库设计-Data数据服务");
     }
     
 }

@@ -11,17 +11,17 @@ import org.junit.Test;
  * 数据库设计文档的生成
  *
  * @author      ZhengWei(HY)
- * @createDate  2024-01-06
+ * @createDate  2024-06-03
  * @version     v1.0
  */
-public class JU_Message_DBDocument
+public class JU_PLC_DBDocument
 {
     
     private static boolean $IsInit = false;
     
     
     
-    public JU_Message_DBDocument()
+    public JU_PLC_DBDocument()
     {
         synchronized ( this )
         {
@@ -29,7 +29,7 @@ public class JU_Message_DBDocument
             {
                 $IsInit = true;
                 
-                new XJavaInit(false ,"C:\\Software\\apache-tomcat-9.0.44\\webapps\\hy.microservice.message\\WEB-INF\\classes\\");
+                new XJavaInit(false ,"C:\\Software\\apache-tomcat-9.0.44\\webapps\\hy.microservice.plc\\WEB-INF\\classes\\");
             }
         }
     }
@@ -39,7 +39,7 @@ public class JU_Message_DBDocument
     @Test
     public void makeDoc()
     {
-        DBDocument.makeDatabaseDoc("DS_MS_Message" ,"V10.0" ,null ,"OpenApi.数据库设计-短消息服务");
+        DBDocument.makeDatabaseDoc("DS_MS_PLC" ,"V1.0" ,null ,"OpenApi.数据库设计-PLC数据物联");
     }
     
 }

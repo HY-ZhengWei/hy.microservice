@@ -39,7 +39,7 @@ public class JU_Timing_DBDocument
     @Test
     public void makeDoc()
     {
-        DBDocument.makeDatabaseDoc("DS_MS_Timing" ,"V1.4" ,null ,"OpenApi.数据库设计-定时任务");
+        DBDocument.makeDatabaseDoc("DS_MS_Timing" ,"V1.8" ,null ,"OpenApi.数据库设计-Timing定时任务");
     }
     
 }
