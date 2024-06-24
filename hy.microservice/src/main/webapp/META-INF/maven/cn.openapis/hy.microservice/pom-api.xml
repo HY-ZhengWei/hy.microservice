@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     
     <groupId>org</groupId>
-    <artifactId>hy.microservice-api</artifactId>
+    <artifactId>hy.microservice</artifactId>
     <version>1.8.3</version>
     <packaging>jar</packaging>
     
@@ -191,24 +191,27 @@
                 </configuration>
             </plugin>
             
-            <!-- Tomcat 启动Spring Boot ，并加载本地Jar包 Add ZhengWei(HY) 2019-01-13 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <configuration>
-                    <!--注意增加这两行，在打包时相关的类会被独立打成jar -->
-                    <attachClasses>true</attachClasses>
-                    <classesClassifier>api</classesClassifier>
-                    <webResources>
-                        <resource>
-                            <directory>${project.basedir}/src/main/resources/lib/</directory>
-                            <targetPath>WEB-INF/lib</targetPath>
-                            <includes>
-                                <include>**/*.jar</include>
-                            </includes>
-                        </resource>
-                    </webResources>
-                </configuration>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <finalName>${project.artifactId}-${project.version}-api</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <classifier>api</classifier>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             
         </plugins>
