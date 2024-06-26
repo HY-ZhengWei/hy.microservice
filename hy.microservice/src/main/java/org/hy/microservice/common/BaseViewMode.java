@@ -21,10 +21,8 @@ public class BaseViewMode extends SerializableDef
 {
     private static final long serialVersionUID = -3998918924300953503L;
     
-    
-    
     /** 服务启动时间 */
-    public final static Date $StartupTime = new Date();
+    public final static Date $StartupTime = BaseData.$StartupTime;
     
 
     

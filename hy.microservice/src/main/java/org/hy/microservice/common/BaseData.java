@@ -1,6 +1,7 @@
 package org.hy.microservice.common;
 
 import org.hy.common.Date;
+import org.hy.common.Help;
 import org.hy.common.xml.SerializableDef;
 
 
@@ -8,43 +9,111 @@ import org.hy.common.xml.SerializableDef;
 
 
 /**
- * 通用的领域模型
+ * 与数据层交互的基础类
  *
  * @author      ZhengWei(HY)
- * @createDate  2024-06-12
+ * @createDate  2024-06-25
  * @version     v1.0
- * @param <Data>  数据对象的类型
  */
-public class BaseDomain<Data extends BaseData> extends SerializableDef
+public class BaseData extends SerializableDef
 {
- 
-    private static final long serialVersionUID = 5055692459964652206L;
+    
+    private static final long serialVersionUID = -3998918924300953503L;
     
     
     
-    /** 数据对象 */
-    protected Data data;
+    /** 服务启动时间 */
+    public final static Date $StartupTime = new Date();
     
-    
-    
-    /**
-     * 获取：Data 类型的数据
-     */
-    public Data gatData()
-    {
-        return data;
-    }
 
     
-    /**
-     * 设置：Data 类型的数据
-     * 
-     * @param i_Data 类型的数据
-     */
-    public void satData(Data i_Data)
-    {
-        this.data = i_Data;
-    }
+    /** 应用appKey */
+    private String  appKey;
+    
+    /** 票据号 */
+    private String  token;
+    
+    /** 设备号 */
+    private String  deviceNo;
+
+    /** 设备类型 */
+    private String  deviceType;
+    
+    /** 业务类型（值内容由业务决定） */
+    private String  serviceType;
+    
+    /** 项目ID */
+    private String  projectID;
+    
+    /** 用户编号 */
+    private String  userID;
+    
+    /** 用户名称 */
+    private String  userName;
+    
+    /** 用户头像 */
+    private String  userIcon;
+    
+    /** 用户类型 */
+    private String  userType;
+    
+    /** 过期时间 */
+    private Date    expireTime;
+    
+    /** 创建时间 */
+    private Date    createTime;
+    
+    /** 修改时间 */
+    private Date    updateTime;
+    
+    /** 开始时间 */
+    private Date    startTime;
+    
+    /** 结束时间 */
+    private Date    endTime;
+    
+    /** 创建人编号 */
+    private String  createUserID;
+    
+    /** 修改者编号 */
+    private String  updateUserID;
+    
+    /** 有效标记。1有效；-1无效 */
+    private Integer isValid;
+    
+    /** 删除标记。1删除；0未删除 */
+    private Integer isDel;
+    
+    /** 是否显示。1显示；0不显示 */
+    private Integer isShow;
+    
+    /** 排列显示顺序。数据越大越在前显示 */
+    private Integer orderBy;
+    
+    /** 审核状态：0：待审核、1：已审核 */
+    private String  auditState;
+
+    /** 审核结果，0：不通过、1：通过 */
+    private String  auditResult;
+
+    /** 审核时间 */
+    private Date    auditTime;
+    
+    /** 页码。有效下标从1开始 */
+    private Long    pageIndex;
+
+    /** 每页显示数量 */
+    private Long    pagePerCount;
+    
+    /** 总行数 */
+    private Long    totalCount;
+    
+    /** 备注说明 */
+    private String  remarks;
+    
+    /** 注解说明 */
+    private String  comment;
+    
     
     
     /**
@@ -52,7 +121,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getAppKey()
     {
-        return this.data.getAppKey();
+        return appKey;
     }
 
     
@@ -63,7 +132,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setAppKey(String appKey)
     {
-        this.data.setAppKey(appKey);
+        this.appKey = appKey;
     }
 
     
@@ -72,7 +141,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getToken()
     {
-        return this.data.getToken();
+        return token;
     }
 
     
@@ -83,16 +152,60 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setToken(String token)
     {
-        this.data.setToken(token);
+        this.token = token;
     }
 
 
+    /**
+     * 数量转为短数输出显示
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2020-10-19
+     * @version     v1.0
+     *
+     * @param i_Count
+     * @return
+     */
+    protected  String toCountInfo(Long i_Count)
+    {
+        if ( i_Count == null )
+        {
+            return "0";
+        }
+        
+        // 1Y
+        if ( i_Count.longValue() >= 100000000 )
+        {
+            return Help.round(i_Count.longValue() / 100000000 ,2) + "Y";
+        }
+        // 1Y ~ 100W
+        else if ( i_Count.longValue() >= 1000000 )
+        {
+            return Help.round(i_Count.longValue() / 10000 ,1) + "W";
+        }
+        // 100W ~ 1W
+        else if ( i_Count.longValue() >= 10000 )
+        {
+            return Help.round(i_Count.longValue() / 10000 ,2) + "W";
+        }
+        // 1W ~ 1K
+        else if ( i_Count.longValue() >= 1000 )
+        {
+            return Help.round(i_Count.longValue() / 1000 ,2) + "K";
+        }
+        else
+        {
+            return "" + i_Count.longValue();
+        }
+    }
+    
+    
     /**
      * 获取：设备号
      */
     public String getDeviceNo()
     {
-        return this.data.getDeviceNo();
+        return deviceNo;
     }
 
     
@@ -101,7 +214,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getDeviceType()
     {
-        return this.data.getDeviceType();
+        return deviceType;
     }
 
     
@@ -110,7 +223,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getServiceType()
     {
-        return this.data.getServiceType();
+        return serviceType;
     }
 
     
@@ -119,7 +232,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getUserID()
     {
-        return this.data.getUserID();
+        return userID;
     }
 
     
@@ -128,7 +241,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getUserName()
     {
-        return this.data.getUserName();
+        return userName;
     }
 
     
@@ -137,7 +250,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getUserIcon()
     {
-        return this.data.getUserIcon();
+        return userIcon;
     }
 
     
@@ -146,7 +259,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public Date getCreateTime()
     {
-        return this.data.getCreateTime();
+        return createTime;
     }
 
     
@@ -155,7 +268,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public Integer getIsShow()
     {
-        return this.data.getIsShow();
+        return isShow;
     }
 
     
@@ -164,7 +277,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getAuditState()
     {
-        return this.data.getAuditState();
+        return auditState;
     }
 
     
@@ -173,7 +286,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getAuditResult()
     {
-        return this.data.getAuditResult();
+        return auditResult;
     }
 
     
@@ -182,7 +295,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public Date getAuditTime()
     {
-        return this.data.getAuditTime();
+        return auditTime;
     }
 
     
@@ -193,7 +306,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setDeviceNo(String deviceNo)
     {
-        this.data.setDeviceNo(deviceNo);
+        this.deviceNo = deviceNo;
     }
 
     
@@ -204,7 +317,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setDeviceType(String deviceType)
     {
-        this.data.setDeviceType(deviceType);
+        this.deviceType = deviceType;
     }
 
     
@@ -215,7 +328,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setServiceType(String serviceType)
     {
-        this.data.setServiceType(serviceType);
+        this.serviceType = serviceType;
     }
 
     
@@ -226,7 +339,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setUserID(String userID)
     {
-        this.data.setUserID(userID);
+        this.userID = userID;
     }
 
     
@@ -237,7 +350,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setUserName(String userName)
     {
-        this.data.setUserName(userName);
+        this.userName = userName;
     }
 
     
@@ -248,7 +361,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setUserIcon(String userIcon)
     {
-        this.data.setUserIcon(userIcon);
+        this.userIcon = userIcon;
     }
 
     
@@ -259,7 +372,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setCreateTime(Date createTime)
     {
-        this.data.setCreateTime(createTime);
+        this.createTime = createTime;
     }
 
     
@@ -270,7 +383,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setIsShow(Integer isShow)
     {
-        this.data.setIsShow(isShow);
+        this.isShow = isShow;
     }
 
     
@@ -281,7 +394,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setAuditState(String auditState)
     {
-        this.data.setAuditState(auditState);
+        this.auditState = auditState;
     }
 
     
@@ -292,7 +405,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setAuditResult(String auditResult)
     {
-        this.data.setAuditResult(auditResult);
+        this.auditResult = auditResult;
     }
 
     
@@ -303,7 +416,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setAuditTime(Date auditTime)
     {
-        this.data.setAuditTime(auditTime);
+        this.auditTime = auditTime;
     }
 
     
@@ -312,7 +425,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getUserType()
     {
-        return this.data.getUserType();
+        return userType;
     }
 
     
@@ -323,7 +436,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setUserType(String userType)
     {
-        this.data.setUserType(userType);
+        this.userType = userType;
     }
 
 
@@ -332,13 +445,13 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public Long getStartIndex()
     {
-        if ( this.data.getPageIndex() == null || this.data.getPagePerCount() == null )
+        if ( this.pageIndex == null || this.pagePerCount == null )
         {
             return null;
         }
         else
         {
-            return this.data.getPagePerCount() * (this.data.getPageIndex() - 1);
+            return this.getPagePerCount() * (this.getPageIndex() - 1);
         }
     }
 
@@ -348,21 +461,21 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public Long getPagePerCount()
     {
-        if ( this.data.getPagePerCount() == null )
+        if ( this.pagePerCount == null )
         {
             return null;
         }
-        else if ( this.data.getPagePerCount() > 1000L )
+        else if ( this.pagePerCount > 1000L )
         {
             return 1000L;
         }
-        else if ( this.data.getPagePerCount() <= 0L )
+        else if ( this.pagePerCount <= 0L )
         {
             return 10L;
         }
         else
         {
-            return this.data.getPagePerCount();
+            return pagePerCount;
         }
     }
 
@@ -374,7 +487,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setPagePerCount(Long pagePerCount)
     {
-        this.data.setPagePerCount(pagePerCount);
+        this.pagePerCount = pagePerCount;
     }
 
     
@@ -383,7 +496,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public Long getTotalCount()
     {
-        return this.data.getTotalCount();
+        return totalCount;
     }
 
 
@@ -394,7 +507,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setTotalCount(Long totalCount)
     {
-        this.data.setTotalCount(totalCount);
+        this.totalCount = totalCount;
     }
 
 
@@ -403,7 +516,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public Date getUpdateTime()
     {
-        return this.data.getUpdateTime();
+        return updateTime;
     }
 
     
@@ -414,7 +527,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setUpdateTime(Date updateTime)
     {
-        this.data.setUpdateTime(updateTime);
+        this.updateTime = updateTime;
     }
 
     
@@ -423,7 +536,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public Integer getIsDel()
     {
-        return this.data.getIsDel();
+        return isDel;
     }
 
     
@@ -434,7 +547,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setIsDel(Integer isDel)
     {
-        this.data.setIsDel(isDel);
+        this.isDel = isDel;
     }
 
     
@@ -443,17 +556,17 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public Long getPageIndex()
     {
-        if ( this.data.getPageIndex() == null )
+        if ( this.pageIndex == null )
         {
             return null;
         }
-        else if ( this.data.getPageIndex() <= 0 )
+        else if ( this.pageIndex <= 0 )
         {
             return 1L;
         }
         else
         {
-            return this.data.getPageIndex();
+            return pageIndex;
         }
     }
 
@@ -465,7 +578,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setPageIndex(Long pageIndex)
     {
-        this.data.setPageIndex(pageIndex);
+        this.pageIndex = pageIndex;
     }
 
     
@@ -474,7 +587,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public Integer getOrderBy()
     {
-        return this.data.getOrderBy();
+        return orderBy;
     }
 
 
@@ -485,7 +598,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setOrderBy(Integer orderBy)
     {
-        this.data.setOrderBy(orderBy);
+        this.orderBy = orderBy;
     }
 
     
@@ -494,7 +607,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public Date getExpireTime()
     {
-        return this.data.getExpireTime();
+        return expireTime;
     }
 
 
@@ -505,7 +618,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setExpireTime(Date expireTime)
     {
-        this.data.setExpireTime(expireTime);
+        this.expireTime = expireTime;
     }
     
     
@@ -514,7 +627,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getRemarks()
     {
-        return this.data.getRemarks();
+        return remarks;
     }
 
     
@@ -525,7 +638,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setRemarks(String remarks)
     {
-        this.data.setRemarks(remarks);
+        this.remarks = remarks;
     }
 
 
@@ -534,7 +647,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getCreateUserID()
     {
-        return this.data.getCreateUserID();
+        return createUserID;
     }
 
 
@@ -545,7 +658,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setCreateUserID(String createUserID)
     {
-        this.data.setCreateUserID(createUserID);
+        this.createUserID = createUserID;
     }
 
 
@@ -554,7 +667,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getUpdateUserID()
     {
-        return this.data.getUpdateUserID();
+        return updateUserID;
     }
 
 
@@ -565,7 +678,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setUpdateUserID(String updateUserID)
     {
-        this.data.setUpdateUserID(updateUserID);
+        this.updateUserID = updateUserID;
     }
 
 
@@ -574,7 +687,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public Integer getIsValid()
     {
-        return this.data.getIsValid();
+        return isValid;
     }
 
 
@@ -585,7 +698,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setIsValid(Integer isValid)
     {
-        this.data.setIsValid(isValid);
+        this.isValid = isValid;
     }
 
     
@@ -594,7 +707,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getComment()
     {
-        return this.data.getComment();
+        return comment;
     }
 
 
@@ -605,7 +718,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setComment(String i_Comment)
     {
-        this.data.setComment(i_Comment);
+        this.comment = i_Comment;
     }
 
     
@@ -614,7 +727,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public Date getStartTime()
     {
-        return this.data.getStartTime();
+        return startTime;
     }
 
     
@@ -625,7 +738,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setStartTime(Date i_StartTime)
     {
-        this.data.setStartTime(i_StartTime);
+        this.startTime = i_StartTime;
     }
 
     
@@ -634,7 +747,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public Date getEndTime()
     {
-        return this.data.getEndTime();
+        return endTime;
     }
 
     
@@ -645,7 +758,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setEndTime(Date i_EndTime)
     {
-        this.data.setEndTime(i_EndTime);
+        this.endTime = i_EndTime;
     }
 
     
@@ -654,7 +767,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getProjectID()
     {
-        return this.data.getProjectID();
+        return projectID;
     }
 
     
@@ -665,7 +778,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setProjectID(String i_ProjectID)
     {
-        this.data.setProjectID(i_ProjectID);
+        this.projectID = i_ProjectID;
     }
     
 }
