@@ -74,7 +74,7 @@ public class HeartbeatCache implements IHeartbeatCache
         if ( v_InvalidTime != null )
         {
             // 确保仅首次写入无效时间，之后将不在记录无效时间
-            v_Redis.insert("msModbus" ,"Heartbeat" ,io_Heartbeat.getEdgeIP() ,"invalidTime" ,io_Heartbeat.getInvalidTime().getFull());
+            v_Redis.insert(this.redisDatabaseName.getValue() ,$RTable ,io_Heartbeat.getEdgeIP() ,"invalidTime" ,io_Heartbeat.getInvalidTime().getFull());
             io_Heartbeat.setInvalidTime(null);
         }
         
