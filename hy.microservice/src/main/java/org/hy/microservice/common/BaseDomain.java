@@ -27,6 +27,13 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
     
     
     
+    public BaseDomain(Data i_Data)
+    {
+        this.data = i_Data;
+    }
+    
+    
+    
     /**
      * 获取：Data 类型的数据
      */
