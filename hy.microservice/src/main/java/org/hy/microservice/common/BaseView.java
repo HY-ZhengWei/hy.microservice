@@ -3,57 +3,58 @@ package org.hy.microservice.common;
 import org.hy.common.Date;
 import org.hy.common.xml.SerializableDef;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 
 
 
 
 /**
- * 通用的领域模型
+ * 与页面交互的基础类（2024新版）
  *
  * @author      ZhengWei(HY)
- * @createDate  2024-06-12
+ * @createDate  2024-07-03
  * @version     v1.0
- * @param <Data>  数据对象的类型
  */
-public class BaseDomain<Data extends BaseData> extends SerializableDef
+public class BaseView<Domain extends BaseDomain<? extends BaseData>> extends SerializableDef
 {
- 
-    private static final long serialVersionUID = 5055692459964652206L;
+
+    private static final long serialVersionUID = -1012316681966628518L;
     
     /** 服务启动时间 */
     public final static Date $StartupTime = BaseData.$StartupTime;
     
     
     
-    /** 数据对象 */
-    protected Data data;
+    /** 领域数据 */
+    protected Domain domain;
     
     
     
-    public BaseDomain(Data i_Data)
+    public BaseView(Domain i_Domain)
     {
-        this.data = i_Data;
+        this.domain = i_Domain;
     }
     
     
     
     /**
-     * 获取：Data 类型的数据
+     * 获取：领域数据
      */
-    public Data gatData()
+    public Domain gatDomain()
     {
-        return data;
+        return domain;
     }
 
     
     /**
-     * 设置：Data 类型的数据
+     * 设置：领域数据
      * 
-     * @param i_Data 类型的数据
+     * @param i_Domain 类型的数据
      */
-    public void satData(Data i_Data)
+    public void satDomain(Domain i_Domain)
     {
-        this.data = i_Data;
+        this.domain = i_Domain;
     }
     
     
@@ -62,7 +63,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getAppKey()
     {
-        return this.data.getAppKey();
+        return this.domain.getAppKey();
     }
 
     
@@ -73,7 +74,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setAppKey(String appKey)
     {
-        this.data.setAppKey(appKey);
+        this.domain.setAppKey(appKey);
     }
 
     
@@ -82,7 +83,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getToken()
     {
-        return this.data.getToken();
+        return this.domain.getToken();
     }
 
     
@@ -93,7 +94,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setToken(String token)
     {
-        this.data.setToken(token);
+        this.domain.setToken(token);
     }
 
 
@@ -102,7 +103,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getDeviceNo()
     {
-        return this.data.getDeviceNo();
+        return this.domain.getDeviceNo();
     }
 
     
@@ -111,7 +112,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getDeviceType()
     {
-        return this.data.getDeviceType();
+        return this.domain.getDeviceType();
     }
 
     
@@ -120,7 +121,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getServiceType()
     {
-        return this.data.getServiceType();
+        return this.domain.getServiceType();
     }
 
     
@@ -129,7 +130,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getUserID()
     {
-        return this.data.getUserID();
+        return this.domain.getUserID();
     }
 
     
@@ -138,7 +139,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getUserName()
     {
-        return this.data.getUserName();
+        return this.domain.getUserName();
     }
 
     
@@ -147,7 +148,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getUserIcon()
     {
-        return this.data.getUserIcon();
+        return this.domain.getUserIcon();
     }
 
     
@@ -156,7 +157,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public Integer getIsShow()
     {
-        return this.data.getIsShow();
+        return this.domain.getIsShow();
     }
 
     
@@ -165,7 +166,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getAuditState()
     {
-        return this.data.getAuditState();
+        return this.domain.getAuditState();
     }
 
     
@@ -174,9 +175,9 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getAuditResult()
     {
-        return this.data.getAuditResult();
+        return this.domain.getAuditResult();
     }
-
+    
     
     /**
      * 设置：设备号
@@ -185,7 +186,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setDeviceNo(String deviceNo)
     {
-        this.data.setDeviceNo(deviceNo);
+        this.domain.setDeviceNo(deviceNo);
     }
 
     
@@ -196,7 +197,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setDeviceType(String deviceType)
     {
-        this.data.setDeviceType(deviceType);
+        this.domain.setDeviceType(deviceType);
     }
 
     
@@ -207,7 +208,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setServiceType(String serviceType)
     {
-        this.data.setServiceType(serviceType);
+        this.domain.setServiceType(serviceType);
     }
 
     
@@ -218,7 +219,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setUserID(String userID)
     {
-        this.data.setUserID(userID);
+        this.domain.setUserID(userID);
     }
 
     
@@ -229,7 +230,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setUserName(String userName)
     {
-        this.data.setUserName(userName);
+        this.domain.setUserName(userName);
     }
 
     
@@ -240,9 +241,9 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setUserIcon(String userIcon)
     {
-        this.data.setUserIcon(userIcon);
+        this.domain.setUserIcon(userIcon);
     }
-    
+
     
     /**
      * 设置：是否显示。1显示；0不显示
@@ -251,7 +252,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setIsShow(Integer isShow)
     {
-        this.data.setIsShow(isShow);
+        this.domain.setIsShow(isShow);
     }
 
     
@@ -262,7 +263,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setAuditState(String auditState)
     {
-        this.data.setAuditState(auditState);
+        this.domain.setAuditState(auditState);
     }
 
     
@@ -273,7 +274,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setAuditResult(String auditResult)
     {
-        this.data.setAuditResult(auditResult);
+        this.domain.setAuditResult(auditResult);
     }
 
     
@@ -282,7 +283,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getUserType()
     {
-        return this.data.getUserType();
+        return this.domain.getUserType();
     }
 
     
@@ -293,7 +294,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setUserType(String userType)
     {
-        this.data.setUserType(userType);
+        this.domain.setUserType(userType);
     }
 
 
@@ -302,13 +303,13 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public Long getStartIndex()
     {
-        if ( this.data.getPageIndex() == null || this.data.getPagePerCount() == null )
+        if ( this.domain.getPageIndex() == null || this.domain.getPagePerCount() == null )
         {
             return null;
         }
         else
         {
-            return this.data.getPagePerCount() * (this.data.getPageIndex() - 1);
+            return this.domain.getPagePerCount() * (this.domain.getPageIndex() - 1);
         }
     }
 
@@ -318,21 +319,21 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public Long getPagePerCount()
     {
-        if ( this.data.getPagePerCount() == null )
+        if ( this.domain.getPagePerCount() == null )
         {
             return null;
         }
-        else if ( this.data.getPagePerCount() > 1000L )
+        else if ( this.domain.getPagePerCount() > 1000L )
         {
             return 1000L;
         }
-        else if ( this.data.getPagePerCount() <= 0L )
+        else if ( this.domain.getPagePerCount() <= 0L )
         {
             return 10L;
         }
         else
         {
-            return this.data.getPagePerCount();
+            return this.domain.getPagePerCount();
         }
     }
 
@@ -344,7 +345,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setPagePerCount(Long pagePerCount)
     {
-        this.data.setPagePerCount(pagePerCount);
+        this.domain.setPagePerCount(pagePerCount);
     }
 
     
@@ -353,7 +354,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public Long getTotalCount()
     {
-        return this.data.getTotalCount();
+        return this.domain.getTotalCount();
     }
 
 
@@ -364,7 +365,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setTotalCount(Long totalCount)
     {
-        this.data.setTotalCount(totalCount);
+        this.domain.setTotalCount(totalCount);
     }
 
 
@@ -373,7 +374,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public Integer getIsDel()
     {
-        return this.data.getIsDel();
+        return this.domain.getIsDel();
     }
 
     
@@ -384,7 +385,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setIsDel(Integer isDel)
     {
-        this.data.setIsDel(isDel);
+        this.domain.setIsDel(isDel);
     }
 
     
@@ -393,17 +394,17 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public Long getPageIndex()
     {
-        if ( this.data.getPageIndex() == null )
+        if ( this.domain.getPageIndex() == null )
         {
             return null;
         }
-        else if ( this.data.getPageIndex() <= 0 )
+        else if ( this.domain.getPageIndex() <= 0 )
         {
             return 1L;
         }
         else
         {
-            return this.data.getPageIndex();
+            return this.domain.getPageIndex();
         }
     }
 
@@ -415,7 +416,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setPageIndex(Long pageIndex)
     {
-        this.data.setPageIndex(pageIndex);
+        this.domain.setPageIndex(pageIndex);
     }
 
     
@@ -424,7 +425,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public Integer getOrderBy()
     {
-        return this.data.getOrderBy();
+        return this.domain.getOrderBy();
     }
 
 
@@ -435,7 +436,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setOrderBy(Integer orderBy)
     {
-        this.data.setOrderBy(orderBy);
+        this.domain.setOrderBy(orderBy);
     }
 
     
@@ -444,7 +445,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getRemarks()
     {
-        return this.data.getRemarks();
+        return this.domain.getRemarks();
     }
 
     
@@ -455,7 +456,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setRemarks(String remarks)
     {
-        this.data.setRemarks(remarks);
+        this.domain.setRemarks(remarks);
     }
 
 
@@ -464,7 +465,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getCreateUserID()
     {
-        return this.data.getCreateUserID();
+        return this.domain.getCreateUserID();
     }
 
 
@@ -475,7 +476,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setCreateUserID(String createUserID)
     {
-        this.data.setCreateUserID(createUserID);
+        this.domain.setCreateUserID(createUserID);
     }
 
 
@@ -484,7 +485,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getUpdateUserID()
     {
-        return this.data.getUpdateUserID();
+        return this.domain.getUpdateUserID();
     }
 
 
@@ -495,7 +496,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setUpdateUserID(String updateUserID)
     {
-        this.data.setUpdateUserID(updateUserID);
+        this.domain.setUpdateUserID(updateUserID);
     }
 
 
@@ -504,7 +505,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public Integer getIsValid()
     {
-        return this.data.getIsValid();
+        return this.domain.getIsValid();
     }
 
 
@@ -515,7 +516,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setIsValid(Integer isValid)
     {
-        this.data.setIsValid(isValid);
+        this.domain.setIsValid(isValid);
     }
 
     
@@ -524,7 +525,7 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public String getComment()
     {
-        return this.data.getComment();
+        return this.domain.getComment();
     }
 
 
@@ -535,16 +536,16 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setComment(String i_Comment)
     {
-        this.data.setComment(i_Comment);
+        this.domain.setComment(i_Comment);
     }
-
+    
     
     /**
      * 获取：项目ID
      */
     public String getProjectID()
     {
-        return this.data.getProjectID();
+        return this.domain.getProjectID();
     }
 
     
@@ -555,16 +556,17 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      */
     public void setProjectID(String i_ProjectID)
     {
-        this.data.setProjectID(i_ProjectID);
+        this.domain.setProjectID(i_ProjectID);
     }
     
     
     /**
      * 获取：过期时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,timezone = "GMT+8")
     public Date getExpireTime()
     {
-        return this.data.getExpireTime();
+        return this.domain.getExpireTime();
     }
 
 
@@ -573,18 +575,20 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      * 
      * @param expireTime
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,timezone = "GMT+8")
     public void setExpireTime(Date expireTime)
     {
-        this.data.setExpireTime(expireTime);
+        this.domain.setExpireTime(expireTime);
     }
     
     
     /**
      * 获取：创建时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,timezone = "GMT+8")
     public Date getCreateTime()
     {
-        return this.data.getCreateTime();
+        return this.domain.getCreateTime();
     }
 
     
@@ -593,18 +597,20 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      * 
      * @param createTime
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,timezone = "GMT+8")
     public void setCreateTime(Date createTime)
     {
-        this.data.setCreateTime(createTime);
+        this.domain.setCreateTime(createTime);
     }
     
     
     /**
      * 获取：修改时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,timezone = "GMT+8")
     public Date getUpdateTime()
     {
-        return this.data.getUpdateTime();
+        return this.domain.getUpdateTime();
     }
 
     
@@ -613,18 +619,20 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      * 
      * @param updateTime
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,timezone = "GMT+8")
     public void setUpdateTime(Date updateTime)
     {
-        this.data.setUpdateTime(updateTime);
+        this.domain.setUpdateTime(updateTime);
     }
     
     
     /**
      * 获取：审核时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,timezone = "GMT+8")
     public Date getAuditTime()
     {
-        return this.data.getAuditTime();
+        return this.domain.getAuditTime();
     }
     
     
@@ -633,19 +641,20 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      * 
      * @param auditTime
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,timezone = "GMT+8")
     public void setAuditTime(Date auditTime)
     {
-        this.data.setAuditTime(auditTime);
+        this.domain.setAuditTime(auditTime);
     }
 
-    
     
     /**
      * 获取：开始时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,timezone = "GMT+8")
     public Date getStartTime()
     {
-        return this.data.getStartTime();
+        return this.domain.getStartTime();
     }
 
     
@@ -654,18 +663,20 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      * 
      * @param i_StartTime 开始时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,timezone = "GMT+8")
     public void setStartTime(Date i_StartTime)
     {
-        this.data.setStartTime(i_StartTime);
+        this.domain.setStartTime(i_StartTime);
     }
 
     
     /**
      * 获取：结束时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,timezone = "GMT+8")
     public Date getEndTime()
     {
-        return this.data.getEndTime();
+        return this.domain.getEndTime();
     }
 
     
@@ -674,9 +685,10 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
      * 
      * @param i_EndTime 结束时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,timezone = "GMT+8")
     public void setEndTime(Date i_EndTime)
     {
-        this.data.setEndTime(i_EndTime);
+        this.domain.setEndTime(i_EndTime);
     }
     
 }

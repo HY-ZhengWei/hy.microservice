@@ -3,8 +3,8 @@ package org.hy.microservice.common.domain;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -103,7 +103,7 @@ public class DomainUtil
         }
         else if ( i_Datas.isEmpty() )
         {
-            return new HashSet<Domain>();
+            return new LinkedHashSet<Domain>();
         }
         else if ( i_DomainClass == null )
         {
@@ -116,7 +116,7 @@ public class DomainUtil
             throw new RuntimeException("Can't find Doamin Constructor(<? extends BaseData>)");
         }
         
-        Set<Domain> v_Domains = new HashSet<Domain>();
+        Set<Domain> v_Domains = new LinkedHashSet<Domain>();
         for (Data v_Data : i_Datas)
         {
             Domain v_Domain = newDomain(v_DomainConstructor ,v_Data);
@@ -152,7 +152,7 @@ public class DomainUtil
         }
         else if ( i_Datas.isEmpty() )
         {
-            return new HashMap<String ,Domain>();
+            return new LinkedHashMap<String ,Domain>();
         }
         else if ( i_DomainClass == null )
         {
@@ -165,7 +165,7 @@ public class DomainUtil
             throw new RuntimeException("Can't find Doamin Constructor(<? extends BaseData>)");
         }
         
-        Map<String ,Domain> v_Domains = new HashMap<String ,Domain>();
+        Map<String ,Domain> v_Domains = new LinkedHashMap<String ,Domain>();
         for (Map.Entry<String ,Data> v_Data : i_Datas.entrySet())
         {
             Domain v_Domain = newDomain(v_DomainConstructor ,v_Data.getValue());

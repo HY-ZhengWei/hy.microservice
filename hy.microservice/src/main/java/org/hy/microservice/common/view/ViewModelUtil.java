@@ -3,8 +3,8 @@ package org.hy.microservice.common.view;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,7 +13,7 @@ import org.hy.common.Help;
 import org.hy.common.xml.log.Logger;
 import org.hy.microservice.common.BaseData;
 import org.hy.microservice.common.BaseDomain;
-import org.hy.microservice.common.BaseViewMode;
+import org.hy.microservice.common.BaseView;
 
 
 
@@ -48,7 +48,7 @@ public class ViewModelUtil
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static <Data extends BaseData ,Domain extends BaseDomain<Data> ,View extends BaseViewMode> List<View> toView(List<Domain> i_Domains ,Class<View> i_ViewClass)
+    public static <Data extends BaseData ,Domain extends BaseDomain<Data> ,View extends BaseView<Domain>> List<View> toView(List<Domain> i_Domains ,Class<View> i_ViewClass)
     {
         if ( i_Domains == null )
         {
@@ -98,7 +98,7 @@ public class ViewModelUtil
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static <Data extends BaseData ,Domain extends BaseDomain<Data> ,View extends BaseViewMode> Set<View> toView(Set<Domain> i_Domains ,Class<View> i_ViewClass)
+    public static <Data extends BaseData ,Domain extends BaseDomain<Data> ,View extends BaseView<Domain>> Set<View> toView(Set<Domain> i_Domains ,Class<View> i_ViewClass)
     {
         if ( i_Domains == null )
         {
@@ -106,7 +106,7 @@ public class ViewModelUtil
         }
         else if ( i_Domains.isEmpty() )
         {
-            return new HashSet<View>();
+            return new LinkedHashSet<View>();
         }
         else if ( i_ViewClass == null )
         {
@@ -119,7 +119,7 @@ public class ViewModelUtil
             throw new RuntimeException("Can't find View Constructor(<? extends BaseDomain>)");
         }
         
-        Set<View> v_Views = new HashSet<View>();
+        Set<View> v_Views = new LinkedHashSet<View>();
         for (Domain v_Domain : i_Domains)
         {
             View v_View = newView(v_ViewConstructor ,v_Domain);
@@ -148,7 +148,7 @@ public class ViewModelUtil
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static <Data extends BaseData ,Domain extends BaseDomain<Data> ,View extends BaseViewMode> Map<String ,View> toView(Map<String ,Domain> i_Domains ,Class<View> i_ViewClass)
+    public static <Data extends BaseData ,Domain extends BaseDomain<Data> ,View extends BaseView<Domain>> Map<String ,View> toView(Map<String ,Domain> i_Domains ,Class<View> i_ViewClass)
     {
         if ( i_Domains == null )
         {
@@ -156,7 +156,7 @@ public class ViewModelUtil
         }
         else if ( i_Domains.isEmpty() )
         {
-            return new HashMap<String ,View>();
+            return new LinkedHashMap<String ,View>();
         }
         else if ( i_ViewClass == null )
         {
@@ -169,7 +169,7 @@ public class ViewModelUtil
             throw new RuntimeException("Can't find View Constructor(<? extends BaseDomain>)");
         }
         
-        Map<String ,View> v_Views = new HashMap<String ,View>();
+        Map<String ,View> v_Views = new LinkedHashMap<String ,View>();
         for (Map.Entry<String ,Domain> v_Domain : i_Domains.entrySet())
         {
             View v_View = newView(v_ViewConstructor ,v_Domain.getValue());
@@ -197,7 +197,7 @@ public class ViewModelUtil
      * @param i_Domain           领域层的领域
      * @return
      */
-    private static <Data extends BaseData ,Domain extends BaseDomain<Data> ,View extends BaseViewMode> View newView(Constructor<View> i_ViewConstructor ,Domain i_Domain)
+    private static <Data extends BaseData ,Domain extends BaseDomain<Data> ,View extends BaseView<Domain>> View newView(Constructor<View> i_ViewConstructor ,Domain i_Domain)
     {
         try
         {
@@ -239,7 +239,7 @@ public class ViewModelUtil
      * @return
      */
     @SuppressWarnings("unchecked")
-    private static <Data extends BaseData ,Domain extends BaseDomain<Data> ,View extends BaseViewMode> Constructor<View> findConstructor(Class<Domain> i_DomainClass ,Class<View> i_ViewClass)
+    private static <Data extends BaseData ,Domain extends BaseDomain<Data> ,View extends BaseView<Domain>> Constructor<View> findConstructor(Class<Domain> i_DomainClass ,Class<View> i_ViewClass)
     {
         Constructor<View>[] v_Constructors = (Constructor<View> []) i_ViewClass.getConstructors();
         if ( Help.isNull(v_Constructors) )
