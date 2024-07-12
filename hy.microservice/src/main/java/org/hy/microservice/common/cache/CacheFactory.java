@@ -33,7 +33,7 @@ public class CacheFactory
     {
         if ( i_UseRemoteCache )
         {
-            return new CacheRemote<Data>((IRedis) XJava.getObject("RedisOperation_MS_Common"));
+            return new CacheRemote<Data>((IRedis) XJava.getObject("RedisOperation_MS_Common") ,i_DataClass);
         }
         else
         {

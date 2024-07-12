@@ -34,6 +34,14 @@ public class CacheRemote<Data> implements ICache<Data>
     
     
     
+    public CacheRemote(IRedis i_Redis ,Class<Data> i_DataClass)
+    {
+        this.redis     = i_Redis;
+        this.dataClass = i_DataClass;
+    }
+    
+    
+    
     /**
      * 解析泛型<Data>的真实元类型
      * 
