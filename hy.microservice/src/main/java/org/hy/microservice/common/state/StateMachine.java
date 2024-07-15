@@ -20,13 +20,21 @@ import org.hy.common.TablePartitionRID;
 public class StateMachine
 {
     
+    /** 分割符 */
+    private static final String $Split = "->";
+    
+    
+    
     /**
      * 状态推进的操作，及状态转换模型。
      *    分区为：起始状态
      *    行主键：操作动作
      *    行值为：目标状态（包装在Transition类中）
      */
-    private final TablePartitionRID<String ,Transition> translatedTransitions = new TablePartitionRID<String ,Transition>();
+    private final TablePartitionRID<String ,Transition> transitions = new TablePartitionRID<String ,Transition>();
+    
+    /** 与上面一样，仅结构不同，主要用于界面展示 */
+    private final Transition []                         transitionList;
     
     
     
@@ -51,17 +59,19 @@ public class StateMachine
             if ( this.getTargetTransition(v_Item.getFromState() ,v_Item.getAction()) != null )
             {
                 // 起始状态的操作动作已存在，不能重复配置
-                throw new RuntimeException(v_Item.getFromState() + "->" + v_Item.getAction() + " is exists.");
+                throw new RuntimeException(v_Item.getFromState() + $Split + v_Item.getAction() + " is exists.");
             }
             
             if ( this.checkStateFromTo(v_Item.getFromState() ,v_Item.getToState()) )
             {
                 // 起始状态到目标状态的操作动作已存在，不能重复配置
-                throw new RuntimeException(v_Item.getFromState() + "->" + getAction(v_Item.getFromState() ,v_Item.getToState()) + "->" + v_Item.getToState() + " is exists.");
+                throw new RuntimeException(v_Item.getFromState() + $Split + getAction(v_Item.getFromState() ,v_Item.getToState()) + $Split + v_Item.getToState() + " is exists.");
             }
             
-            this.translatedTransitions.putRow(v_Item.getFromState() ,v_Item.getAction() ,v_Item);
+            this.transitions.putRow(v_Item.getFromState() ,v_Item.getAction() ,v_Item);
         }
+        
+        this.transitionList = i_Transitions;
     }
     
     
@@ -78,7 +88,7 @@ public class StateMachine
      */
     public Set<String> allowActions(String i_FromState)
     {
-        Map<String ,Transition> v_Actions = this.translatedTransitions.get(i_FromState);
+        Map<String ,Transition> v_Actions = this.transitions.get(i_FromState);
         if ( Help.isNull(v_Actions) )
         {
             return null;
@@ -102,9 +112,9 @@ public class StateMachine
      * @param i_Action     操作动作
      * @return             返回状态转换路径
      */
-    private Transition getTargetTransition(String i_FromState ,String i_Action)
+    public Transition getTargetTransition(String i_FromState ,String i_Action)
     {
-        return this.translatedTransitions.getRow(i_FromState ,i_Action);
+        return this.transitions.getRow(i_FromState ,i_Action);
     }
     
     
@@ -198,7 +208,7 @@ public class StateMachine
      */
     public String getAction(String i_FromState ,String i_ToState)
     {
-        Map<String ,Transition> v_Actions = this.translatedTransitions.get(i_FromState);
+        Map<String ,Transition> v_Actions = this.transitions.get(i_FromState);
         if ( Help.isNull(v_Actions) )
         {
             return null;
@@ -240,6 +250,22 @@ public class StateMachine
     public boolean checkStateFromTo(String i_FromState ,String i_ToState)
     {
         return this.getAction(i_FromState ,i_ToState) != null;
+    }
+    
+    
+    
+    /**
+     * 获取状态转换路径
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2024-07-15
+     * @version     v1.0
+     *
+     * @return
+     */
+    public Transition[] getTransitions()
+    {
+        return this.transitionList;
     }
     
 }

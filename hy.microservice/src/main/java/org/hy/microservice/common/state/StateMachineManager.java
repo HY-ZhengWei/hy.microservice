@@ -3,6 +3,8 @@ package org.hy.microservice.common.state;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.hy.microservice.common.BaseEnum;
+
 
 
 
@@ -18,7 +20,7 @@ import java.util.Map;
 public class StateMachineManager
 {
 
-    private static final Map<String ,StateMachine> $StateMachineMap = new HashMap<String ,StateMachine>();
+    private static final Map<String ,StateMachineCell> $StateMachineMap = new HashMap<String ,StateMachineCell>();
     
     
     
@@ -30,10 +32,12 @@ public class StateMachineManager
      * @version     v1.0
      *
      * @param i_ServiceType   业务类型
-     * @param i_StateMachine  状态机
+     * @param i_StateMachine  状态机模型
+     * @param i_StateClass    状态枚举的元类型
+     * @param i_ActionClass   操作动作枚的举元类型
      * @return                注册是否成功
      */
-    public static synchronized boolean register(String i_ServiceType ,StateMachine i_StateMachine)
+    public static synchronized boolean register(String i_ServiceType ,StateMachine i_StateMachine ,Class<? extends BaseEnum<?>> i_StateClass ,Class<? extends BaseEnum<?>> i_ActionClass)
     {
         if ( $StateMachineMap.containsKey(i_ServiceType) )
         {
@@ -41,7 +45,7 @@ public class StateMachineManager
         }
         else
         {
-            $StateMachineMap.put(i_ServiceType ,i_StateMachine);
+            $StateMachineMap.put(i_ServiceType ,new StateMachineCell(i_StateMachine ,i_StateClass ,i_ActionClass));
             return true;
         }
     }
@@ -49,12 +53,51 @@ public class StateMachineManager
     
     
     /**
-     * 获取状态机
+     * 获取状态机模型
      * 
      * @param i_ServiceType   业务类型
      * @return
      */
     public static StateMachine getStateMachine(String i_ServiceType)
+    {
+        return $StateMachineMap.get(i_ServiceType).getStateMachine();
+    }
+    
+    
+    
+    /**
+     * 获取状态枚举值的举元类型
+     * 
+     * @param i_ServiceType   业务类型
+     * @return
+     */
+    public static Class<? extends BaseEnum<?>> getStateClass(String i_ServiceType)
+    {
+        return $StateMachineMap.get(i_ServiceType).getStateClass();
+    }
+    
+    
+    
+    /**
+     * 获取状态操作动作枚举值的举元类型
+     * 
+     * @param i_ServiceType   业务类型
+     * @return
+     */
+    public static Class<? extends BaseEnum<?>> getActionClass(String i_ServiceType)
+    {
+        return $StateMachineMap.get(i_ServiceType).getActionClass();
+    }
+    
+    
+    
+    /**
+     * 获取状态机模型的组成单元
+     * 
+     * @param i_ServiceType   业务类型
+     * @return
+     */
+    public static StateMachineCell getStateMachineCell(String i_ServiceType)
     {
         return $StateMachineMap.get(i_ServiceType);
     }
