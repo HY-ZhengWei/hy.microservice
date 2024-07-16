@@ -89,27 +89,50 @@ public class StateMachine
         
         this.startStates = v_StartStates.toArray(new String []{});
         this.endStates   = v_EndStates  .toArray(new String []{});
+        
+        v_ToStates   .clear();
+        v_StartStates.clear();
+        v_EndStates  .clear();
+        v_ToStates    = null;
+        v_StartStates = null;
+        v_EndStates   = null;
     }
     
     
     
+    /**
+     * 检查开始状态与最终状态是否正确
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2024-07-16
+     * @version     v1.0
+     *
+     * @param i_StartStates  开始状态的集合
+     * @param i_EndStates    结束状态的信息
+     */
     private void checkStartEnd(Set<String> i_StartStates ,Set<String> i_EndStates)
     {
-        for (String i_StartState : i_StartStates)
+        if ( !Help.isNull(i_StartStates) )
         {
-            if ( i_EndStates.contains(i_StartState) )
+            for (String i_StartState : i_StartStates)
             {
-                // 开始状态不能又是最终状态。或是程序判定开始状态与最终状态有误
-                throw new RuntimeException("StartState[" + i_StartState + "] is EndState again.");
+                if ( i_EndStates.contains(i_StartState) )
+                {
+                    // 开始状态不能又是最终状态。或是程序判定开始状态与最终状态有误
+                    throw new RuntimeException("StartState[" + i_StartState + "] is EndState again.");
+                }
             }
         }
         
-        for (String i_EndState : i_EndStates)
+        if ( !Help.isNull(i_EndStates) )
         {
-            if ( i_StartStates.contains(i_EndState) )
+            for (String i_EndState : i_EndStates)
             {
-                // 最终状态不能又是开始状态。或是程序判定开始状态与最终状态有误
-                throw new RuntimeException("EndState[" + i_EndState + "] is StartState again.");
+                if ( i_StartStates.contains(i_EndState) )
+                {
+                    // 最终状态不能又是开始状态。或是程序判定开始状态与最终状态有误
+                    throw new RuntimeException("EndState[" + i_EndState + "] is StartState again.");
+                }
             }
         }
     }
@@ -130,14 +153,17 @@ public class StateMachine
     {
         Set<String> v_StartStates = new HashSet<String>();
         
-        for (Transition v_Item : this.transitionList)
+        if ( !Help.isNull(i_ToStates) )
         {
-            if ( i_ToStates.contains(v_Item.getFromState()) )
+            for (Transition v_Item : this.transitionList)
             {
-                continue;
+                if ( i_ToStates.contains(v_Item.getFromState()) )
+                {
+                    continue;
+                }
+                
+                v_StartStates.add(v_Item.getFromState());
             }
-            
-            v_StartStates.add(v_Item.getFromState());
         }
         
         return v_StartStates;
@@ -159,14 +185,17 @@ public class StateMachine
     {
         Set<String> v_EndStates = new HashSet<String>();
         
-        for (String v_ToState : i_ToStates)
+        if ( !Help.isNull(i_ToStates) )
         {
-            if ( this.transitions.containsKey(v_ToState) )
+            for (String v_ToState : i_ToStates)
             {
-                continue;
+                if ( this.transitions.containsKey(v_ToState) )
+                {
+                    continue;
+                }
+                
+                v_EndStates.add(v_ToState);
             }
-            
-            v_EndStates.add(v_ToState);
         }
         
         return v_EndStates;
