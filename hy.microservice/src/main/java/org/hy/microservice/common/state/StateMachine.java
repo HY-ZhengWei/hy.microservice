@@ -1,5 +1,6 @@
 package org.hy.microservice.common.state;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -36,6 +37,12 @@ public class StateMachine
     /** 与上面一样，仅结构不同，主要用于界面展示 */
     private final Transition []                         transitionList;
     
+    /** 开始状态 */
+    private final String []                             startStates;
+    
+    /** 最终状态 */
+    private final String []                             endStates;
+    
     
     
     /**
@@ -54,6 +61,9 @@ public class StateMachine
             throw new NullPointerException("Transitions is null");
         }
         
+        this.transitionList = i_Transitions;
+        
+        Set<String> v_ToStates = new HashSet<String>();
         for (Transition v_Item : i_Transitions)
         {
             if ( this.getTargetTransition(v_Item.getFromState() ,v_Item.getAction()) != null )
@@ -69,9 +79,97 @@ public class StateMachine
             }
             
             this.transitions.putRow(v_Item.getFromState() ,v_Item.getAction() ,v_Item);
+            v_ToStates.add(v_Item.getToState());
         }
         
-        this.transitionList = i_Transitions;
+        Set<String> v_StartStates = this.findStartStates(v_ToStates);
+        Set<String> v_EndStates   = this.findEndStates  (v_ToStates);
+        
+        this.checkStartEnd(v_StartStates ,v_EndStates);
+        
+        this.startStates = v_StartStates.toArray(new String []{});
+        this.endStates   = v_EndStates  .toArray(new String []{});
+    }
+    
+    
+    
+    private void checkStartEnd(Set<String> i_StartStates ,Set<String> i_EndStates)
+    {
+        for (String i_StartState : i_StartStates)
+        {
+            if ( i_EndStates.contains(i_StartState) )
+            {
+                // 开始状态不能又是最终状态。或是程序判定开始状态与最终状态有误
+                throw new RuntimeException("StartState[" + i_StartState + "] is EndState again.");
+            }
+        }
+        
+        for (String i_EndState : i_EndStates)
+        {
+            if ( i_StartStates.contains(i_EndState) )
+            {
+                // 最终状态不能又是开始状态。或是程序判定开始状态与最终状态有误
+                throw new RuntimeException("EndState[" + i_EndState + "] is StartState again.");
+            }
+        }
+    }
+    
+    
+    
+    /**
+     * 查找状态机中的开始状态
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2024-07-16
+     * @version     v1.0
+     *
+     * @param i_ToStates  流转状态（包含最终状态）
+     * @return
+     */
+    private Set<String> findStartStates(Set<String> i_ToStates)
+    {
+        Set<String> v_StartStates = new HashSet<String>();
+        
+        for (Transition v_Item : this.transitionList)
+        {
+            if ( i_ToStates.contains(v_Item.getFromState()) )
+            {
+                continue;
+            }
+            
+            v_StartStates.add(v_Item.getFromState());
+        }
+        
+        return v_StartStates;
+    }
+    
+    
+    
+    /**
+     * 查找状态机中的最终状态
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2024-07-16
+     * @version     v1.0
+     *
+     * @param i_ToStates  流转状态（包含最终状态）
+     * @return
+     */
+    private Set<String> findEndStates(Set<String> i_ToStates)
+    {
+        Set<String> v_EndStates = new HashSet<String>();
+        
+        for (String v_ToState : i_ToStates)
+        {
+            if ( this.transitions.containsKey(v_ToState) )
+            {
+                continue;
+            }
+            
+            v_EndStates.add(v_ToState);
+        }
+        
+        return v_EndStates;
     }
     
     
@@ -266,6 +364,26 @@ public class StateMachine
     public Transition[] getTransitions()
     {
         return this.transitionList;
+    }
+
+
+    
+    /**
+     * 获取：开始状态
+     */
+    public String [] getStartStates()
+    {
+        return startStates;
+    }
+
+
+    
+    /**
+     * 获取：最终状态
+     */
+    public String [] getEndStates()
+    {
+        return endStates;
     }
     
 }

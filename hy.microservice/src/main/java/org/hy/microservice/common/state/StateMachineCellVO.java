@@ -37,6 +37,12 @@ public class StateMachineCellVO extends BaseViewMode
     /** 状态转换路径 */
     private Transition []       transitions;
     
+    /** 开始状态 */
+    private String []           startStates;
+    
+    /** 最终状态 */
+    private String []           endStates;
+    
     
     
     public StateMachineCellVO()
@@ -51,6 +57,8 @@ public class StateMachineCellVO extends BaseViewMode
         this.states      = new HashMap<String ,String>();
         this.actions     = new HashMap<String ,String>();
         this.transitions = i_StateMachineCell.getStateMachine().getTransitions();
+        this.startStates = i_StateMachineCell.getStateMachine().getStartStates();
+        this.endStates   = i_StateMachineCell.getStateMachine().getEndStates();
         
         this.putToMap(i_StateMachineCell.getStateClass()  ,this.states);
         this.putToMap(i_StateMachineCell.getActionClass() ,this.actions);
@@ -153,6 +161,46 @@ public class StateMachineCellVO extends BaseViewMode
     public void setTransitions(Transition [] i_Transitions)
     {
         this.transitions = i_Transitions;
+    }
+
+    
+    /**
+     * 获取：开始状态
+     */
+    public String [] getStartStates()
+    {
+        return startStates;
+    }
+
+    
+    /**
+     * 设置：开始状态
+     * 
+     * @param i_StartStates 开始状态
+     */
+    public void setStartStates(String [] i_StartStates)
+    {
+        this.startStates = i_StartStates;
+    }
+
+    
+    /**
+     * 获取：最终状态
+     */
+    public String [] getEndStates()
+    {
+        return endStates;
+    }
+
+    
+    /**
+     * 设置：最终状态
+     * 
+     * @param i_EndStates 最终状态
+     */
+    public void setEndStates(String [] i_EndStates)
+    {
+        this.endStates = i_EndStates;
     }
     
 }
