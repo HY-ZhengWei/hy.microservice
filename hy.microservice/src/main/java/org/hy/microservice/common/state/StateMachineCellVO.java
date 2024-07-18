@@ -29,19 +29,19 @@ public class StateMachineCellVO extends BaseViewMode
     
     
     /** 状态 */
-    private Map<String ,String> states;
+    private Map<String ,StateInfoVO> states;
     
     /** 操作动作 */
-    private Map<String ,String> actions;
-    
+    private Map<String ,String>      actions;
+                                     
     /** 状态转换路径 */
-    private Transition []       transitions;
-    
+    private Transition []            transitions;
+                                     
     /** 开始状态 */
-    private String []           startStates;
-    
+    private String []                startStates;
+                                     
     /** 最终状态 */
-    private String []           endStates;
+    private String []                endStates;
     
     
     
@@ -54,14 +54,22 @@ public class StateMachineCellVO extends BaseViewMode
     
     public StateMachineCellVO(StateMachineCell i_StateMachineCell)
     {
-        this.states      = new HashMap<String ,String>();
+        this.states      = new HashMap<String ,StateInfoVO>();
         this.actions     = new HashMap<String ,String>();
         this.transitions = i_StateMachineCell.getStateMachine().getTransitions();
         this.startStates = i_StateMachineCell.getStateMachine().getStartStates();
         this.endStates   = i_StateMachineCell.getStateMachine().getEndStates();
         
-        this.putToMap(i_StateMachineCell.getStateClass()  ,this.states);
+        Map<String ,String> v_States = new HashMap<String ,String>();
+        
+        this.putToMap(i_StateMachineCell.getStateClass()  ,v_States);
         this.putToMap(i_StateMachineCell.getActionClass() ,this.actions);
+        
+        for (Map.Entry<String ,String> v_Item : v_States.entrySet())
+        {
+            StateInfo v_StateInfo = i_StateMachineCell.getStateMachine().getStateInfo(v_Item.getKey());
+            this.states.put(v_Item.getKey() ,new StateInfoVO(v_StateInfo ,v_Item.getValue()));
+        }
     }
     
     
@@ -107,7 +115,7 @@ public class StateMachineCellVO extends BaseViewMode
     /**
      * 获取：状态
      */
-    public Map<String ,String> getStates()
+    public Map<String ,StateInfoVO> getStates()
     {
         return states;
     }
@@ -118,7 +126,7 @@ public class StateMachineCellVO extends BaseViewMode
      * 
      * @param i_States 状态
      */
-    public void setStates(Map<String ,String> i_States)
+    public void setStates(Map<String ,StateInfoVO> i_States)
     {
         this.states = i_States;
     }

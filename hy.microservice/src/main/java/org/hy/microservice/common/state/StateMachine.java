@@ -1,6 +1,9 @@
 package org.hy.microservice.common.state;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -42,6 +45,9 @@ public class StateMachine
     
     /** 最终状态 */
     private final String []                             endStates;
+    
+    /** 状态信息 */
+    private final Map<String ,StateInfo>                stateInfos;
     
     
     
@@ -85,8 +91,9 @@ public class StateMachine
         Set<String> v_StartStates = this.findStartStates(v_ToStates);
         Set<String> v_EndStates   = this.findEndStates  (v_ToStates);
         
-        this.checkStartEnd(v_StartStates ,v_EndStates);
+        this.checkStartEnd  (v_StartStates ,v_EndStates);
         
+        this.stateInfos  = this.calcStatesLevel(v_StartStates ,v_EndStates);
         this.startStates = v_StartStates.toArray(new String []{});
         this.endStates   = v_EndStates  .toArray(new String []{});
         
@@ -96,6 +103,94 @@ public class StateMachine
         v_ToStates    = null;
         v_StartStates = null;
         v_EndStates   = null;
+    }
+    
+    
+    
+    /**
+     * 计算状态所属的层级和分支数量
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2024-07-18
+     * @version     v1.0
+     *
+     * @param i_StartStates  开始状态的集合
+     * @param i_EndStates    结束状态的信息
+     * @return
+     */
+    private Map<String ,StateInfo> calcStatesLevel(Set<String> i_StartStates ,Set<String> i_EndStates)
+    {
+        Map<String ,StateInfo> v_States = new HashMap<String ,StateInfo>();
+        
+        if ( !Help.isNull(i_EndStates) )
+        {
+            for (String v_EndState : i_EndStates)
+            {
+                v_States.put(v_EndState ,new StateInfo(StateInfo.$EndLevel ,0));
+            }
+        }
+        
+        if ( !Help.isNull(i_StartStates) )
+        {
+            for (String v_StartState : i_StartStates)
+            {
+                calcStatesLevelFor(v_States ,v_StartState ,StateInfo.$StartLevel);
+            }
+        }
+        
+        return v_States;
+    }
+    
+    
+    
+    /**
+     * 计算状态所属的层级和分支数量（递归遍历）
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2024-07-18
+     * @version     v1.0
+     *
+     * @param io_States    已计算的状态信息
+     * @param i_FromState  父级状态
+     * @param i_FromLevel  父级状态层级
+     */
+    private void calcStatesLevelFor(Map<String ,StateInfo> io_States, String i_FromState ,int i_FromLevel)
+    {
+        Map<String ,Transition> v_Transitions = this.transitions.get(i_FromState);
+        if ( !Help.isNull(v_Transitions) )
+        {
+            io_States.put(i_FromState ,new StateInfo(i_FromLevel ,v_Transitions.size()));
+            
+            List<String> v_AddStates = new ArrayList<String>();
+            int          v_Level     = i_FromLevel + 1;
+            for (Transition v_ToState : v_Transitions.values())
+            {
+                if ( i_FromState.equals(v_ToState.getToState()) )
+                {
+                    // 预防循环
+                    continue;
+                }
+                
+                StateInfo v_Old = io_States.get(v_ToState.getToState());
+                if ( v_Old == null )
+                {
+                    io_States.put(v_ToState.getToState() ,new StateInfo(v_Level ,1));  // 先默认给1个分支，其后遍历中会重新计算分支数量
+                    v_AddStates.add(v_ToState.getToState());
+                }
+            }
+            
+            if ( !Help.isNull(v_AddStates) )
+            {
+                // i_FromState它下所有关系状态均遍历过（设置Level后），再向下层发起遍历
+                for (String i_AddState : v_AddStates)
+                {
+                    calcStatesLevelFor(io_States ,i_AddState ,v_Level);
+                }
+            }
+            
+            v_AddStates.clear();
+            v_AddStates = null;
+        }
     }
     
     
@@ -413,6 +508,23 @@ public class StateMachine
     public String [] getEndStates()
     {
         return endStates;
+    }
+    
+    
+    
+    /**
+     * 获取状态信息（层次、分支数量）
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2024-07-18
+     * @version     v1.0
+     *
+     * @param i_State  状态
+     * @return
+     */
+    public StateInfo getStateInfo(String i_State)
+    {
+        return this.stateInfos.get(i_State);
     }
     
 }
