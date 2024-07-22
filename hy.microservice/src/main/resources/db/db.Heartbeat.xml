@@ -15,7 +15,43 @@
         
             <dataSourceGroup ref="DSG_MS_Common" />
             
-            <content>
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT  INTO THeartbeat
+                       (
+                        edgeIP
+                       ,hostIP
+                       ,osType
+                       ,edgeStartTime
+                       ,osTime
+                       ,claimCount
+                       ,taskOKCount
+                       ,isValid
+                       ,invalidTime
+                       ,projectID
+                       ,"COMMENT"
+                       ,createTime
+                       ,updateTime
+                       )
+                VALUES (
+                        ':edgeIP'
+                       ,':hostIP'
+                       ,':osType'
+                       ,TO_DATE(':edgeStartTime' ,'yyyy-MM-dd HH24:MI:SS')
+                       ,TO_DATE(':osTime'        ,'yyyy-MM-dd HH24:MI:SS')
+                       ,':claimCount'
+                       ,':taskOKCount'
+                       ,':isValid'
+                       ,NULL
+                       ,':projectID'
+                       ,':comment'
+                       ,SYSDATE
+                       ,SYSDATE
+                       )
+                ]]>
+            </content>
+            
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 INSERT  INTO THeartbeat
                        (
@@ -59,7 +95,23 @@
         
             <dataSourceGroup ref="DSG_MS_Common" />
             
-            <content>
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                UPDATE  THeartbeat
+                   SET  hostIP        = ':hostIP'
+                       ,osType        = ':osType'
+                       ,edgeStartTime = TO_DATE(':edgeStartTime' ,'yyyy-MM-dd HH24:MI:SS')
+                       ,osTime        = TO_DATE(':osTime'        ,'yyyy-MM-dd HH24:MI:SS')
+                       ,claimCount    = ':claimCount'
+                       ,taskOKCount   = ':taskOKCount'
+                       ,isValid       = ':isValid'
+               <[      ,invalidTime   = NVL(invalidTime ,':invalidTime')    ]>
+                       ,updateTime    = SYSDATE
+                 WHERE  edgeIP        = ':edgeIP'
+                ]]>
+            </content>
+            
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 UPDATE  THeartbeat
                    SET  hostIP        = ':hostIP'
@@ -119,7 +171,33 @@
             
             <dataSourceGroup ref="DSG_MS_Common" />
             
-            <content>
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT  A.edgeIP
+                       ,A.hostIP
+                       ,A.osType
+                       ,A.edgeStartTime
+                       ,A.osTime
+                       ,A.claimCount
+                       ,A.taskOKCount
+                       ,A.isValid
+                       ,A.invalidTime
+                       ,A.projectID
+                       ,A."COMMENT"
+                       ,A.createTime   
+                       ,A.updateTime   
+                  FROM  THeartbeat  A
+                 WHERE  A.isValid     = 1
+             <[    AND  A.updateTime >= SYSDATE + :second / 24 / 60 / 60  ]>
+             <[    AND  A.osTime     >= SYSDATE + :second / 24 / 60 / 60  ]>
+             <[    AND  A.edgeIP      = ':edgeIP'                         ]>
+             <[    AND  A.projectID   = ':projectID'                      ]>
+                 ORDER  BY A.edgeStartTime 
+                          ,A.edgeIP
+                ]]>
+            </content>
+            
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 SELECT  A.edgeIP
                        ,A.hostIP
@@ -158,7 +236,47 @@
             
             <dataSourceGroup ref="DSG_MS_Common" />
             
-            <content>
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT  XB.edgeIP
+                       ,XB.hostIP
+                       ,XB.osType
+                       ,XB.edgeStartTime
+                       ,XB.osTime
+                       ,XB.claimCount
+                       ,XB.taskOKCount
+                       ,XB.isValid
+                       ,XB.invalidTime
+                       ,XB.projectID
+                       ,XB."COMMENT"
+                       ,XB.createTime   
+                       ,XB.updateTime 
+                  FROM (
+                        SELECT  WA.hostIP
+                               ,MIN(WA.edgeStartTime) AS edgeStartTime
+                          FROM  (
+                                SELECT  A.hostIP
+                                       ,A.edgeStartTime 
+                                  FROM  THeartbeat  A
+                                 WHERE  A.isValid     = 1
+                             <[    AND  A.updateTime >= SYSDATE + :second / 24 / 60 / 60   ]>
+                             <[    AND  A.osTime     >= SYSDATE + :second / 24 / 60 / 60   ]>
+                             <[    AND  A.edgeIP      = ':edgeIP'                          ]>
+                             <[    AND  A.projectID   = ':projectID'                       ]>
+                                 ORDER  BY A.edgeStartTime 
+                                          ,A.edgeIP
+                                )  WA
+                          GROUP  BY WA.hostIP
+                       )  XA
+                       ,THeartbeat  XB
+                 WHERE  XA.hostIP        = XB.hostIP
+                   AND  XA.edgeStartTime = XB.edgeStartTime
+                 ORDER  BY XB.edgeStartTime 
+                          ,XB.edgeIP
+                ]]>
+            </content>
+            
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 SELECT  XB.edgeIP
                        ,XB.hostIP

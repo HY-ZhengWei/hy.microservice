@@ -14,7 +14,45 @@
         
             <dataSourceGroup ref="DSG_MS_Common" />
             
-            <content>
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE THeartbeat
+                (
+                 edgeIP                     VARCHAR2(128)  NOT NULL
+                ,hostIP                     VARCHAR2(128)  NOT NULL
+                ,osType                     VARCHAR2(200)  NOT NULL
+                ,edgeStartTime              DATE           NOT NULL
+                ,osTime                     DATE           NOT NULL
+                ,claimCount                 NUMBER(10)     NOT NULL
+                ,taskOKCount                NUMBER(10)     NOT NULL
+                ,isValid                    NUMBER(1)      NOT NULL
+                ,invalidTime                DATE
+                ,projectID                  VARCHAR2(64)
+                ,"COMMENT"                  VARCHAR2(4000)
+                ,createTime                 DATE           NOT NULL
+                ,updateTime                 DATE           NOT NULL
+                );/
+                
+                ALTER TABLE THeartbeat ADD CONSTRAINT PK_Heartbeat PRIMARY KEY (edgeIP);/
+                
+                COMMENT ON TABLE  THeartbeat                    IS '心跳信息';/
+                COMMENT ON COLUMN THeartbeat.edgeIP             IS '边缘服务IP地址';/
+                COMMENT ON COLUMN THeartbeat.hostIP             IS '宿主服务IP地址';/
+                COMMENT ON COLUMN THeartbeat.osType             IS '操作系统的类型';/
+                COMMENT ON COLUMN THeartbeat.edgeStartTime      IS '边缘计算服务的启动时间';/
+                COMMENT ON COLUMN THeartbeat.osTime             IS '操作系统的当前时间';/
+                COMMENT ON COLUMN THeartbeat.claimCount         IS '认领任务数量';/
+                COMMENT ON COLUMN THeartbeat.taskOKCount        IS '任务执行正常的数量';/
+                COMMENT ON COLUMN THeartbeat.isValid            IS '是否有效';/
+                COMMENT ON COLUMN THeartbeat.invalidTime        IS '失效时间';/
+                COMMENT ON COLUMN THeartbeat.projectID          IS '项目ID';/
+                COMMENT ON COLUMN THeartbeat."COMMENT"          IS '注释说明';/
+                COMMENT ON COLUMN THeartbeat.createTime         IS '创建时间';/
+                COMMENT ON COLUMN THeartbeat.updateTime         IS '修改时间';/
+                ]]>
+            </content>
+            
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 CREATE TABLE THeartbeat
                 (
