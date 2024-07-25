@@ -61,6 +61,22 @@
             </item>
             
             
+            <item id="MS_Common_XSSO_Protocol">
+                <name>MS_Common_XSSO_Protocol</name>
+                <value>https</value>
+                <comment>单点登录的协议类型</comment>
+                <onlyRead>false</onlyRead>
+            </item>
+            
+            
+            <item id="MS_Common_XSSO_HostName">
+                <name>MS_Common_XSSO_HostName</name>
+                <value>127.0.0.1</value>
+                <comment>单点登录的IP地址</comment>
+                <onlyRead>false</onlyRead>
+            </item>
+            
+            
             <item id="MS_Common_RootPackageName">
                 <name>MS_Common_RootPackageName</name>
                 <value>org.hy.microservice</value>
