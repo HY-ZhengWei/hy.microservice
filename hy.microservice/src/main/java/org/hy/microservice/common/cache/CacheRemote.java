@@ -106,8 +106,7 @@ public class CacheRemote<Data> implements ICache<Data>
     @Override
     public void save(String i_DataBase ,String i_Table ,String i_ID ,Data i_Data ,long i_Second)
     {
-        this.redis.save(i_DataBase ,i_Table ,i_ID ,i_Data ,true);
-        // TODO 过期时长的功能须等待 Redis包的实现
+        this.redis.save(i_DataBase ,i_Table ,i_ID ,i_Data ,true ,i_Second);
     }
     
     
