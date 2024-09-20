@@ -41,7 +41,7 @@ public class DynamicDataSourceAspect
      * @version     v1.0
      *
      */
-    @Pointcut("@annotation(com.lps.microservice.common.mybatis.SourceData)")
+    @Pointcut("@annotation(org.hy.microservice.common.mybatis.SourceData)")
     public void dataSourcePointCut()
     {
         // 前置通知逻辑
