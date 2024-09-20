@@ -2,6 +2,8 @@ package org.hy.microservice.common.cache;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Map;
 
 import org.hy.common.redis.IRedis;
 
@@ -16,6 +18,7 @@ import org.hy.common.redis.IRedis;
  * @createDate  2024-07-01
  * @version     v1.0
  * @param <Data>  缓存的数据对象
+ *              v2.0  2024-09-20  添加：getRowsList 和 getRowsMap 全表数据获取的方法
  */
 public class CacheRemote<Data> implements ICache<Data>
 {
@@ -152,6 +155,44 @@ public class CacheRemote<Data> implements ICache<Data>
     public Data get(String i_DataBase ,String i_Table ,String i_ID)
     {
         return this.redis.getRow(i_ID ,this.dataClass);
+    }
+    
+    
+    
+    /**
+     * 获取全表数据（Map结构）
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2024-09-20
+     * @version     v1.0
+     *
+     * @param i_DataBase  数据库名称
+     * @param i_Table     表名称
+     * @return            Map.key行主键，Map.value行数据
+     */
+    @Override
+    public Map<String ,Data> getRowsMap(String i_DataBase ,String i_Table)
+    {
+        return this.redis.getRows(i_DataBase ,i_Table ,this.dataClass);
+    }
+    
+    
+    
+    /**
+     * 获取全表数据（List结构）
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2024-09-20
+     * @version     v1.0
+     *
+     * @param i_DataBase  数据库名称
+     * @param i_Table     表名称
+     * @return
+     */
+    @Override
+    public List<Data> getRowsList(String i_DataBase ,String i_Table)
+    {
+        return this.redis.getRowsList(i_DataBase ,i_Table ,this.dataClass);
     }
     
 }
