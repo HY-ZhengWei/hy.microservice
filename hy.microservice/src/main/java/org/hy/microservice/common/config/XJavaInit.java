@@ -107,37 +107,37 @@ public class XJavaInit extends AppInitConfig
     /**
      * 初始化 @XRequest 接口
      * 
-	 * @author      ZhengWei(HY)
-	 * @createDate  2023-08-17
-	 * @version     v1.0
+     * @author      ZhengWei(HY)
+     * @createDate  2023-08-17
+     * @version     v1.0
      */
     private void init_XRequest()
     {
-    	Map<String ,String> v_AppMsgKeySysID = new HashMap<String ,String>();
+        Map<String ,String> v_AppMsgKeySysID = new HashMap<String ,String>();
         v_AppMsgKeySysID.put(XJava.getParam("MS_Common_AppMsg_SYSID").getValue() ,XJava.getParam("MS_Common_AppMsg_MsgPWD").getValue());
         XJava.putObject("AppMsgKeySysID" ,v_AppMsgKeySysID);
         
         @SuppressWarnings("unchecked")
-		Map<String ,AppInterface> v_Apps = (Map<String ,AppInterface>)XJava.getObject("AppInterfaces");
+        Map<String ,AppInterface> v_Apps = (Map<String ,AppInterface>)XJava.getObject("AppInterfaces");
         if ( Help.isNull(v_Apps) )
         {
-        	return;
+            return;
         }
         
-    	OperationLogModule v_OModule = new OperationLogModule();
+        OperationLogModule v_OModule = new OperationLogModule();
         v_OModule.setModuleCode("app");
         v_OModule.setModuleName("XRequest接口");
         ProjectStartBase.$RequestMappingModules.put(v_OModule.getModuleCode() ,v_OModule);
         
         for (AppInterface v_App : v_Apps.values())
         {
-	        OperationLogApi v_OApi = new OperationLogApi();
-	        v_OApi.setModuleCode(v_OModule.getModuleCode());
-	        v_OApi.setModuleName(v_OModule.getModuleName());
-	        v_OApi.setUrl("/" + v_OModule.getModuleCode() + "/" + v_App.getName());
-	        v_OApi.setUrlName(v_App.getComment());
-	        
-	        ProjectStartBase.$RequestMappingMethods.putRow(v_OApi.getModuleCode() ,v_OApi);
+            OperationLogApi v_OApi = new OperationLogApi();
+            v_OApi.setModuleCode(v_OModule.getModuleCode());
+            v_OApi.setModuleName(v_OModule.getModuleName());
+            v_OApi.setUrl("/" + v_OModule.getModuleCode() + "/" + v_App.getName());
+            v_OApi.setUrlName(v_App.getComment());
+            
+            ProjectStartBase.$RequestMappingMethods.putRow(v_OApi.getModuleCode() ,v_OApi);
         }
     }
     
