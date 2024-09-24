@@ -18,6 +18,7 @@ import java.util.Map;
  * @createDate  2024-07-01
  * @version     v1.0
  *              v2.0  2024-09-20  添加：getRowsList 和 getRowsMap 全表数据获取的方法
+ *              v3.0  2024-09-23  添加：开放字符串的get、set方法
  */
 public interface ICache<Data>
 {
@@ -114,5 +115,93 @@ public interface ICache<Data>
      * @return
      */
     public List<Data> getRowsList(String i_DataBase ,String i_Table);
+    
+    
+    
+    /**
+     * 设置数据
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2024-09-23
+     * @version     v1.0
+     *
+     * @param i_Key    关键字
+     * @param i_Value  数据
+     * @return         成功返回true
+     */
+    public Boolean set(String i_Key ,String i_Value);
+    
+    
+    
+    /**
+     * 设置数据，并且设定过期时长
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2024-09-23
+     * @version     v1.0
+     *
+     * @param i_Key         关键字
+     * @param i_Value       数据
+     * @param i_ExpireTime  过期时间（单位：秒）
+     * @return              成功返回true
+     */
+    public Boolean setex(String i_Key ,String i_Value ,Long i_ExpireTime);
+    
+    
+    
+    /**
+     * 设置数据，仅在关键字不存在时设置数据
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2024-09-23
+     * @version     v1.0
+     *
+     * @param i_Key    关键字
+     * @param i_Value  数据
+     * @return         是否设置数据
+     */
+    public Boolean setnx(String i_Key ,String i_Value);
+    
+    
+    
+    /**
+     * 获取数据
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2024-09-23
+     * @version     v1.0
+     *
+     * @param i_Key  关键字
+     * @return
+     */
+    public String get(String i_Key);
+    
+    
+    
+    /**
+     * 获取数据并删除
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2024-09-23
+     * @version     v1.0
+     *
+     * @param i_Key  关键字
+     * @return
+     */
+    public String getdel(String i_Key);
+    
+    
+    
+    /**
+     * 删除数据
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2024-09-23
+     * @version     v1.0
+     *
+     * @param i_Keys  一个或多个关键字
+     * @return        返回删除数据的数量
+     */
+    public Long del(String ... i_Keys);
     
 }

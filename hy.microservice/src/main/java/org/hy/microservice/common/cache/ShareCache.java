@@ -18,8 +18,10 @@ import org.hy.common.xml.annotation.Xjava;
  * @author      ZhengWei(HY)
  * @createDate  2021-08-08
  * @version     v1.0
+ *              v2.0  2024-09-24  废弃：由CacheFactory代替
  */
 @Xjava
+@Deprecated
 public class ShareCache
 {
     
