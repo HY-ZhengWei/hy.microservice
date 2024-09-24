@@ -145,6 +145,24 @@ public class CacheRemote<Data> implements ICache<Data>
     
     
     /**
+     * 删除内存表。会同时删除表数据、表关系
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2024-09-24
+     * @version     v1.0
+     *
+     * @param i_Database  库名称
+     * @param i_Table     表名称
+     */
+    @Override
+    public boolean dropTable(String i_Database ,String i_Table)
+    {
+        return this.redis.dropTable(i_Database ,i_Table);
+    }
+    
+    
+    
+    /**
      * 获取数据
      * 
      * @author      ZhengWei(HY)
