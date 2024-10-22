@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="sqls"            class="java.util.ArrayList" />
+    <import name="sqlGroup"        class="org.hy.common.xml.plugins.XSQLGroup" />
+    <import name="sql"             class="org.hy.common.xml.XSQL" />
+
+
+
+    <!-- 收藏夹的相关SQL组 -->
+    <sqls>
+        
+        <sqlGroup id="GXSQL_Common_FavoriteData_Save">
+            <comment>保存收藏夹</comment>
+            
+            <sqlNode>
+                <sql  ref="XSQL_Common_FavoriteData_IsExists" />
+                <type ref="this.$Type_Query" />
+                <oneConnection>true</oneConnection>
+            </sqlNode>
+            
+            <sqlNode>
+                <sql  ref="XSQL_Common_FavoriteData_Insert" />
+                <type ref="this.$Type_ExecuteUpdate" />
+                <condition><![CDATA[:FavoriteData_IsExists <= 0]]></condition>
+            </sqlNode>
+            
+            <sqlNode>
+                <sql  ref="XSQL_Common_FavoriteData_Update" />
+                <type ref="this.$Type_ExecuteUpdate" />
+                <condition><![CDATA[:FavoriteData_IsExists >= 1]]></condition>
+            </sqlNode>
+        </sqlGroup>
+        
+    </sqls>
+    
+</config>

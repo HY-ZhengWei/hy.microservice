@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="sqls"            class="java.util.ArrayList" />
+    <import name="sql"             class="org.hy.common.xml.XSQL" />
+
+
+
+    <!-- 收藏夹的相关SQL -->
+    <sqls>
+    
+        <sql id="XSQL_Common_Create_FavoriteData">
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TFavoriteData
+                (
+                 id                         VARCHAR2(64)   NOT NULL
+                ,serviceType                VARCHAR2(200)  NOT NULL
+                ,dataID                     VARCHAR2(64)   NOT NULL
+                ,favoriteName               VARCHAR2(200)  NOT NULL
+                ,orderBy                    NUMBER(10 ,0)  NOT NULL
+                ,projectID                  VARCHAR2(64)
+                ,comment                    VARCHAR2(4000)
+                ,isDel                      NUMBER(1 ,0)   NOT NULL
+                ,isValid                    NUMBER(1 ,0)   NOT NULL
+                ,createUserID               VARCHAR2(64)   NOT NULL
+                ,updateUserID               VARCHAR2(64)   NOT NULL
+                ,createTime                 DATE           NOT NULL
+                ,updateTime                 DATE           NOT NULL
+                );/
+                
+                ALTER TABLE TFavoriteData ADD CONSTRAINT PK_FavoriteData PRIMARY KEY (id);/
+                
+                CREATE INDEX IDX_FavoriteData_dataID     ON TFavoriteData (updateUserID ,serviceType ,dataID);/
+                CREATE INDEX IDX_FavoriteData_updateTime ON TFavoriteData (updateTime);/
+                
+                COMMENT ON TABLE  TFavoriteData                                IS '收藏夹';/
+                COMMENT ON COLUMN TFavoriteData.id                             IS '主键';/
+                COMMENT ON COLUMN TFavoriteData.serviceType                    IS '收藏业务分类';/
+                COMMENT ON COLUMN TFavoriteData.dataID                         IS '收藏数据ID';/
+                COMMENT ON COLUMN TFavoriteData.favoriteName                   IS '收藏数据名称';/
+                COMMENT ON COLUMN TFavoriteData.orderBy                        IS '排列显示顺序';/
+                COMMENT ON COLUMN TFavoriteData.projectID                      IS '项目ID';/
+                COMMENT ON COLUMN TFavoriteData.comment                        IS '注释说明';/
+                COMMENT ON COLUMN TFavoriteData.isValid                        IS '收藏是否有效。1有效；-1无效';/
+                COMMENT ON COLUMN TFavoriteData.isDel                          IS '删除标记。1删除；0未删除';/
+                COMMENT ON COLUMN TFavoriteData.createUserID                   IS '数据创建人ID';/
+                COMMENT ON COLUMN TFavoriteData.updateUserID                   IS '数据修改人ID';/
+                COMMENT ON COLUMN TFavoriteData.createTime                     IS '创建时间';/
+                COMMENT ON COLUMN TFavoriteData.updateTime                     IS '修改时间';/
+                ]]>
+            </content>
+            
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TFavoriteData
+                (
+                 id                         VARCHAR(64)   NOT NULL        COMMENT '主键'
+                ,serviceType                VARCHAR(200)  NOT NULL        COMMENT '收藏业务分类'
+                ,dataID                     VARCHAR(64)   NOT NULL        COMMENT '收藏数据ID'
+                ,favoriteName               VARCHAR(200)  NOT NULL        COMMENT '收藏数据名称'
+                ,orderBy                    INT           NOT NULL        COMMENT '排列显示顺序'
+                ,projectID                  VARCHAR(64)                   COMMENT '项目ID'
+                ,comment                    VARCHAR(4000)                 COMMENT '注释说明'
+                ,isValid                    INT           NOT NULL        COMMENT '收藏是否有效。1有效；-1无效'
+                ,isDel                      INT           NOT NULL        COMMENT '删除标记。1删除；0未删除'
+                ,createUserID               VARCHAR(64)   NOT NULL        COMMENT '数据创建人ID'
+                ,updateUserID               VARCHAR(64)   NOT NULL        COMMENT '数据修改人ID'
+                ,createTime                 DATETIME      NOT NULL        COMMENT '创建时间'
+                ,updateTime                 DATETIME      NOT NULL        COMMENT '修改时间'
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;/
+                
+                ALTER TABLE TFavoriteData COMMENT                      = '收藏夹';/
+
+                ALTER TABLE TFavoriteData ADD CONSTRAINT PK_FavoriteData PRIMARY KEY (id);/
+                                
+                CREATE INDEX IDX_FavoriteData_dataID     ON TFavoriteData (updateUserID ,serviceType ,dataID);/
+                CREATE INDEX IDX_FavoriteData_updateTime ON TFavoriteData (updateTime);/
+                ]]>
+            </content>
+            
+            <comment>收藏夹</comment>
+            <create if="启用 == IsCreateDB_MS_Common.getValue">TFavoriteData</create>
+            
+        </sql>
+        
+    </sqls>
+    
+</config>

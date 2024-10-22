@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="sqls"            class="java.util.ArrayList" />
+    <import name="sqlGroup"        class="org.hy.common.xml.plugins.XSQLGroup" />
+    <import name="sql"             class="org.hy.common.xml.XSQL" />
+
+
+
+    <!-- 收藏夹的相关SQL -->
+    <sqls>
+    
+        <sql id="XSQL_Common_FavoriteData_Insert"> 
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <contentDB>
+                <defaultNull>true</defaultNull>
+            </contentDB>
+            
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT  INTO TFavoriteData
+                       (
+                        id
+                       ,serviceType
+                       ,dataID
+                       ,favoriteName
+                       ,orderBy
+                       ,projectID
+                       ,comment
+                       ,isValid
+                       ,isDel
+                       ,createUserID
+                       ,updateUserID
+                       ,createTime
+                       ,updateTime
+                       )
+                VALUES (
+                        ':id'
+                       ,':serviceType'
+                       ,':dataID'
+                       ,':favoriteName'
+                       ,':orderBy'
+                       ,':projectID'
+                       ,':comment'
+                       ,':isValid'
+                       ,':isDel'
+                       ,':createUserID'
+                       ,':updateUserID'
+                       ,SYSDATE
+                       ,SYSDATE
+                       )
+                ]]>
+            </content>
+            
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT  INTO TFavoriteData
+                       (
+                        id
+                       ,serviceType
+                       ,dataID
+                       ,favoriteName
+                       ,orderBy
+                       ,projectID
+                       ,comment
+                       ,isValid
+                       ,isDel
+                       ,createUserID
+                       ,updateUserID
+                       ,createTime
+                       ,updateTime
+                       )
+                VALUES (
+                        ':id'
+                       ,':serviceType'
+                       ,':dataID'
+                       ,':favoriteName'
+                       ,':orderBy'
+                       ,':projectID'
+                       ,':comment'
+                       ,':isValid'
+                       ,':isDel'
+                       ,':createUserID'
+                       ,':updateUserID'
+                       ,NOW()
+                       ,NOW()
+                       )
+                ]]>
+            </content>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_FavoriteData_Update"> 
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                UPDATE  TFavoriteData
+                   SET  updateTime   = NOW()
+                       ,updateUserID = ':updateUserID'
+                    <[ ,favoriteName = ':favoriteName'  ]>
+                    <[ ,orderBy      = ':orderBy'       ]>
+                    <[ ,projectID    = ':projectID'     ]>
+                    <[ ,comment      = ':comment'       ]>
+                    <[ ,isValid      = ':isValid'       ]>
+                    <[ ,isDel        = ':isDel'         ]>
+                 WHERE  id           = ':id'
+                ]]>
+            </content>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_FavoriteData_IsExists"> 
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                SELECT  COUNT(1) AS FavoriteData_IsExists
+                  FROM  TFavoriteData
+                 WHERE  id = ':id'
+                   FOR  UPDATE
+                ]]>
+            </content>
+            
+            <result>
+                <row>java.util.HashMap</row>
+                <cfill>put(colName ,colValue)</cfill>
+                <cstyle>UPPER</cstyle>
+            </result>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_FavoriteData_Query"> 
+            
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                SELECT  A.id
+                       ,A.serviceType
+                       ,A.dataID
+                       ,A.favoriteName
+                       ,A.orderBy
+                       ,A.projectID
+                       ,A.comment
+                       ,A.isValid
+                       ,A.isDel
+                       ,A.createUserID
+                       ,A.updateUserID
+                       ,A.createTime
+                       ,A.updateTime
+                  FROM  TFavoriteData  A
+                 WHERE  A.isDel        = 0
+              <[   AND  A.updateUserID = ':userID'       ]>
+              <[   AND  A.id           = ':id'           ]>
+              <[   AND  A.serviceType  = ':serviceType'  ]>
+              <[   AND  A.dataID       = ':dataID'       ]>
+              <[   AND  A.projectID    = ':projectID'    ]>
+                 ORDER  BY A.orderBy 
+                          ,A.updateTime DESC
+                ]]>
+            </content>
+            
+            <result>
+                <table>java.util.LinkedHashMap</table>
+                <fill>put(row.id ,row)</fill>
+                <row>org.hy.microservice.common.favorite.FavoriteData</row>
+                <cfill>setter(colValue)</cfill>
+            </result>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_FavoriteData_Query_ByPage"> 
+            
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content ref="XSQL_Common_FavoriteData_Query.getContent" />
+            <result  ref="XSQL_Common_FavoriteData_Query.getResult"/>
+            <comment>分页查询</comment>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_FavoriteData_Count"> 
+            
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                SELECT  COUNT(1) AS totalCount
+                  FROM  TFavoriteData  A
+                 WHERE  A.isDel        = 0
+              <[   AND  A.updateUserID = ':userID'       ]>
+              <[   AND  A.id           = ':id'           ]>
+              <[   AND  A.serviceType  = ':serviceType'  ]>
+              <[   AND  A.dataID       = ':dataID'       ]>
+              <[   AND  A.projectID    = ':projectID'    ]>
+                ]]>
+            </content>
+            
+        </sql>
+        
+    </sqls>
+    
+</config>
