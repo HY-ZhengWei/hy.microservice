@@ -82,6 +82,22 @@ public interface IFavoriteDAO
     
     
     /**
+     * 按用户及收藏数据ID查询收藏夹
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2024-10-23
+     * @version     v1.0
+     * 
+     * @param i_UserID  收藏用户ID
+     * @param i_DataID  收藏数据ID
+     * @return
+     */
+    @Xsql(id="XSQL_Common_FavoriteData_Query" ,returnOne=true)
+    public FavoriteData queryByDataID(@Xparam("userID") String i_UserID ,@Xparam("dataID") String i_DataID);
+    
+    
+    
+    /**
      * 新增、修改、逻辑删除收藏夹
      * 
      * @author      ZhengWei(HY)

@@ -207,6 +207,7 @@ public class FavoriteController extends BaseController
                 }
                 
                 // 未修改请求参数时，填充原来的
+                v_Favorite.setDataID(Help.NVL(v_Favorite.getDataID() ,v_Old.getDataID()));
             }
             
             if ( isCheckToken != null && Boolean.parseBoolean(isCheckToken.getValue()) )
@@ -231,6 +232,17 @@ public class FavoriteController extends BaseController
             
             synchronized (this)
             {
+                // 防止重复
+                if ( Help.isNull(v_Favorite.getId()) )
+                {
+                    FavoriteDomain v_SameDataID = this.favoriteService.queryByDataID(v_Favorite.getUserID() ,v_Favorite.getDataID());
+                    if ( v_SameDataID != null )
+                    {
+                        $Logger.warn("创建收藏数据ID[" + v_Favorite.getDataID() + "]时已存在，禁止重复创建");
+                        return v_RetResp.setCode("-903").setMessage("收藏数据ID" + v_Favorite.getDataID() + "已存在，禁止重复创建");
+                    }
+                }
+                
                 FavoriteDomain v_SaveRet = this.favoriteService.save(v_Favorite);
                 if ( v_SaveRet != null )
                 {

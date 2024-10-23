@@ -8,6 +8,7 @@ import org.hy.common.Help;
 import org.hy.common.StringHelp;
 import org.hy.common.app.Param;
 import org.hy.common.xml.annotation.Xjava;
+import org.hy.common.xml.annotation.Xparam;
 import org.hy.microservice.common.domain.DomainUtil;
 
 
@@ -114,6 +115,30 @@ public class FavoriteService implements IFavoriteService ,Serializable
         }
         
         FavoriteData v_Favorite = this.favoriteDAO.queryByID(i_ID);
+        return v_Favorite == null ? null : new FavoriteDomain(v_Favorite);
+    }
+    
+    
+    
+    /**
+     * 按用户及收藏数据ID查询收藏夹
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2024-10-23
+     * @version     v1.0
+     * 
+     * @param i_UserID  收藏用户ID
+     * @param i_DataID  收藏数据ID
+     * @return
+     */
+    public FavoriteDomain queryByDataID(@Xparam("userID") String i_UserID ,@Xparam("dataID") String i_DataID)
+    {
+        if ( Help.isNull(i_UserID) || Help.isNull(i_DataID) )
+        {
+            return null;
+        }
+        
+        FavoriteData v_Favorite = this.favoriteDAO.queryByDataID(i_UserID ,i_DataID);
         return v_Favorite == null ? null : new FavoriteDomain(v_Favorite);
     }
     
