@@ -8,7 +8,6 @@ import org.hy.common.Help;
 import org.hy.common.StringHelp;
 import org.hy.common.app.Param;
 import org.hy.common.xml.annotation.Xjava;
-import org.hy.common.xml.annotation.Xparam;
 import org.hy.microservice.common.domain.DomainUtil;
 
 
@@ -131,7 +130,7 @@ public class FavoriteService implements IFavoriteService ,Serializable
      * @param i_DataID  收藏数据ID
      * @return
      */
-    public FavoriteDomain queryByDataID(@Xparam("userID") String i_UserID ,@Xparam("dataID") String i_DataID)
+    public FavoriteDomain queryByDataID(String i_UserID ,String i_DataID)
     {
         if ( Help.isNull(i_UserID) || Help.isNull(i_DataID) )
         {

@@ -2,8 +2,6 @@ package org.hy.microservice.common.favorite;
 
 import java.util.Map;
 
-import org.hy.common.xml.annotation.Xparam;
-
 
 
 
@@ -85,7 +83,7 @@ public interface IFavoriteService
      * @param i_DataID  收藏数据ID
      * @return
      */
-    public FavoriteDomain queryByDataID(@Xparam("userID") String i_UserID ,@Xparam("dataID") String i_DataID);
+    public FavoriteDomain queryByDataID(String i_UserID ,String i_DataID);
     
     
     
