@@ -438,6 +438,26 @@ public class BaseView<Domain extends BaseDomain<? extends BaseData>> extends Ser
     {
         this.domain.setOrderBy(orderBy);
     }
+    
+    
+    /**
+     * 获取：当前用户是否收藏。1收藏；0不收藏
+     */
+    public Integer getIsFavorite()
+    {
+        return this.domain.getIsFavorite();
+    }
+
+    
+    /**
+     * 设置：当前用户是否收藏。1收藏；0不收藏
+     * 
+     * @param i_IsFavorite 当前用户是否收藏。1收藏；0不收藏
+     */
+    public void setIsFavorite(Integer i_IsFavorite)
+    {
+        this.domain.setIsFavorite(i_IsFavorite);
+    }
 
     
     /**

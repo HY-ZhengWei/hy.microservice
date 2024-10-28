@@ -437,6 +437,26 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
     {
         this.data.setOrderBy(orderBy);
     }
+    
+    
+    /**
+     * 获取：当前用户是否收藏。1收藏；0不收藏
+     */
+    public Integer getIsFavorite()
+    {
+        return this.data.getIsFavorite();
+    }
+
+    
+    /**
+     * 设置：当前用户是否收藏。1收藏；0不收藏
+     * 
+     * @param i_IsFavorite 当前用户是否收藏。1收藏；0不收藏
+     */
+    public void setIsFavorite(Integer i_IsFavorite)
+    {
+        this.data.setIsFavorite(i_IsFavorite);
+    }
 
     
     /**

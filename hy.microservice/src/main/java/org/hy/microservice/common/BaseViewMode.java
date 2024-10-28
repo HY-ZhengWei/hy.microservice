@@ -94,6 +94,9 @@ public class BaseViewMode extends SerializableDef
     /** 排列显示顺序。数据越大越在前显示 */
     private Integer orderBy;
     
+    /** 当前用户是否收藏。1收藏；0不收藏 */
+    private Integer isFavorite;
+    
     /** 审核状态：0：待审核、1：已审核 */
     private String  auditState;
 
@@ -790,6 +793,26 @@ public class BaseViewMode extends SerializableDef
     public void setProjectID(String i_ProjectID)
     {
         this.projectID = i_ProjectID;
+    }
+
+    
+    /**
+     * 获取：当前用户是否收藏。1收藏；0不收藏
+     */
+    public Integer getIsFavorite()
+    {
+        return isFavorite;
+    }
+
+    
+    /**
+     * 设置：当前用户是否收藏。1收藏；0不收藏
+     * 
+     * @param i_IsFavorite 当前用户是否收藏。1收藏；0不收藏
+     */
+    public void setIsFavorite(Integer i_IsFavorite)
+    {
+        this.isFavorite = i_IsFavorite;
     }
 
 }
