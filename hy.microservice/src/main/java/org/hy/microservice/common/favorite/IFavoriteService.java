@@ -79,11 +79,12 @@ public interface IFavoriteService
      * @createDate  2024-10-23
      * @version     v1.0
      * 
-     * @param i_UserID  收藏用户ID
-     * @param i_DataID  收藏数据ID
+     * @param i_UserID       收藏用户ID
+     * @param i_ServiceType  业务类型编码
+     * @param i_DataID       收藏数据ID
      * @return
      */
-    public FavoriteDomain queryByDataID(String i_UserID ,String i_DataID);
+    public FavoriteDomain queryByDataID(String i_UserID ,String i_ServiceType ,String i_DataID);
     
     
     

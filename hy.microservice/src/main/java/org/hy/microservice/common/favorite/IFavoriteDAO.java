@@ -88,12 +88,15 @@ public interface IFavoriteDAO
      * @createDate  2024-10-23
      * @version     v1.0
      * 
-     * @param i_UserID  收藏用户ID
-     * @param i_DataID  收藏数据ID
+     * @param i_UserID       收藏用户ID
+     * @param i_ServiceType  业务类型编码
+     * @param i_DataID       收藏数据ID
      * @return
      */
     @Xsql(id="XSQL_Common_FavoriteData_Query" ,returnOne=true)
-    public FavoriteData queryByDataID(@Xparam("userID") String i_UserID ,@Xparam("dataID") String i_DataID);
+    public FavoriteData queryByDataID(@Xparam("userID")      String i_UserID 
+                                     ,@Xparam("serviceType") String i_ServiceType 
+                                     ,@Xparam("dataID")      String i_DataID);
     
     
     

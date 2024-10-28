@@ -168,7 +168,7 @@ public class FavoriteController extends BaseController
         try
         {
             FavoriteDomain v_Favorite = i_Favorite.gatDomain();
-            FavoriteDomain v_Old       = null;
+            FavoriteDomain v_Old      = null;
             $Logger.info("saveFavorite Start: " + i_Token + ":" + v_Favorite.toString());
             
             if ( Help.isNull(v_Favorite.getUserID()) )
@@ -176,8 +176,34 @@ public class FavoriteController extends BaseController
                 return v_RetResp.setCode("-2").setMessage("用户编号为空");
             }
             
+            // 删除时
+            if ( v_Favorite.getIsDel() != null && v_Favorite.getIsDel() >= 1 )
+            {
+                if ( !Help.isNull(v_Favorite.getId()) )
+                {
+                    v_Old = this.favoriteService.queryByID(v_Favorite.getId());
+                    if ( v_Old == null )
+                    {
+                        return v_RetResp.setCode("-20").setMessage("ID不存在");
+                    }
+                }
+                else if ( !Help.isNull(v_Favorite.getServiceType()) && !Help.isNull(v_Favorite.getDataID()) )
+                {
+                    v_Old = this.favoriteService.queryByDataID(v_Favorite.getUserID() ,v_Favorite.getServiceType() ,v_Favorite.getDataID());
+                    if ( v_Old == null )
+                    {
+                        return v_RetResp.setCode("-21").setMessage("用户未收藏业务类型[" + v_Favorite.getServiceType() + "]的数据[" + v_Favorite.getDataID() + "]");
+                    }
+                    
+                    v_Favorite.setId(v_Old.getId());
+                }
+                else
+                {
+                    return v_RetResp.setCode("-22").setMessage("删除时，ID和业务类型+数据ID是二选一必填");
+                }
+            }
             // 新创建的验证
-            if ( Help.isNull(v_Favorite.getId()) )
+            else if ( Help.isNull(v_Favorite.getId()) )
             {
                 if ( Help.isNull(v_Favorite.getServiceType()) )
                 {
@@ -235,7 +261,7 @@ public class FavoriteController extends BaseController
                 // 防止重复
                 if ( Help.isNull(v_Favorite.getId()) )
                 {
-                    FavoriteDomain v_SameDataID = this.favoriteService.queryByDataID(v_Favorite.getUserID() ,v_Favorite.getDataID());
+                    FavoriteDomain v_SameDataID = this.favoriteService.queryByDataID(v_Favorite.getUserID() ,v_Favorite.getServiceType() ,v_Favorite.getDataID());
                     if ( v_SameDataID != null )
                     {
                         $Logger.warn("创建收藏数据ID[" + v_Favorite.getDataID() + "]时已存在，禁止重复创建");
