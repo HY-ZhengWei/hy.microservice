@@ -24,8 +24,10 @@ import org.hy.common.redis.IRedis;
 public class CacheRemote<Data> implements ICache<Data>
 {
     
+    /** Redis接口 */
     private IRedis      redis;
     
+    /** 数据类型 */
     private Class<Data> dataClass;
     
     

@@ -29,6 +29,7 @@ public class CacheLocal<Data> implements ICache<Data>
     
     private static final String $Level = ">";
     
+    /** 数据类型 */
     private Class<Data> dataClass;
     
     
