@@ -179,7 +179,7 @@ public class CacheRemote<Data> implements ICache<Data>
     @Override
     public Data get(String i_DataBase ,String i_Table ,String i_ID)
     {
-        return this.redis.getRow(i_ID ,this.dataClass);
+        return this.redis.getRow(i_DataBase ,i_Table ,i_ID ,this.dataClass);
     }
     
     

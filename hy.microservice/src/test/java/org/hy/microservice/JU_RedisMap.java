@@ -3,9 +3,12 @@ package org.hy.microservice;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.hy.common.Date;
+import org.hy.common.redis.type.RedisMapType;
 import org.hy.common.xml.annotation.Xjava;
 import org.hy.microservice.common.cache.CacheFactory;
 import org.hy.microservice.common.cache.ICache;
+
 
 
 
@@ -42,9 +45,13 @@ public class JU_RedisMap
         String                  v_TabName = "Test";
         HashMap<String ,Object> v_RowData = new HashMap<String ,Object>();
         
+        RedisMapType.save(v_DBName ,v_TabName ,"F01" ,String.class);
+        RedisMapType.save(v_DBName ,v_TabName ,"F02" ,Integer.class);
+        RedisMapType.save(v_DBName ,v_TabName ,"F03" ,Date.class);
+        
         v_RowData.put("F01" ,"V01");
-        v_RowData.put("F02" ,"V02");
-        v_RowData.put("F03" ,"V03");
+        v_RowData.put("F02" ,123456);
+        v_RowData.put("F03" ,new Date());
         
         this.cache.save(v_DBName ,v_TabName ,"Row01" ,v_RowData);
         this.cache.save(v_DBName ,v_TabName ,"Row02" ,v_RowData);
@@ -57,7 +64,7 @@ public class JU_RedisMap
             
             for (Map.Entry<String ,Object> v_Data : v_Datas.entrySet())
             {
-                System.out.println("\t" + v_Data.getKey() + "=" + v_Data.getValue());
+                System.out.println("\t" + v_Data.getKey() + "=" + v_Data.getValue() + ":" + v_Data.getValue().getClass().getSimpleName());
             }
         }
     }
