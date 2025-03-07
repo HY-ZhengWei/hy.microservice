@@ -155,7 +155,7 @@ public class WebSocketServer
             $Logger.error(exce);
         }
         
-        $Logger.debug("WebSocket onMessage：" + this.client.getServiceType() + "=" + i_Message);
+        $Logger.info("WebSocket onMessage：" + this.client.getServiceType() + "=" + i_Message);
     }
 
     
