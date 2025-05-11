@@ -12,6 +12,11 @@
       <option name="url" value="https://repo.maven.apache.org/maven2" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="nexus2" />
+      <option name="name" value="Nexus" />
+      <option name="url" value="http://10.0.1.100:8081/repository/snapshots/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="maven-snapshot" />
       <option name="name" value="maven-snapshot" />
       <option name="url" value="https://oss.sonatype.org/content/repositories/snapshots" />
@@ -35,6 +40,11 @@
       <option name="id" value="nexus" />
       <option name="name" value="nexus" />
       <option name="url" value="https://repo1.maven.org/maven2/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="nexus" />
+      <option name="name" value="Nexus" />
+      <option name="url" value="http://10.0.1.100:8081/repository/public/" />
     </remote-repository>
   </component>
 </project>
