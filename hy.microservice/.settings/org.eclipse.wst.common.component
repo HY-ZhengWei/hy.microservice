@@ -637,7 +637,7 @@
         <dependent-module archiveName="hy.common.plc-1.0.6.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/hy.common.plc/hy.common.plc">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="hy.common.hart-1.0.5.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/hy.common.hart/hy.common.hart">
+        <dependent-module archiveName="hy.common.hart-1.0.6.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/hy.common.hart/hy.common.hart">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="hy.common.modbus-1.0.2.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/hy.common.modbus/hy.common.modbus">
