@@ -10,7 +10,7 @@
     
     <name>cn.openapis.hy.microservice</name>
     <url>https://github.com/HY-ZhengWei/hy.microservice</url>
-    <description>cn.openapis.hy.microservice</description>
+    <description>ms微服务基座</description>
     
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
