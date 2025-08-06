@@ -29,7 +29,7 @@ public class JU_YonYou_DBDocument
             {
                 $IsInit = true;
                 
-                new XJavaInit(false ,"C:\\Software\\apache-tomcat-9.0.44\\webapps\\fimeson.microservice.yonyou\\WEB-INF\\classes\\");
+                new XJavaInit(false ,"C:\\Software\\apache-tomcat-9.0.44\\webapps\\hy.microservice.yonyou\\WEB-INF\\classes\\");
             }
         }
     }

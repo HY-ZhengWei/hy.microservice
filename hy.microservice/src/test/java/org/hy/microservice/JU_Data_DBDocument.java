@@ -29,7 +29,7 @@ public class JU_Data_DBDocument
             {
                 $IsInit = true;
                 
-                new XJavaInit(false ,"C:\\Software\\apache-tomcat-9.0.44\\webapps\\hy.microservice.data\\WEB-INF\\classes\\");
+                new XJavaInit(false ,"D:\\Software\\apache-tomcat-9.0.96\\webapps\\hy.microservice.data\\WEB-INF\\classes\\");
             }
         }
     }

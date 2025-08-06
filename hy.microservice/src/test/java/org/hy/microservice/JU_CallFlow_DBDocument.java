@@ -29,7 +29,7 @@ public class JU_CallFlow_DBDocument
             {
                 $IsInit = true;
                 
-                new XJavaInit(false ,"D:\\Software\\apache-tomcat-9.0.96\\webapps\\lps.microservice.mes\\WEB-INF\\classes\\");
+                new XJavaInit(false ,"D:\\Software\\apache-tomcat-9.0.96\\webapps\\hy.microservice.mes\\WEB-INF\\classes\\");
             }
         }
     }
