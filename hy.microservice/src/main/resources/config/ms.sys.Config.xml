@@ -96,7 +96,7 @@
             
             <item id="MS_Common_Version">
                 <name>MS_Common_Version</name>
-                <value>1.13.9</value>
+                <value>1.14.0</value>
                 <comment>边缘计算服务的版本号</comment>
                 <onlyRead>false</onlyRead>
             </item>

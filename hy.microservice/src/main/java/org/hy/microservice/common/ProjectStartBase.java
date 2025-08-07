@@ -81,10 +81,14 @@ public class ProjectStartBase
         Map<String ,Object> v_Beans = v_WebAppContext.getBeansWithAnnotation(RequestMapping.class);
         for (Map.Entry<String ,Object> v_Item : v_Beans.entrySet())
         {
-            Class<?>       v_AnnoClass      = v_Item.getValue().getClass();
-            RequestMapping v_RequestMapping = v_AnnoClass.getAnnotation(RequestMapping.class);
+            Class<?> v_AnnoClass = v_Item.getValue().getClass();
+            if ( v_AnnoClass == null )
+            {
+                continue;
+            }
             
-            if ( Help.isNull(v_RequestMapping.name()) )
+            RequestMapping v_RequestMapping = v_AnnoClass.getAnnotation(RequestMapping.class);
+            if ( v_RequestMapping == null || Help.isNull(v_RequestMapping.name()) )
             {
                 continue;
             }

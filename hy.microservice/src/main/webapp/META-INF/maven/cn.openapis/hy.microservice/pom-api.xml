@@ -5,7 +5,7 @@
     
     <groupId>org</groupId>
     <artifactId>hy.microservice</artifactId>
-    <version>1.13.9</version>
+    <version>1.14.0</version>
     <packaging>jar</packaging>
     
     <name>org.hy.microservice</name>
