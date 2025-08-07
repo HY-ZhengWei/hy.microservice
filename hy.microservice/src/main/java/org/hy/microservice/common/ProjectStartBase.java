@@ -39,6 +39,8 @@ import org.hy.microservice.common.operationLog.OperationLogModule;
  * @createDate  2020-11-19
  * @version     v1.0
  *              v2.0  2021-02-19  添加：支持SpringBoot 2.4.0版本
+ *              v3.0  2025-08-07  添加：从名称name中解析出日志表名称的后缀。
+ *                                     可支持不同业务的日志保存在不同的表中。
  */
 public class ProjectStartBase
 {
@@ -104,6 +106,18 @@ public class ProjectStartBase
             v_OModule.setModuleCode(v_RequestMapping.value()[0]);
             v_OModule.setModuleName(v_RequestMapping.name());
             
+            int v_LastIndex = v_OModule.getModuleName().lastIndexOf($NameLogSplit);
+            if ( v_LastIndex > 0 && v_LastIndex < v_OModule.getModuleName().length() - 1 )
+            {
+                v_OModule.setLogName(   v_OModule.getModuleName().substring(v_LastIndex + 1));
+                v_OModule.setModuleName(v_OModule.getModuleName().substring(0 ,v_LastIndex));
+            }
+            else
+            {
+                v_OModule.setLogName("");
+                v_OModule.setModuleName(v_OModule.getModuleName());
+            }
+            
             $RequestMappingModules.put(v_OModule.getModuleCode() ,v_OModule);
         }
         
@@ -133,14 +147,15 @@ public class ProjectStartBase
                     continue;
                 }
                 
-                if ( $RequestMappingModules.get(v_Url[1]) == null )
+                OperationLogModule v_OLModule = $RequestMappingModules.get(v_Url[1]);
+                if ( v_OLModule == null )
                 {
                     continue;
                 }
                 
                 OperationLogApi v_OApi = new OperationLogApi();
                 v_OApi.setModuleCode(v_Url[1]);
-                v_OApi.setModuleName($RequestMappingModules.get(v_OApi.getModuleCode()).getModuleName());
+                v_OApi.setModuleName(v_OLModule.getModuleName());
                 v_OApi.setUrl(v_Pattern);
                 v_OApi.setUrlName(v_Names[1]);
                 
@@ -149,14 +164,14 @@ public class ProjectStartBase
                 {
                     v_OApi.setLogName(v_OApi.getUrlName().substring(v_LastIndex + 1));
                     v_OApi.setUrlName(v_OApi.getUrlName().substring(0 ,v_LastIndex));
-                    
-                    v_LogService.create(v_OApi.getLogName());
                 }
                 else
                 {
-                    v_OApi.setLogName("");
+                    v_OApi.setLogName(v_OLModule.getLogName());
                     v_OApi.setUrlName(v_OApi.getUrlName());
                 }
+                
+                v_LogService.create(v_OApi.getLogName());
                 
                 $RequestMappingMethods.putRow(v_OApi.getModuleCode() ,v_OApi.getUrl() ,v_OApi);
             }

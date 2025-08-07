@@ -24,6 +24,9 @@ public class OperationLogModule extends SerializableDef
     /** 模块名称 */
     private String moduleName;
     
+    /** 日志名称。即日志表名称的后缀 */
+    private String logName;
+    
     
     
     /**
@@ -63,6 +66,26 @@ public class OperationLogModule extends SerializableDef
     public void setModuleName(String i_ModuleName)
     {
         this.moduleName = i_ModuleName;
+    }
+    
+    
+    /**
+     * 获取：日志名称。即日志表名称的后缀
+     */
+    public String getLogName()
+    {
+        return logName;
+    }
+
+    
+    /**
+     * 设置：日志名称。即日志表名称的后缀
+     * 
+     * @param i_LogName 日志名称。即日志表名称的后缀
+     */
+    public void setLogName(String i_LogName)
+    {
+        this.logName = i_LogName;
     }
     
 }

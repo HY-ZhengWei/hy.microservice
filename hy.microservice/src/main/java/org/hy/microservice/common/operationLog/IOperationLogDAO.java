@@ -31,7 +31,7 @@ public interface IOperationLogDAO
      * @param i_OperationLog  操作日志数据
      * @return
      */
-    @Xsql(id="XSQL_Common_OperationLog_Insert" ,batch=true)
+    @Xsql(id="XSQL_Common_OperationLog_Insert" ,batch=false)
     public int insert(OperationLog i_OperationLog);
     
     
@@ -46,7 +46,7 @@ public interface IOperationLogDAO
      * @param i_OperationLog  操作日志数据
      * @return
      */
-    @Xsql(id="XSQL_Common_OperationLog_Update" ,batch=true)
+    @Xsql(id="XSQL_Common_OperationLog_Update" ,batch=false)
     public int update(OperationLog i_OperationLog);
     
     

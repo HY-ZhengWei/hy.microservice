@@ -19,6 +19,8 @@ import org.hy.common.xml.annotation.Xjava;
  * @author      ZhengWei(HY)
  * @createDate  2023-04-11
  * @version     v1.0
+ *              v2.0  2025-08-07  添加：从名称name中解析出日志表名称的后缀。
+ *                                     可支持不同业务的日志保存在不同的表中。
  */
 @Xjava
 public class OperationLogService implements IOperationLogService ,Serializable
@@ -47,6 +49,11 @@ public class OperationLogService implements IOperationLogService ,Serializable
      */
     public synchronized boolean create(String i_LogName)
     {
+        if ( Help.isNull(i_LogName) )
+        {
+            return false;
+        }
+        
         if ( XJava.getXSQL("XSQL_Common_Create_OperationLog_Template_" + i_LogName) == null )
         {
             XSQL v_XSQL = XJava.getXSQL("XSQL_Common_Create_OperationLog_Template" ,true);
