@@ -127,6 +127,11 @@ public class ProjectStartBase
                     continue;
                 }
                 
+                if ( $RequestMappingModules.get(v_Url[1]) == null )
+                {
+                    continue;
+                }
+                
                 OperationLogApi v_OApi = new OperationLogApi();
                 v_OApi.setModuleCode(v_Url[1]);
                 v_OApi.setModuleName($RequestMappingModules.get(v_OApi.getModuleCode()).getModuleName());
