@@ -144,6 +144,120 @@
             
         </sql>
         
+        
+        
+        <sql id="XSQL_Common_Create_OperationLog_Template">
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TOperationLogTemplate
+                (
+                 id                         VARCHAR2(64)   NOT NULL
+                ,systemCode                 VARCHAR2(64)   NOT NULL
+                ,moduleCode                 VARCHAR2(64)   NOT NULL
+                ,url                        VARCHAR2(256)  NOT NULL
+                ,urlRequest                 VARCHAR2(4000)
+                ,urlRequestBody             VARCHAR2(4000)
+                ,urlResponse                VARCHAR2(4000)
+                ,resultCode                 VARCHAR2(64)
+                ,userID                     VARCHAR2(64)   NOT NULL
+                ,userIP                     VARCHAR2(64)   NOT NULL
+                ,requestTime                NUMBER(15)     NOT NULL
+                ,responseTime               NUMBER(15)
+                ,timeLen                    NUMBER(15)
+                ,attackType                 VARCHAR2(64)
+                ,createTime                 DATE
+                );/
+                
+                ALTER TABLE TOperationLogTemplate ADD CONSTRAINT PK_OperationLogTemplate PRIMARY KEY (id);/
+                CREATE INDEX IDX_TOperationLogTemplate_Url        ON TOperationLogTemplate (systemCode ,moduleCode ,url);/
+                CREATE INDEX IDX_TOperationLogTemplate_ResultCode ON TOperationLogTemplate (resultCode);/
+                CREATE INDEX IDX_TOperationLogTemplate_CreateTime ON TOperationLogTemplate (createTime);/
+                
+                COMMENT ON TABLE  TOperationLogTemplate                    IS '系统操作日志';/
+                COMMENT ON COLUMN TOperationLogTemplate.id                 IS '主键';/
+                COMMENT ON COLUMN TOperationLogTemplate.systemCode         IS '系统编号';/ 
+                COMMENT ON COLUMN TOperationLogTemplate.moduleCode         IS '模块编号';/
+                COMMENT ON COLUMN TOperationLogTemplate.url                IS '操作的URL地址';/
+                COMMENT ON COLUMN TOperationLogTemplate.urlRequest         IS '操作的请求参数';/
+                COMMENT ON COLUMN TOperationLogTemplate.urlRequestBody     IS '操作的请求体数据';/
+                COMMENT ON COLUMN TOperationLogTemplate.urlResponse        IS '操作的响应信息';/
+                COMMENT ON COLUMN TOperationLogTemplate.resultCode         IS '操作的响应结果编号';/
+                COMMENT ON COLUMN TOperationLogTemplate.userID             IS '操作人ID';/
+                COMMENT ON COLUMN TOperationLogTemplate.userIP             IS '操作人IP地址';/
+                COMMENT ON COLUMN TOperationLogTemplate.requestTime        IS '请求时间';/
+                COMMENT ON COLUMN TOperationLogTemplate.responseTime       IS '响应时间';/
+                COMMENT ON COLUMN TOperationLogTemplate.timeLen            IS '操作时长（单位：毫秒）';/
+                COMMENT ON COLUMN TOperationLogTemplate.attackType         IS '攻击类型';/
+                COMMENT ON COLUMN TOperationLogTemplate.createTime         IS '数据库的创建时间';/
+                ]]>
+            </content>
+        
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TOperationLogTemplate
+                (
+                 id                         VARCHAR(64)   NOT NULL COMMENT '主键'
+                ,systemCode                 VARCHAR(64)   NOT NULL COMMENT '系统编号'
+                ,moduleCode                 VARCHAR(64)   NOT NULL COMMENT '模块编号'
+                ,url                        VARCHAR(256)  NOT NULL COMMENT '操作的URL地址'
+                ,urlRequest                 TEXT                   COMMENT '操作的请求参数'
+                ,urlRequestBody             TEXT                   COMMENT '操作的请求体数据'
+                ,urlResponse                TEXT                   COMMENT '操作的响应信息'
+                ,resultCode                 VARCHAR(64)            COMMENT '操作的响应结果编号'
+                ,userID                     VARCHAR(64)   NOT NULL COMMENT '操作人ID'
+                ,userIP                     VARCHAR(64)   NOT NULL COMMENT '操作人IP地址'
+                ,requestTime                BIGINT        NOT NULL COMMENT '请求时间'
+                ,responseTime               BIGINT                 COMMENT '响应时间'
+                ,timeLen                    BIGINT                 COMMENT '操作时长（单位：毫秒）'
+                ,attackType                 VARCHAR(64)            COMMENT '攻击类型'
+                ,createTime                 DATETIME               COMMENT '数据库的创建时间'
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;/
+                
+                ALTER TABLE TOperationLogTemplate ADD CONSTRAINT PK_OperationLogTemplate PRIMARY KEY (id);/
+                CREATE INDEX IDX_TOperationLogTemplate_Url          USING BTREE ON TOperationLogTemplate (systemCode ,moduleCode ,url);/
+                CREATE INDEX IDX_TOperationLogTemplate_ResultCode   USING BTREE ON TOperationLogTemplate (resultCode);/
+                CREATE INDEX IDX_TOperationLogTemplate_CreateTime   USING BTREE ON TOperationLogTemplate (createTime);/
+                
+                Alter TABLE TOperationLogTemplate COMMENT = '系统操作日志';/
+                ]]>
+            </content>
+            
+            <content if="SQLITE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TOperationLogTemplate
+                (
+                 id                         TEXT(64)   NOT NULL 
+                ,systemCode                 TEXT(64)   NOT NULL 
+                ,moduleCode                 TEXT(64)   NOT NULL
+                ,url                        TEXT(256)  NOT NULL 
+                ,urlRequest                 TEXT
+                ,urlRequestBody             TEXT
+                ,urlResponse                TEXT
+                ,resultCode                 TEXT(64)
+                ,userID                     TEXT(64)   NOT NULL
+                ,userIP                     TEXT(64)   NOT NULL
+                ,requestTime                NUMERIC    NOT NULL
+                ,responseTime               NUMERIC
+                ,timeLen                    NUMERIC
+                ,attackType                 TEXT(64)
+                ,createTime                 TEXT(32)
+                );/
+                
+                CREATE UNIQUE INDEX PK_OperationLogTemplate       ON TOperationLogTemplate (id);/
+                
+                CREATE INDEX IDX_TOperationLogTemplate_Url        ON TOperationLogTemplate (systemCode ,moduleCode ,url);/
+                CREATE INDEX IDX_TOperationLogTemplate_ResultCode ON TOperationLogTemplate (resultCode);/
+                CREATE INDEX IDX_TOperationLogTemplate_CreateTime ON TOperationLogTemplate (createTime);/
+                ]]>
+            </content>
+            
+            <comment>系统操作日志的模板</comment>
+            
+        </sql>
+        
     </sqls>
     
 </config>

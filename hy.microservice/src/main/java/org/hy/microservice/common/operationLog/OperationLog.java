@@ -80,6 +80,9 @@ public class OperationLog extends BaseViewMode
     /** 日志缓存持久化的异常的次数 */
     private int                     cacheToDBErrCount;
     
+    /** 日志名称。即日志表名称的后缀 */
+    private String                  logName;
+    
 
     
     public OperationLog()
@@ -87,6 +90,7 @@ public class OperationLog extends BaseViewMode
         this.requestTime       = new Date().getTime();
         this.cacheToDBFlag     = 0;
         this.cacheToDBErrCount = 0;
+        this.logName           = "";
     }
     
     
@@ -504,6 +508,28 @@ public class OperationLog extends BaseViewMode
     public void setCacheToDBErrCount(int i_CacheToDBErrCount)
     {
         this.cacheToDBErrCount = i_CacheToDBErrCount;
+    }
+    
+    
+    
+    /**
+     * 获取：日志名称。即日志表名称的后缀
+     */
+    public String getLogName()
+    {
+        return logName;
+    }
+
+    
+    
+    /**
+     * 设置：日志名称。即日志表名称的后缀
+     * 
+     * @param i_LogName 日志名称。即日志表名称的后缀
+     */
+    public void setLogName(String i_LogName)
+    {
+        this.logName = i_LogName;
     }
 
 }

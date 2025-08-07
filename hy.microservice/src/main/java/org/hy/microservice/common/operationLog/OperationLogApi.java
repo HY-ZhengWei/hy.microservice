@@ -21,6 +21,9 @@ public class OperationLogApi extends OperationLogModule
     
     /** API接口的名称 */
     private String urlName;
+    
+    /** 日志名称。即日志表名称的后缀 */
+    private String logName;
 
     
     
@@ -61,6 +64,26 @@ public class OperationLogApi extends OperationLogModule
     public void setUrlName(String i_UrlName)
     {
         this.urlName = i_UrlName;
+    }
+    
+    
+    /**
+     * 获取：日志名称。即日志表名称的后缀
+     */
+    public String getLogName()
+    {
+        return logName;
+    }
+
+    
+    /**
+     * 设置：日志名称。即日志表名称的后缀
+     * 
+     * @param i_LogName 日志名称。即日志表名称的后缀
+     */
+    public void setLogName(String i_LogName)
+    {
+        this.logName = i_LogName;
     }
     
 }

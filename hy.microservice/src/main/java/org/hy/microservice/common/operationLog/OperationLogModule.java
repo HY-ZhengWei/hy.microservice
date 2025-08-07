@@ -23,7 +23,7 @@ public class OperationLogModule extends SerializableDef
     
     /** 模块名称 */
     private String moduleName;
-
+    
     
     
     /**

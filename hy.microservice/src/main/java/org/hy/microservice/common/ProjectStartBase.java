@@ -12,9 +12,6 @@ import org.hy.common.xml.plugins.AppBaseServlet;
 import org.hy.common.xml.plugins.XJavaSpringAnnotationConfigServletWebServerApplicationContext;
 import org.hy.common.xml.plugins.analyse.AnalyseObjectServlet;
 import org.hy.common.xml.plugins.analyse.AnalysesServlet;
-import org.hy.microservice.common.config.XJavaSpringInitialzer;
-import org.hy.microservice.common.operationLog.OperationLogApi;
-import org.hy.microservice.common.operationLog.OperationLogModule;
 import org.springframework.boot.ApplicationContextFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -26,6 +23,10 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import com.google.common.collect.ImmutableMap;
+import org.hy.microservice.common.config.XJavaSpringInitialzer;
+import org.hy.microservice.common.operationLog.IOperationLogService;
+import org.hy.microservice.common.operationLog.OperationLogApi;
+import org.hy.microservice.common.operationLog.OperationLogModule;
 
 
 
@@ -50,6 +51,9 @@ public class ProjectStartBase
      * Map.key  为/模块编码/接口编码，即 URL访问路径
      **/
     public static final TablePartitionRID<String ,OperationLogApi> $RequestMappingMethods = new TablePartitionRID<String ,OperationLogApi>();
+    
+    /** 名称name中分割日志名称的分割符 */
+    public static final String                                     $NameLogSplit          = "/";
     
     
     
@@ -99,12 +103,14 @@ public class ProjectStartBase
             OperationLogModule v_OModule = new OperationLogModule();
             v_OModule.setModuleCode(v_RequestMapping.value()[0]);
             v_OModule.setModuleName(v_RequestMapping.name());
+            
             $RequestMappingModules.put(v_OModule.getModuleCode() ,v_OModule);
         }
         
         // 获取Spring所有RequestMapping方法
-        AbstractHandlerMethodMapping<RequestMappingInfo> v_Methods   = v_WebAppContext.getBean(RequestMappingHandlerMapping.class);
-        Map<RequestMappingInfo ,HandlerMethod>           v_MethodMap = v_Methods.getHandlerMethods();
+        AbstractHandlerMethodMapping<RequestMappingInfo> v_Methods    = v_WebAppContext.getBean(RequestMappingHandlerMapping.class);
+        Map<RequestMappingInfo ,HandlerMethod>           v_MethodMap  = v_Methods.getHandlerMethods();
+        IOperationLogService                             v_LogService = (IOperationLogService) XJava.getObject("OperationLogService");
         v_MethodMap.forEach((k ,v) ->
         {
             final Set<String> v_Patterns = k.getPatternValues();// getPatternsCondition().getPatterns();
@@ -137,6 +143,20 @@ public class ProjectStartBase
                 v_OApi.setModuleName($RequestMappingModules.get(v_OApi.getModuleCode()).getModuleName());
                 v_OApi.setUrl(v_Pattern);
                 v_OApi.setUrlName(v_Names[1]);
+                
+                int v_LastIndex = v_OApi.getUrlName().lastIndexOf($NameLogSplit);
+                if ( v_LastIndex > 0 && v_LastIndex < v_OApi.getUrlName().length() - 1 )
+                {
+                    v_OApi.setLogName(v_OApi.getUrlName().substring(v_LastIndex + 1));
+                    v_OApi.setUrlName(v_OApi.getUrlName().substring(0 ,v_LastIndex));
+                    
+                    v_LogService.create(v_OApi.getLogName());
+                }
+                else
+                {
+                    v_OApi.setLogName("");
+                    v_OApi.setUrlName(v_OApi.getUrlName());
+                }
                 
                 $RequestMappingMethods.putRow(v_OApi.getModuleCode() ,v_OApi.getUrl() ,v_OApi);
             }
