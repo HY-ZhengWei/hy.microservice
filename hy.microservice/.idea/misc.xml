@@ -6,6 +6,7 @@
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/../../../WorkSpace_LPS_MS/lps.microservice/pom.xml" />
+        <option value="$PROJECT_DIR$/../../hy.common/pom.xml" />
       </list>
     </option>
   </component>

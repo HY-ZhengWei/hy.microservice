@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="xconfig"         class="java.util.ArrayList" />
+    <import name="mq"              class="org.apache.rocketmq.client.producer.DefaultMQProducer" />
+    <import name="MQTemplate"      class="org.apache.rocketmq.spring.core.RocketMQTemplate" />
+
+
+    <!-- 消息服务配置信息 -->
+    <xconfig>
+
+        <mq id="MS_Message_MQGroup_CalcGroup">
+            <producerGroup>cluster_producer_group</producerGroup>
+
+            <retryTimesWhenSendFailed>3</retryTimesWhenSendFailed>
+            <sendMsgTimeout>60000</sendMsgTimeout>
+
+            <namesrvAddr>127.0.0.1:9876;127.0.0.1:9876;127.0.0.1:9876;127.0.0.1:9876</namesrvAddr>
+            <retryTimesWhenSendAsyncFailed>0</retryTimesWhenSendAsyncFailed>
+            <call name="start" />
+        </mq>
+
+        <MQTemplate id="MS_MQ_TEMPLATE">
+            <producer ref ="MS_Message_MQGroup_CalcGroup"/>
+        </MQTemplate>
+
+    </xconfig>
+
+</config>

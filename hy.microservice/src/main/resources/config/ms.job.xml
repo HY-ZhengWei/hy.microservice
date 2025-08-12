@@ -46,6 +46,19 @@
             <xid>HeartbeatCache</xid>
             <methodName>delExpire</methodName>
         </job>
+
+
+        <job id="JOB_MS_Common_RocketMQ_SendFailMessage">
+            <code>JOB_MS_Common_RocketMQ_SendFailMessage</code>
+            <name>发送失败的RocketMQ消息</name>
+            <comment>发送失败的RocketMQ消息</comment>
+            <intervalType ref="this.$IntervalType_Minute"/>
+            <intervalLen>5</intervalLen>
+            <startTime>2025-08-11 00:00:00</startTime>
+            <xid>MessageRetryService</xid>
+            <methodName>retrySendFailedMessages</methodName>
+            <initExecute>true</initExecute>
+        </job>
         
         
         
@@ -54,7 +67,8 @@
             
             <addJob ref="JOB_MS_Common_Heartbeat"               if="MS_Common_IsHeartbeat.getValue == 启用" />
             <addJob ref="JOB_MS_Common_HeartbeatRedisDelExpire" if="MS_Common_IsHeartbeat.getValue == 启用" />
-        
+            <addJob ref="JOB_MS_Common_RocketMQ_SendFailMessage" if="MS_Common_IsMQ.getValue == 启用" />
+
             <call name="startup" />
         </jobs>
         

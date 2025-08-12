@@ -5,7 +5,7 @@
     
     <groupId>cn.openapis</groupId>
     <artifactId>hy.microservice</artifactId>
-    <version>1.14.5</version>
+    <version>1.14.6</version>
     <packaging>war</packaging>
     
     <name>cn.openapis.hy.microservice</name>
@@ -150,6 +150,10 @@
                     <groupId>org.checkerframework</groupId>
                     <artifactId>checker-qual</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.google.errorprone</groupId>
+                    <artifactId>error_prone_annotations</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         
@@ -184,11 +188,57 @@
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>3.0.0</version>
         </dependency>
+
+        <!-- 添加RocketMQ依赖 -->
+        <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-spring-boot-starter</artifactId>
+            <version>2.3.4</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.rocketmq</groupId>
+                    <artifactId>rocketmq-client</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.protobuf</groupId>
+                    <artifactId>protobuf-java</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.rocketmq</groupId>
+                    <artifactId>rocketmq-common</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.rocketmq</groupId>
+                    <artifactId>rocketmq-remoting</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         
+        <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-client</artifactId>
+            <version>5.3.3</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+             
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>cn.openapis</groupId>
             <artifactId>hy.common</artifactId>
-            <version>3.7.7</version>
+            <version>3.7.9</version>
             <type>pom</type>
             <exclusions>
                 <exclusion>
@@ -214,6 +264,16 @@
             <artifactId>screw-core</artifactId>
             <version>1.0.5</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.alibaba</groupId>
+                    <artifactId>fastjson</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
     
