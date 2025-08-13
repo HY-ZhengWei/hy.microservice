@@ -37,7 +37,7 @@ public class CacheFactory
         }
         else
         {
-            return new CacheLocal<Data>();
+            return new CacheLocal<Data>(i_DataClass);
         }
     }
     

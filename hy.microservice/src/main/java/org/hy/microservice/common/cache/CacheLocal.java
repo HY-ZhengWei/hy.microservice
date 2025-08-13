@@ -34,9 +34,9 @@ public class CacheLocal<Data> implements ICache<Data>
     
     
     
-    public CacheLocal()
+    public CacheLocal(Class<Data> i_DataClass)
     {
-        this.dataClass = this.parserDataType();
+        this.dataClass = i_DataClass;
     }
     
     
@@ -50,7 +50,7 @@ public class CacheLocal<Data> implements ICache<Data>
      *
      * @return
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked" ,"unused"})
     private Class<Data> parserDataType()
     {
         Type v_SuperClass = getClass().getGenericSuperclass();
