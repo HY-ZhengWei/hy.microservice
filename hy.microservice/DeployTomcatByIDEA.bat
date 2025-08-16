@@ -1,1 +1,1 @@
-mvn clean compile package && xcopy /S/Y .\target\hy.microservice-1.14.8\WEB-INF\classes\* .\target\classes
+mvn clean compile package && xcopy /S/Y .\target\hy.microservice-1.15.0\WEB-INF\classes\* .\target\classes
