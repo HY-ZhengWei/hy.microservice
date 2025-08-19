@@ -98,12 +98,13 @@
                 <name>MS_Common_IsMQ</name>
                 <value>停用</value>
                 <comment>是否启用MQ服务，启用|停用</comment>
+                <onlyRead>false</onlyRead>
             </item>
             
             
             <item id="MS_Common_Version">
                 <name>MS_Common_Version</name>
-                <value>1.15.1</value>
+                <value>1.15.2</value>
                 <comment>边缘计算服务的版本号</comment>
                 <onlyRead>false</onlyRead>
             </item>
