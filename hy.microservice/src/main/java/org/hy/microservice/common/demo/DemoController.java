@@ -6,10 +6,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.rocketmq.client.producer.SendResult;
 import org.hy.common.xml.XSQL;
 import org.hy.microservice.common.BaseController;
 import org.hy.microservice.common.operationLog.IOperationLogDAO;
 import org.hy.microservice.common.operationLog.IOperationLogService;
+import org.hy.microservice.common.rocketMQ.RocketMQProducer;
 import org.hy.microservice.common.user.UserSSO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -47,8 +49,10 @@ public class DemoController extends BaseController
     @Autowired
     @Qualifier("XSQL_Common_OperationLog_Query")
     private XSQL                 xsql;
-    
-    
+
+    @Autowired
+    @Qualifier("RocketMQProducer")
+    private RocketMQProducer messageProducer;
     
     /**
      * 无参数，直接跳转的。
@@ -72,7 +76,35 @@ public class DemoController extends BaseController
         // 跳转页面为：classpath:/pages/demo/demo_01.ftl
         return "/common/demo/demo_01";
     }
-    
+
+
+
+    /**
+     * 无参数，直接跳转的。
+     *
+     * 访问页面的完整路径为：http://ip:port/WebName/demo/test01
+     *
+     * @author      ZhengWei(HY)
+     * @createDate  2018-12-09
+     * @version     v1.0
+     *
+     * @return
+     */
+    @RequestMapping(value="/sendMQ01")
+    public String sendMQ01()
+    {
+        // 发送测试消息
+        String topic = "LPS_Test_Topice";
+        String tag = "LPS_tag";
+        String content = "集成测试消息：" + System.currentTimeMillis();
+
+        // 执行发送
+        SendResult result = messageProducer.sendMessage(topic, tag, content);
+
+        // 验证结果
+        System.out.println("消息发送成功，消息ID：" + result.toString());
+        return "消息发送成功，消息ID：" + result.getSendStatus();
+    }
     
     
     /**

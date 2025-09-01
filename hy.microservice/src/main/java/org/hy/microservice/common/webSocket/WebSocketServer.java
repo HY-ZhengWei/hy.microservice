@@ -1,13 +1,16 @@
 package org.hy.microservice.common.webSocket;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.websocket.ContainerProvider;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
+import javax.websocket.WebSocketContainer;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
@@ -28,6 +31,7 @@ import org.springframework.stereotype.Component;
  * @version     v1.0
  *              v2.0  2023-04-17  添加：用户编号 & 访问票据
  *              v3.0  2023-08-25  添加：客户端首次初始化数据的事件监听器机制
+ *              v4.0  2025-08-30  添加：远程WebSocket代理能力
  */
 @ServerEndpoint("/report/{serviceType}/{userID}")
 @Component
@@ -43,6 +47,71 @@ public class WebSocketServer
     
     
     private WebSocketClient client;
+    
+    
+    
+    /**
+     * 连接到远程WebSocket服务（同服务类型名称代理）
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2025-08-30
+     * @version     v1.0
+     *
+     * @param i_RemoteConfig    WebSocket服务连接配置
+     */
+    public static boolean connectRemoteServer(WebSocketConfig i_RemoteConfig)
+    {
+        return connectRemoteServer(null ,i_RemoteConfig);
+    }
+    
+    
+    
+    /**
+     * 连接到远程WebSocket服务
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2025-08-30
+     * @version     v1.0
+     *
+     * @param i_NewServiceType  代理后的服务类型名称
+     * @param i_RemoteConfig    WebSocket服务连接配置
+     */
+    public static boolean connectRemoteServer(String i_NewServiceType ,WebSocketConfig i_RemoteConfig) 
+    {
+        if ( i_RemoteConfig == null )
+        {
+            return false;
+        }
+        
+        String v_URL = i_RemoteConfig.toWebSocketURL();
+        try
+        {
+            WebSocketContainer v_Container = ContainerProvider.getWebSocketContainer();
+            URI                v_URI       = URI.create(v_URL);
+            
+            v_Container.connectToServer(new WebSocketProxy(i_NewServiceType ,i_RemoteConfig) ,v_URI);
+            return true;
+        }
+        catch (Exception error)
+        {
+            $Logger.error("连接远程WebSocket[" + v_URL + "]服务失败: " + error.getMessage() ,error);
+        }
+        
+        return false;
+    }
+    
+    
+    
+    /**
+     * 收到客户端消息后调用的方法
+     * 
+     * @param i_Message      客户端发送过来的消息
+     */
+    @OnMessage
+    public void onMessage(String i_Message)
+    {
+        System.out.println("收到消息: " + i_Message);
+    }
     
     
     
@@ -134,12 +203,15 @@ public class WebSocketServer
     
 
     /**
-     * 收到客户端消息后调用的方法
+     * 发送消息给客户端
      * 
-     * @param i_Message      客户端发送过来的消息
+     * @author      ZhengWei(HY)
+     * @createDate  2025-08-29
+     * @version     v1.0
+     *
+     * @param i_Message
      */
-    @OnMessage
-    public void onMessage(String i_Message)
+    public void sendMessage(String i_Message)
     {
         if ( Help.isNull(i_Message) )
         {
@@ -155,7 +227,7 @@ public class WebSocketServer
             $Logger.error(exce);
         }
         
-        $Logger.info("WebSocket onMessage：" + this.client.getServiceType() + "=" + i_Message);
+        $Logger.debug("WebSocket sendMessage：" + this.client.getServiceType() + "=" + i_Message);
     }
 
     

@@ -154,7 +154,7 @@ public class WebSocketClient
      */
     public void pushMessage(String i_Message)
     {
-        this.getServer().onMessage(i_Message);
+        this.getServer().sendMessage(i_Message);
         this.setSendCount(this.getSendCount() + 1L);
     }
     
