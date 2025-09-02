@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author      ZhengWei(HY)
  * @createDate  2023-04-11
  * @version     v1.0
+ *              v2.0  2025-09-02  添加：分页查询
  */
 @Controller
 @RequestMapping(value="operationLog" ,name="操作日志")
@@ -72,6 +73,7 @@ public class OperationLogController extends BaseController
     {
         BaseResponse<OperationLog> v_RetResp = new BaseResponse<OperationLog>();
         long                       v_Count   = 0L;
+        long                       v_Total   = 0L;
         
         if ( i_OperationLog == null )
         {
@@ -102,9 +104,10 @@ public class OperationLogController extends BaseController
                 }
             }
             
-            List<OperationLog> v_DataList = this.operationLogService.queryList(i_OperationLog);
+            List<OperationLog> v_DataList = this.operationLogService.queryListByPage(i_OperationLog);
             v_Count = v_DataList.size();
-            return v_RetResp.setData(v_DataList).setDataCount(v_Count);
+            v_Total = this.operationLogService.queryCount(i_OperationLog);
+            return v_RetResp.setData(v_DataList).setDataCount(v_Count).setTotalCount(v_Total);
         }
         catch (Exception exce)
         {

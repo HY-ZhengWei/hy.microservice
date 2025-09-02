@@ -104,7 +104,7 @@
                         ,createTime
                         ,attackType
                   FROM  TOperationLog:logName
-                 WHERE  createTime >= SYSDATE - 10
+                 WHERE  createTime >= SYSDATE - 360
                    AND  userID      = ':userID'          
               <[   AND  userIP      = ':userIP'            ]>
               <[   AND  systemCode  = ':systemCode'        ]>
@@ -135,7 +135,7 @@
                         ,createTime
                         ,attackType
                   FROM  TOperationLog:logName
-                 WHERE  createTime >= DATE_ADD(NOW(), INTERVAL -10 DAY)
+                 WHERE  createTime >= DATE_ADD(NOW(), INTERVAL -360 DAY)
                    AND  userID      = ':userID'          
               <[   AND  userIP      = ':userIP'            ]>
               <[   AND  systemCode  = ':systemCode'        ]>
@@ -166,7 +166,7 @@
                         ,createTime
                         ,attackType
                   FROM  TOperationLog:logName
-                 WHERE  createTime >= DATETIME('now' ,'-10 day')
+                 WHERE  createTime >= DATETIME('now' ,'-360 day')
                    AND  userID      = ':userID'          
               <[   AND  userIP      = ':userIP'            ]>
               <[   AND  systemCode  = ':systemCode'        ]>
@@ -183,6 +183,41 @@
                 <row>org.hy.microservice.common.operationLog.OperationLog</row>
                 <cfill>setter(colValue)</cfill>
             </result>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_OperationLog_Query_ByPage"> 
+            
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content ref="XSQL_Common_OperationLog_Query.getContent" />
+            <result  ref="XSQL_Common_OperationLog_Query.getResult"/>
+            <comment>分页查询</comment>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_OperationLog_Query_Count"> 
+            
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                SELECT  COUNT(1) AS totalCount
+                  FROM  TOperationLog:logName
+                 WHERE  userID      = ':userID'          
+              <[   AND  userIP      = ':userIP'            ]>
+              <[   AND  systemCode  = ':systemCode'        ]>
+              <[   AND  moduleCode  = ':moduleCode'        ]>
+              <[   AND  url         = ':url'               ]>
+              <[   AND  resultCode  = ':resultCode'        ]>
+              <[   AND  createTime >= ':createTime'        ]>
+              <[   AND  timeLen    >= ':timeLen'           ]>
+                ]]>
+            </content>
             
         </sql>
         

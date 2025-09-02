@@ -12,6 +12,7 @@ import java.util.List;
  * @author      ZhengWei(HY)
  * @createDate  2023-04-11
  * @version     v1.0
+ *              v2.0  2025-09-02  添加：分页查询
  */
 public interface IOperationLogService
 {
@@ -65,9 +66,37 @@ public interface IOperationLogService
      * @createDate  2023-04-11
      * @version     v1.0
      *
-     * @param i_OperationLog
+     * @param i_OperationLog  操作日志数据
      * @return
      */
     public List<OperationLog> queryList(OperationLog i_OperationLog);
+    
+    
+    
+    /**
+     * 查询系统操作日志（分页查询）
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2025-09-02
+     * @version     v1.0
+     * 
+     * @param io_OperationLog  操作日志数据
+     * @return
+     */
+    public List<OperationLog> queryListByPage(OperationLog io_OperationLog);
+    
+    
+    
+    /**
+     * 查询系统操作日志的总记录数
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2025-09-02
+     * @version     v1.0
+     *
+     * @param i_OperationLog  操作日志数据
+     * @return
+     */
+    public Long queryCount(OperationLog i_OperationLog);
     
 }

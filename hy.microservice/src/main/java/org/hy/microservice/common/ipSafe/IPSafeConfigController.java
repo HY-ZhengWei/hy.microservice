@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author      ZhengWei(HY)
  * @createDate  2023-05-26
  * @version     v1.0
+ *              v2.0  2025-09-02  添加：分页查询
  */
 @Controller
 @RequestMapping(value="ipSafeConfig" ,name="访问安全")
@@ -71,7 +72,8 @@ public class IPSafeConfigController extends BaseController
                                                        ,@RequestBody IPSafeConfig i_IPSafeConfig)
     {
         BaseResponse<IPSafeConfig> v_RetResp = new BaseResponse<IPSafeConfig>();
-        int                        v_Count = 0;
+        long                       v_Count   = 0L;
+        long                       v_Total   = 0L;
         
         if ( i_IPSafeConfig == null )
         {
@@ -112,9 +114,10 @@ public class IPSafeConfigController extends BaseController
                 }
             }
             
-            List<IPSafeConfig> v_DataList = this.ipSafeConfigService.queryByIPType(i_IPSafeConfig);
+            List<IPSafeConfig> v_DataList = this.ipSafeConfigService.queryByIPTypeByPage(i_IPSafeConfig);
             v_Count = v_DataList.size();
-            return v_RetResp.setData(v_DataList);
+            v_Total = this.ipSafeConfigService.queryByIPTypeCount(i_IPSafeConfig);
+            return v_RetResp.setData(v_DataList).setDataCount(v_Count).setTotalCount(v_Total);
         }
         catch (Exception exce)
         {

@@ -210,6 +210,35 @@
         
         
         
+        <sql id="XSQL_Common_IPSafeConfig_Query_ByIPType_ByPage"> 
+            
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content ref="XSQL_Common_IPSafeConfig_Query_ByIPType.getContent" />
+            <result  ref="XSQL_Common_IPSafeConfig_Query_ByIPType.getResult"/>
+            <comment>分页查询</comment>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_IPSafeConfig_Query_ByIPType_Count"> 
+            
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                SELECT  COUNT(1) AS totalCount
+                  FROM  TIPSafeConfig
+                 WHERE  isDel  = 0
+                   ANd  ipType = ':ipType'
+                ]]>
+            </content>
+            
+        </sql>
+        
+        
+        
         <sql id="XSQL_Common_IPSafeConfig_Query_ByID"> 
             
             <dataSourceGroup ref="DSG_MS_Common" />

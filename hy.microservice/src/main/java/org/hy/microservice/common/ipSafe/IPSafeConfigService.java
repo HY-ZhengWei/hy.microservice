@@ -8,6 +8,7 @@ import java.util.Map;
 import org.hy.common.Help;
 import org.hy.common.StringHelp;
 import org.hy.common.TablePartitionRID;
+import org.hy.common.app.Param;
 import org.hy.common.xml.annotation.Xjava;
 
 
@@ -20,6 +21,7 @@ import org.hy.common.xml.annotation.Xjava;
  * @author      ZhengWei(HY)
  * @createDate  2023-05-26
  * @version     v1.0
+ *              v2.0  2025-09-02  添加：分页查询
  */
 @Xjava
 public class IPSafeConfigService implements IIPSafeConfigService ,Serializable
@@ -43,6 +45,9 @@ public class IPSafeConfigService implements IIPSafeConfigService ,Serializable
     
     @Xjava
     private IIPSafeConfigDAO ipSafeConfigDAO;
+    
+    @Xjava(ref="MS_Common_PagePerCount")
+    private Param            pagePerCount;
     
     
 
@@ -157,6 +162,44 @@ public class IPSafeConfigService implements IIPSafeConfigService ,Serializable
     public List<IPSafeConfig> queryByIPType(IPSafeConfig i_IPSafeConfig)
     {
         return this.ipSafeConfigDAO.queryByIPType(i_IPSafeConfig);
+    }
+    
+    
+    
+    /**
+     * 按类型，查询系统安全访问IP黑白名单（分页查询）
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2025-09-02
+     * @version     v1.0
+     * 
+     * @param io_IPSafeConfig  统安全访问IP黑白名单
+     * @return
+     */
+    public List<IPSafeConfig> queryByIPTypeByPage(IPSafeConfig io_IPSafeConfig)
+    {
+        long v_DefPagePerCount = this.pagePerCount.getValueLong();
+        
+        io_IPSafeConfig.setPageIndex(Help.NVL(io_IPSafeConfig.getPageIndex() ,1L));
+        io_IPSafeConfig.setPagePerCount(Help.min(Help.NVL(io_IPSafeConfig.getPagePerCount() ,v_DefPagePerCount) ,v_DefPagePerCount));
+        return this.ipSafeConfigDAO.queryByIPTypeByPage(io_IPSafeConfig);
+    }
+    
+    
+    
+    /**
+     * 按类型，查询系统安全访问IP黑白名单的总记录数
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2025-09-02
+     * @version     v1.0
+     *
+     * @param i_IPSafeConfig  统安全访问IP黑白名单
+     * @return
+     */
+    public Long queryByIPTypeCount(IPSafeConfig i_IPSafeConfig)
+    {
+        return this.ipSafeConfigDAO.queryByIPTypeCount(i_IPSafeConfig);
     }
     
     
