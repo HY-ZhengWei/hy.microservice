@@ -22,6 +22,9 @@ public class OperationLogApi extends OperationLogModule
     /** API接口的名称 */
     private String urlName;
     
+    /** API接口的类型（http、websocket） */
+    private String urlType;
+    
     
     
     /**
@@ -61,6 +64,26 @@ public class OperationLogApi extends OperationLogModule
     public void setUrlName(String i_UrlName)
     {
         this.urlName = i_UrlName;
+    }
+
+    
+    /**
+     * 获取：API接口的类型（http、websocket）
+     */
+    public String getUrlType()
+    {
+        return urlType;
+    }
+
+    
+    /**
+     * 设置：API接口的类型（http、websocket）
+     * 
+     * @param i_UrlType API接口的类型（http、websocket）
+     */
+    public void setUrlType(String i_UrlType)
+    {
+        this.urlType = i_UrlType;
     }
     
 }
