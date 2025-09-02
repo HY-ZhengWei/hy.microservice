@@ -158,6 +158,7 @@ public class ProjectStartBase
                 v_OApi.setModuleName(v_OLModule.getModuleName());
                 v_OApi.setUrl(v_Pattern);
                 v_OApi.setUrlName(v_Names[1]);
+                v_OApi.setUrlType("http");
                 
                 int v_LastIndex = v_OApi.getUrlName().lastIndexOf($NameLogSplit);
                 if ( v_LastIndex > 0 && v_LastIndex < v_OApi.getUrlName().length() - 1 )

@@ -19,7 +19,9 @@ import org.hy.common.TablePartitionRID;
 import org.hy.common.xml.log.Logger;
 import org.springframework.stereotype.Component;
 
-import com.lps.microservice.common.operationLog.OperationLogApi;
+import org.hy.microservice.common.ProjectStartBase;
+import org.hy.microservice.common.operationLog.OperationLogApi;
+import org.hy.microservice.common.operationLog.OperationLogModule;
 
 
 
@@ -47,9 +49,6 @@ public class WebSocketServer
     /** onOpen() 方法时触发执行的事件。方便客户端初始化数据 */
     private static Map<String ,WebSocketMessage>              $WebSocketEvents = new HashMap<String ,WebSocketMessage>();
     
-    /** 保存WebSocket接口的模块信息、名称等配置 */
-    private static Map<String ,OperationLogApi>               $WebSocketApis   = new HashMap<String ,OperationLogApi>();
-
     
     
     private WebSocketClient client;
@@ -330,39 +329,6 @@ public class WebSocketServer
     
     
     /**
-     * 获取所有WebSocket接口的配置信息
-     * 
-     * @author      ZhengWei(HY)
-     * @createDate  2025-09-02
-     * @version     v1.0
-     *
-     * @return
-     */
-    public static Map<String ,OperationLogApi> getAPIConfigs()
-    {
-        return $WebSocketApis;
-    }
-    
-    
-    
-    /**
-     * 查询具体某个WebSocket接口的配置信息
-     * 
-     * @author      ZhengWei(HY)
-     * @createDate  2025-09-02
-     * @version     v1.0
-     *
-     * @param i_ServiceType      服务类型
-     * @return
-     */
-    public static OperationLogApi getAPIConfig(String i_ServiceType)
-    {
-        return $WebSocketApis.get(i_ServiceType);
-    }
-    
-    
-    
-    /**
      * 配置WebSocket接口的模块信息、名称等配置
      * 
      * @author      ZhengWei(HY)
@@ -400,7 +366,18 @@ public class WebSocketServer
         io_WSAPI.setUrl("/report/" + i_ServiceType);
         io_WSAPI.setUrlType("websocket");
         io_WSAPI.setLogName("");
-        $WebSocketApis.put(i_ServiceType ,io_WSAPI);
+        
+        OperationLogModule v_OModule = new OperationLogModule();
+        v_OModule.setModuleCode(io_WSAPI.getModuleCode());
+        v_OModule.setModuleName(io_WSAPI.getModuleName());
+        
+        // 不重复添加模块信息
+        if ( ProjectStartBase.$RequestMappingModules.get(v_OModule.getModuleCode()) == null )
+        {
+            ProjectStartBase.$RequestMappingModules.put(v_OModule.getModuleCode() ,v_OModule);
+        }
+        
+        ProjectStartBase.$RequestMappingMethods.putRow(v_OModule.getModuleCode() ,io_WSAPI.getUrl() ,io_WSAPI);
     }
     
     
