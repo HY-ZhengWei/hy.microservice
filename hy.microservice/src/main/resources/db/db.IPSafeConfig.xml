@@ -178,7 +178,8 @@
                   FROM  TIPSafeConfig
                  WHERE  isDel  = 0
                    ANd  ipType = ':ipType'
-                 ORDER  BY updateTime DESC
+                 ORDER  BY ipType
+                          ,ip
                 ]]>
             </content>
             
@@ -197,7 +198,8 @@
                   FROM  TIPSafeConfig
                  WHERE  isDel  = 0
                    ANd  ipType = ':ipType'
-                 ORDER  BY updateTime DESC
+                 ORDER  BY ipType
+                          ,ip
                 ]]>
             </content>
             
