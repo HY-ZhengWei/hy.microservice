@@ -170,6 +170,25 @@
                         ,ip
                         ,moduleCode
                         ,url
+                        ,comment
+                        ,isDel       
+                        ,createUserID
+                        ,createTime  
+                        ,updateTime  
+                  FROM  TIPSafeConfig
+                 WHERE  isDel  = 0
+                   ANd  ipType = ':ipType'
+                 ORDER  BY updateTime DESC
+                ]]>
+            </content>
+            
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT   id
+                        ,ipType      
+                        ,ip
+                        ,moduleCode
+                        ,url
                         ,"COMMENT"
                         ,isDel       
                         ,createUserID
@@ -196,6 +215,23 @@
             <dataSourceGroup ref="DSG_MS_Common" />
             
             <content>
+                <![CDATA[
+                SELECT   id
+                        ,ipType      
+                        ,ip
+                        ,moduleCode
+                        ,url       
+                        ,comment
+                        ,isDel       
+                        ,createUserID
+                        ,createTime  
+                        ,updateTime  
+                  FROM  TIPSafeConfig
+                 WHERE  id  = ':id'
+                ]]>
+            </content>
+            
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 SELECT   id
                         ,ipType      
@@ -232,11 +268,30 @@
                         ,ip
                         ,moduleCode
                         ,url
-                        ,"COMMENT"     
+                        ,comment
                         ,isDel       
                         ,createUserID
                         ,createTime  
                         ,updateTime  
+                  FROM  TIPSafeConfig
+                 WHERE  isDel = 0
+                 ORDER  BY ipType
+                          ,ip
+                ]]>
+            </content>
+            
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT   id
+                        ,ipType
+                        ,ip
+                        ,moduleCode
+                        ,url
+                        ,"COMMENT"
+                        ,isDel
+                        ,createUserID
+                        ,createTime
+                        ,updateTime
                   FROM  TIPSafeConfig
                  WHERE  isDel = 0
                  ORDER  BY ipType
