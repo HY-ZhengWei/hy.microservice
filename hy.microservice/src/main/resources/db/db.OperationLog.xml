@@ -17,7 +17,7 @@
             
             <content>
                 <![CDATA[
-                INSERT  INTO TOperationLog
+                INSERT  INTO TOperationLog:logName
                        (
                          id
                         ,systemCode
@@ -69,7 +69,7 @@
             
             <content>
                 <![CDATA[
-                UPDATE  TOperationLog
+                UPDATE  TOperationLog:logName
                    SET  urlResponse    = ':urlResponse'
                        ,resultCode     = ':resultCode'
                        ,responseTime   = ':responseTime'
@@ -103,7 +103,7 @@
                         ,timeLen
                         ,createTime
                         ,attackType
-                  FROM  TOperationLog
+                  FROM  TOperationLog:logName
                  WHERE  createTime >= SYSDATE - 10
                    AND  userID      = ':userID'          
               <[   AND  userIP      = ':userIP'            ]>
@@ -134,7 +134,7 @@
                         ,timeLen
                         ,createTime
                         ,attackType
-                  FROM  TOperationLog
+                  FROM  TOperationLog:logName
                  WHERE  createTime >= DATE_ADD(NOW(), INTERVAL -10 DAY)
                    AND  userID      = ':userID'          
               <[   AND  userIP      = ':userIP'            ]>
@@ -165,7 +165,7 @@
                         ,timeLen
                         ,createTime
                         ,attackType
-                  FROM  TOperationLog
+                  FROM  TOperationLog:logName
                  WHERE  createTime >= DATETIME('now' ,'-10 day')
                    AND  userID      = ':userID'          
               <[   AND  userIP      = ':userIP'            ]>
