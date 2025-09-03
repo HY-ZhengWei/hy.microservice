@@ -329,7 +329,7 @@ public class WebSocketServer
     
     
     /**
-     * 配置WebSocket接口的模块信息、名称等配置
+     * 注册WebSocket接口的模块信息、名称等配置
      * 
      * @author      ZhengWei(HY)
      * @createDate  2025-09-02
@@ -340,19 +340,19 @@ public class WebSocketServer
      * @param i_ModuleCode       模块编号
      * @param i_ModuleName       模块名称
      */
-    public static void apiConfig(String i_ServiceType ,String i_ServiceTypeName ,String i_ModuleCode ,String i_ModuleName)
+    public static void register(String i_ServiceType ,String i_ServiceTypeName ,String i_ModuleCode ,String i_ModuleName)
     {
         OperationLogApi v_WSApis = new OperationLogApi();
         v_WSApis.setModuleCode(i_ModuleCode);
         v_WSApis.setModuleName(i_ModuleName);
         v_WSApis.setUrlName(i_ServiceTypeName);
-        apiConfig(i_ServiceType ,v_WSApis);
+        register(i_ServiceType ,v_WSApis);
     }
     
     
     
     /**
-     * 配置WebSocket接口的模块信息、名称等配置
+     * 注册WebSocket接口的模块信息、名称等配置
      * 
      * @author      ZhengWei(HY)
      * @createDate  2025-09-02
@@ -361,7 +361,7 @@ public class WebSocketServer
      * @param i_ServiceType      服务类型
      * @param io_WSAPI           WebSocket接口配置
      */
-    public static void apiConfig(String i_ServiceType ,OperationLogApi io_WSAPI)
+    public static void register(String i_ServiceType ,OperationLogApi io_WSAPI)
     {
         io_WSAPI.setUrl("/report/" + i_ServiceType);
         io_WSAPI.setUrlType("websocket");
