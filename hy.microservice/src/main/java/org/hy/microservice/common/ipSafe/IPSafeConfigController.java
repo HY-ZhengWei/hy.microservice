@@ -251,24 +251,27 @@ public class IPSafeConfigController extends BaseController
                 }
                 else if ( !Help.isNull(i_IPSafeConfig.getIpType()) && !Help.isNull(i_IPSafeConfig.getIp()) )
                 {
+                    IPSafeConfig v_IPSafeConfig = this.ipSafeConfigService.queryAll().getRow(i_IPSafeConfig.getIpType() ,i_IPSafeConfig.getIpSafeKey());
                     // 防止重复：新IP + IPType的重复
-                    if ( this.ipSafeConfigService.queryAll().getRow(i_IPSafeConfig.getIpType() ,i_IPSafeConfig.getIpSafeKey()) != null )
+                    if ( v_IPSafeConfig != null && !v_IPSafeConfig.getId().equals(i_IPSafeConfig.getId()) )
                     {
                         return v_RetResp.setCode("-8").setMessage("相同安全配置已存在，请勿重复添加");
                     }
                 }
                 else if ( !Help.isNull(i_IPSafeConfig.getIp()) )
                 {
+                    IPSafeConfig v_IPSafeConfig = this.ipSafeConfigService.queryAll().getRow(v_OldConfig.getIpType() ,i_IPSafeConfig.getIpSafeKey());
                     // 防止重复：新IP重复
-                    if ( this.ipSafeConfigService.queryAll().getRow(v_OldConfig.getIpType() ,i_IPSafeConfig.getIpSafeKey()) != null )
+                    if ( v_IPSafeConfig != null && !v_IPSafeConfig.getId().equals(i_IPSafeConfig.getId()) )
                     {
                         return v_RetResp.setCode("-8").setMessage("相同安全配置已存在，请勿重复添加");
                     }
                 }
                 else if ( !Help.isNull(i_IPSafeConfig.getIpType()) )
                 {
+                    IPSafeConfig v_IPSafeConfig = this.ipSafeConfigService.queryAll().getRow(i_IPSafeConfig.getIpType() ,v_OldConfig.getIpSafeKey());
                     // 防止重复：新IPType重复
-                    if ( this.ipSafeConfigService.queryAll().getRow(i_IPSafeConfig.getIpType() ,v_OldConfig.getIpSafeKey()) != null )
+                    if ( v_IPSafeConfig != null && !v_IPSafeConfig.getId().equals(i_IPSafeConfig.getId()) )
                     {
                         return v_RetResp.setCode("-8").setMessage("相同安全配置已存在，请勿重复添加");
                     }

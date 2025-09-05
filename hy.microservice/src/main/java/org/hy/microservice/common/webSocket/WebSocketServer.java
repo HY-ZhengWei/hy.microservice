@@ -9,6 +9,9 @@ import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
+import javax.websocket.RemoteEndpoint;
+import javax.websocket.SendHandler;
+import javax.websocket.SendResult;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
 import javax.websocket.server.PathParam;
@@ -225,7 +228,18 @@ public class WebSocketServer
         
         try
         {
-            this.client.getSession().getBasicRemote().sendText(i_Message);
+            RemoteEndpoint.Async v_Async = this.client.getSession().getAsyncRemote();
+            v_Async.sendText(i_Message ,new SendHandler() 
+            {
+                @Override
+                public void onResult(SendResult result) 
+                {
+                    if ( !result.isOK() ) 
+                    {
+                        $Logger.error("消息[" + i_Message  + "]发送异常：" ,result.getException());
+                    }
+                }
+            });
         }
         catch (Exception exce)
         {
