@@ -240,9 +240,156 @@ public class IPSafeConfigService implements IIPSafeConfigService ,Serializable
     @Override
     public synchronized TablePartitionRID<String ,IPSafeConfig> cacheIPSafesRefurbish()
     {
-        $CacheIPSafes = this.ipSafeConfigDAO.queryAll();
+        TablePartitionRID<String ,IPSafeConfig> v_Datas = this.ipSafeConfigDAO.queryAll();
+        TablePartitionRID<String ,IPSafeConfig> v_IPs   = new TablePartitionRID<String ,IPSafeConfig>();
+        
+        Map<String ,IPSafeConfig> v_BackList = v_Datas.get(IPSafeConfig.$Type_BackList);
+        for (IPSafeConfig v_IP : v_BackList.values())
+        {
+            if ( Help.isNull(v_IP.getIpMax()) )
+            {
+                v_IPs.putRow(v_IP.getIpType() ,v_IP.getIpSafeKey() ,v_IP);
+                continue;
+            }
+            
+            if ( v_IP.getIp().endsWith(".0") && v_IP.getIp().endsWith(".255") )
+            {
+                long v_IPStart = ipToLong(v_IP.getIp());
+                long v_IPEnd   = ipToLong(v_IP.getIpMax());
+                
+                do
+                {
+                    IPSafeConfig v_New = new IPSafeConfig();
+                    v_New.initNotNull(v_IP);
+                    v_New.setIp(ipToString3(v_IPStart));
+                    v_New.setIpMax(null);
+                    v_IPs.putRow(v_New.getIpType() ,v_New.getIpSafeKey() ,v_New);
+                    
+                    v_IPStart += 255;
+                } while ( v_IPStart < v_IPEnd );
+            }
+            else
+            {
+                long v_IPStart = ipToLong(v_IP.getIp());
+                long v_IPEnd   = ipToLong(v_IP.getIpMax());
+                
+                for (long v_IPIndex=v_IPStart; v_IPIndex<=v_IPEnd; v_IPIndex++)
+                {
+                    IPSafeConfig v_New = new IPSafeConfig();
+                    v_New.initNotNull(v_IP);
+                    v_New.setIp(ipToString(v_IPIndex));
+                    v_New.setIpMax(null);
+                    v_IPs.putRow(v_New.getIpType() ,v_New.getIpSafeKey() ,v_New);
+                }
+            }
+        }
+        
+        Map<String ,IPSafeConfig> v_WhiteList = v_Datas.get(IPSafeConfig.$Type_WhiteList);
+        for (IPSafeConfig v_IP : v_WhiteList.values())
+        {
+            if ( Help.isNull(v_IP.getIpMax()) )
+            {
+                v_IPs.putRow(IPSafeConfig.$Type_WhiteList ,v_IP.getIpSafeKey() ,v_IP);
+                continue;
+            }
+            
+            if ( v_IP.getIp().endsWith(".0") && v_IP.getIp().endsWith(".255") )
+            {
+                long v_IPStart = ipToLong(v_IP.getIp());
+                long v_IPEnd   = ipToLong(v_IP.getIpMax());
+                
+                do
+                {
+                    IPSafeConfig v_New = new IPSafeConfig();
+                    v_New.initNotNull(v_IP);
+                    v_New.setIp(ipToString3(v_IPStart));
+                    v_New.setIpMax(null);
+                    v_IPs.putRow(v_New.getIpType() ,v_New.getIpSafeKey() ,v_New);
+                    
+                    v_IPStart += 255;
+                } while ( v_IPStart < v_IPEnd );
+            }
+            else
+            {
+                long v_IPStart = ipToLong(v_IP.getIp());
+                long v_IPEnd   = ipToLong(v_IP.getIpMax());
+                
+                for (long v_IPIndex=v_IPStart; v_IPIndex<=v_IPEnd; v_IPIndex++)
+                {
+                    IPSafeConfig v_New = new IPSafeConfig();
+                    v_New.initNotNull(v_IP);
+                    v_New.setIp(ipToString(v_IPIndex));
+                    v_New.setIpMax(null);
+                    v_IPs.putRow(v_New.getIpType() ,v_New.getIpSafeKey() ,v_New);
+                }
+            }
+        }
+        
+        $CacheIPSafes = v_IPs;
         $IPSafeHits.clear();  // 清空命中的历史信息
         return $CacheIPSafes;
+    }
+    
+    
+    
+    /**
+     * IP地址转为数字
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2025-09-08
+     * @version     v1.0
+     *
+     * @param i_IP
+     * @return
+     */
+    public final static long ipToLong(String i_IP)
+    {
+        String [] v_Parts = i_IP.split("\\.");
+        long v_Value = 0;
+        for (int i = 0; i < 4; i++)
+        {
+            v_Value = v_Value << 8 | Integer.parseInt(v_Parts[i]);
+        }
+        return v_Value;
+    }
+    
+    
+    
+    /**
+     * IP地址（数字形式）转为字符
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2025-09-08
+     * @version     v1.0
+     *
+     * @param i_IP
+     * @return
+     */
+    public final static String ipToString(long i_IP) 
+    {
+        return ((i_IP >> 24) & 0xFF) + "." +
+               ((i_IP >> 16) & 0xFF) + "." +
+               ((i_IP >> 8)  & 0xFF) + "." +
+                (i_IP        & 0xFF);
+    }
+    
+    
+    
+    /**
+     * IP地址（数字形式）转为字符，但只有三段IP地址位
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2025-09-08
+     * @version     v1.0
+     *
+     * @param i_IP
+     * @return
+     */
+    public final static String ipToString3(long i_IP) 
+    {
+        return ((i_IP >> 24) & 0xFF) + "." +
+               ((i_IP >> 16) & 0xFF) + "." +
+               ((i_IP >> 8)  & 0xFF) + ".";
     }
     
     

@@ -104,7 +104,7 @@
             
             <item id="MS_Common_Version">
                 <name>MS_Common_Version</name>
-                <value>1.16.3</value>
+                <value>1.16.4</value>
                 <comment>边缘计算服务的版本号</comment>
                 <onlyRead>false</onlyRead>
             </item>
@@ -131,6 +131,14 @@
                 <name>MS_Common_SessionTimeOut</name>
                 <valueLong>36000</valueLong>
                 <comment>会话的有效时长（单位：秒）</comment>
+                <onlyRead>false</onlyRead>
+            </item>
+            
+            
+            <item id="MS_Common_ApiUseIP2Region">
+                <name>MS_Common_ApiUseIP2Region</name>
+                <value>中国,陕西;中国,宁夏</value>
+                <comment>每个API接口允许被哪些国家、地区访问。多个国家间用英文分号;分隔，国家内的地区用英文逗号,分隔</comment>
                 <onlyRead>false</onlyRead>
             </item>
             

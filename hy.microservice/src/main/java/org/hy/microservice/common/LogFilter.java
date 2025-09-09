@@ -34,6 +34,7 @@ import org.hy.microservice.common.ipSafe.IPSafeConfig;
 import org.hy.microservice.common.openapi.OpenApiConfig;
 import org.hy.microservice.common.operationLog.IOperationLogService;
 import org.hy.microservice.common.operationLog.OperationLog;
+import org.hy.microservice.common.operationLog.OperationLogApi;
 
 
 
@@ -52,6 +53,7 @@ import org.hy.microservice.common.operationLog.OperationLog;
  *                                修正：小概率未记录 "访问量达到上限" 的日志
  *              v5.0  2023-09-01  添加：没有配置 @RequestMapping(name) 的方法不记录访问日志
  *              v6.0  2023-11-30  添加：接口的个性化 "访问量达到上限" 的限制
+ *              v7.0  2025-09-09  添加：允许哪些国家、地区访问的限制
  */
 @WebFilter(filterName="logFilter" ,urlPatterns="/*" ,initParams={
         @WebInitParam(name="exclusions" ,value="*.js,*.gif,*.jpg,*.png,*.css,*.ico,*.swf,*.txt,*.log,*.xml,*.md")
@@ -95,6 +97,9 @@ public class LogFilter extends XSQLFilter implements XRequestListener
     /** 服务名称，产品运维时使用 */
     private String                     systemCode;
     
+    /** IP地址与地区 */
+    private IP2Region                  ip2Region;
+    
     
     
     @SuppressWarnings("unchecked")
@@ -108,6 +113,7 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         this.apiUseMaxCountMinute10Map = (Map<String ,OpenApiConfig>) XJava.getObject("MS_Common_ApiUseMaxCountMinute10Map");
         this.apiSimpleMap              = (Map<String ,OpenApiConfig>) XJava.getObject("MS_Common_ApiSimpleMap");
         this.systemCode                = XJava.getParam("MS_Common_ServiceName").getValue();
+        this.ip2Region                 = (IP2Region) XJava.getObject("IP2Region");
         
         AppInterfaces.setListener(this);
     }
@@ -357,6 +363,19 @@ public class LogFilter extends XSQLFilter implements XRequestListener
             }
         }
         
+        if ( Help.isNull(io_OLog.getAttackType()) )
+        {
+            // API接口允许被哪些国家、地区访问
+            if ( !this.ip2Region.isAllow(io_OLog.getUserIP()) )
+            {
+                io_OLog.setAttackType("IP2R");
+                io_OLog.setUrlResponse("{\"code\": \"-890\", \"message\": \"Non-permitted access to countries and regions\"}");
+                io_OLog.setResultCode("-890");
+                io_OLog.setResponseTime(Date.getNowTime().getTime());
+                io_OLog.setTimeLen(io_OLog.getResponseTime() - io_OLog.getRequestTime());
+            }
+        }
+        
         return io_OLog;
     }
     
@@ -418,7 +437,8 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         }
         
         // 没有配置 @RequestMapping(name) 的方法不记录访问日志
-        if ( ProjectStartBase.$RequestMappingMethods.getRow(v_Urls[1] ,v_Url) == null )
+        OperationLogApi v_LogConfig = ProjectStartBase.$RequestMappingMethods.getRow(v_Urls[1] ,v_Url);
+        if ( v_LogConfig == null )
         {
             i_FilterChain.doFilter(i_ServletRequest ,i_ServletResponse);
             return;
@@ -441,9 +461,10 @@ public class LogFilter extends XSQLFilter implements XRequestListener
                 v_OLog.setUserID("");
             }
             
+            v_OLog.setLogName(v_LogConfig.getLogName());
             v_OLog.setCreateTime(new Date());
             v_OLog.setSystemCode(this.systemCode);
-            v_OLog.setId(StringHelp.getUUID());
+            v_OLog.setId(StringHelp.getUUID9n());
             v_OLog.setUrl(v_Url);
             v_OLog.setUrlRequest(v_Request.getQueryString());
             v_OLog.setUserIP(getIpAddress(v_Request));

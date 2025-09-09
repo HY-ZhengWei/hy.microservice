@@ -21,6 +21,7 @@
                  id                         VARCHAR2(64)   NOT NULL
                 ,ipType                     VARCHAR2(64)   NOT NULL
                 ,ip                         VARCHAR2(128)  NOT NULL
+                ,ipMax                      VARCHAR2(128)
                 ,moduleCode                 VARCHAR2(64)
                 ,url                        VARCHAR2(256)
                 ,"COMMENT"                  VARCHAR2(4000)
@@ -36,6 +37,7 @@
                 COMMENT ON COLUMN TIPSafeConfig.id                 IS '主键';/
                 COMMENT ON COLUMN TIPSafeConfig.ipType             IS 'IP类型';/
                 COMMENT ON COLUMN TIPSafeConfig.ip                 IS 'IP地址';/
+                COMMENT ON COLUMN TIPSafeConfig.ipMax              IS 'IP地址范围的最大值';/
                 COMMENT ON COLUMN TIPSafeConfig.moduleCode         IS '接口模块编号';/
                 COMMENT ON COLUMN TIPSafeConfig.url                IS '接口URL地址';/
                 COMMENT ON COLUMN TIPSafeConfig."COMMENT"          IS '备注说明';/
@@ -45,6 +47,13 @@
                 COMMENT ON COLUMN TIPSafeConfig.updateTime         IS '修改时间';/
                 
                 CREATE TABLE TUpgrade20230808
+                (
+                 id                         VARCHAR2(64)   NOT NULL
+                ,createTime                 DATE          NOT NULL
+                ,updateTime                 DATE
+                );/
+                
+                CREATE TABLE TUpgrade20250908
                 (
                  id                         VARCHAR2(64)   NOT NULL
                 ,createTime                 DATE          NOT NULL
@@ -60,6 +69,7 @@
                  id                         VARCHAR(64)   NOT NULL COMMENT '主键'
                 ,ipType                     VARCHAR(64)   NOT NULL COMMENT 'IP类型'
                 ,ip                         VARCHAR(128)  NOT NULL COMMENT 'IP地址'
+                ,ipMax                      VARCHAR(128)  NOT NULL COMMENT 'IP地址范围的最大值'
                 ,moduleCode                 VARCHAR(64)            COMMENT '接口模块编号'
                 ,url                        VARCHAR(256)           COMMENT '接口URL地址'
                 ,comment                    VARCHAR(4000)          COMMENT '备注说明'
@@ -74,6 +84,13 @@
                 Alter TABLE TIPSafeConfig COMMENT = '系统安全访问IP黑白名单';/
                 
                 CREATE TABLE TUpgrade20230808
+                (
+                 id                         VARCHAR(64)   NOT NULL COMMENT '主键'
+                ,createTime                 DATETIME      NOT NULL COMMENT '创建时间'
+                ,updateTime                 DATETIME               COMMENT '修改时间'
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;/
+                
+                CREATE TABLE TUpgrade20250908
                 (
                  id                         VARCHAR(64)   NOT NULL COMMENT '主键'
                 ,createTime                 DATETIME      NOT NULL COMMENT '创建时间'
@@ -121,6 +138,7 @@
                  id                         TEXT(64)   NOT NULL 
                 ,ipType                     TEXT(64)   NOT NULL
                 ,ip                         TEXT(128)  NOT NULL 
+                ,ipMax                      TEXT(128)  NOT NULL 
                 ,moduleCode                 TEXT(64)           
                 ,url                        TEXT(256)         
                 ,comment                    TEXT(4000)         
@@ -133,6 +151,13 @@
                 CREATE UNIQUE INDEX PK_IPSafeConfig ON TIPSafeConfig (id);/
                 
                 CREATE TABLE TUpgrade20230808
+                (
+                 id                         TEXT(64)   NOT NULL
+                ,createTime                 TEXT(32)   NOT NULL
+                ,updateTime                 TEXT(32)         
+                );/
+                
+                CREATE TABLE TUpgrade20250908
                 (
                  id                         TEXT(64)   NOT NULL
                 ,createTime                 TEXT(32)   NOT NULL

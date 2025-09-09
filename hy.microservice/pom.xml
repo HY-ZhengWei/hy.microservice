@@ -5,7 +5,7 @@
     
     <groupId>cn.openapis</groupId>
     <artifactId>hy.microservice</artifactId>
-    <version>1.16.3</version>
+    <version>1.16.4</version>
     <packaging>war</packaging>
     
     <name>cn.openapis.hy.microservice</name>
@@ -210,6 +210,13 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+        
+        <!-- IP地址 -->
+        <dependency>
+            <groupId>org.lionsoul</groupId>
+            <artifactId>ip2region</artifactId>
+            <version>2.7.0</version>
+        </dependency>
 
         <dependency>
             <groupId>cn.openapis</groupId>
@@ -220,6 +227,10 @@
                 <exclusion>
                     <groupId>org.apache.logging.log4j</groupId>
                     <artifactId>log4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>net.java.dev.jna</groupId>
+                    <artifactId>jna</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

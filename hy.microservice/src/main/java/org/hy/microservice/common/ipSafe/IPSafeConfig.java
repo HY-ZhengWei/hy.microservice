@@ -45,6 +45,9 @@ public class IPSafeConfig extends BaseViewMode
     /** IP地址 */
     private String ip;
     
+    /** IP地址范围的最大值 */
+    private String ipMax;
+    
     /** 接口模块编号 */
     private String moduleCode;
                                     
@@ -146,6 +149,26 @@ public class IPSafeConfig extends BaseViewMode
     }
 
     
+    /**
+     * 获取：IP地址范围的最大值
+     */
+    public String getIpMax()
+    {
+        return ipMax;
+    }
+
+    
+    /**
+     * 设置：IP地址范围的最大值
+     * 
+     * @param i_IpMax IP地址范围的最大值
+     */
+    public void setIpMax(String i_IpMax)
+    {
+        this.ipMax = i_IpMax;
+    }
+
+
     /**
      * 获取：接口模块编号
      */
