@@ -21,6 +21,8 @@
                 ALTER TABLE TIPSafeConfig ADD ipMax VARCHAR2(128);/
                 COMMENT ON COLUMN TIPSafeConfig.ipMax IS 'IP地址范围的最大值';/
                 
+                CREATE INDEX IDX_TIPSafeConfig_IP ON TIPSafeConfig (ip ,ipType);/
+                
                 UPDATE TUpgrade20250908 SET updateTime = SYSDATE WHERE id = 'IP地址范围的最大值';/
                 ]]>
             </content>
@@ -30,6 +32,7 @@
                 INSERT INTO TUpgrade20250908 (id ,createTime) VALUES ('API接口类型' ,NOW());/
 
                 ALTER TABLE TIPSafeConfig ADD ipMax VARCHAR(128) NULL COMMENT 'IP地址范围的最大值';/
+                CREATE INDEX IDX_TIPSafeConfig_IP USING BTREE ON TIPSafeConfig (ip ,ipType);/
                 
                 UPDATE TUpgrade20250908 SET updateTime = NOW() WHERE id = 'IP地址范围的最大值';/
                 ]]>
@@ -40,6 +43,7 @@
                 INSERT INTO TUpgrade20250908 (id ,createTime) VALUES ('IP地址范围的最大值' ,DATETIME('now'));/
                 
                 ALTER TABLE TIPSafeConfig ADD ipMax TEXT(128) NULL;/
+                CREATE INDEX IDX_TIPSafeConfig_IP   ON TIPSafeConfig (ip ,ipType);/
                 
                 UPDATE TUpgrade20250908 SET updateTime = DATETIME('now') WHERE id = 'IP地址范围的最大值';/
                 ]]>

@@ -301,6 +301,57 @@
         
         
         
+        <sql id="XSQL_Common_IPSafeConfig_Query_ByIPTypeIP"> 
+            
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                SELECT   id
+                        ,ipType      
+                        ,ip
+                        ,ipMax
+                        ,moduleCode
+                        ,url       
+                        ,comment
+                        ,isDel       
+                        ,createUserID
+                        ,createTime  
+                        ,updateTime  
+                  FROM  TIPSafeConfig
+                 WHERE  ipType = ':ipType'
+                   AND  ip     = ':ip'
+                ]]>
+            </content>
+            
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT   id
+                        ,ipType      
+                        ,ip
+                        ,ipMax
+                        ,moduleCode
+                        ,url       
+                        ,"COMMENT"     
+                        ,isDel       
+                        ,createUserID
+                        ,createTime  
+                        ,updateTime  
+                  FROM  TIPSafeConfig
+                 WHERE  ipType = ':ipType'
+                   AND  ip     = ':ip'
+                ]]>
+            </content>
+            
+            <result>
+                <row>org.hy.microservice.common.ipSafe.IPSafeConfig</row>
+                <cfill>setter(colValue)</cfill>
+            </result>
+            
+        </sql>
+        
+        
+        
         <sql id="XSQL_Common_IPSafeConfig_Query_All"> 
             
             <dataSourceGroup ref="DSG_MS_Common" />
@@ -314,10 +365,6 @@
                         ,moduleCode
                         ,url
                         ,comment
-                        ,isDel       
-                        ,createUserID
-                        ,createTime  
-                        ,updateTime  
                   FROM  TIPSafeConfig
                  WHERE  isDel = 0
                  ORDER  BY ipType
@@ -334,10 +381,6 @@
                         ,moduleCode
                         ,url
                         ,"COMMENT"
-                        ,isDel
-                        ,createUserID
-                        ,createTime
-                        ,updateTime
                   FROM  TIPSafeConfig
                  WHERE  isDel = 0
                  ORDER  BY ipType

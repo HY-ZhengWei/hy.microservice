@@ -10,6 +10,7 @@ import org.hy.common.StringHelp;
 import org.hy.common.TablePartitionRID;
 import org.hy.common.app.Param;
 import org.hy.common.xml.annotation.Xjava;
+import org.hy.common.xml.log.Logger;
 
 
 
@@ -28,6 +29,8 @@ public class IPSafeConfigService implements IIPSafeConfigService ,Serializable
 {
     
     private static final long serialVersionUID = -8491749740722409103L;
+    
+    private static final Logger $Logger = new Logger(IPSafeConfigService.class);
     
     private static TablePartitionRID<String ,IPSafeConfig> $CacheIPSafes = new TablePartitionRID<String ,IPSafeConfig>();
     
@@ -149,6 +152,24 @@ public class IPSafeConfigService implements IIPSafeConfigService ,Serializable
     
     
     /**
+     * 按IP类型和IP地址，查询系统安全访问IP黑白名单
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2025-09-09
+     * @version     v1.0
+     *
+     * @param i_IPSafeConfig  统安全访问IP黑白名单
+     * @return
+     */
+    @Override
+    public IPSafeConfig queryByByIPTypeIP(IPSafeConfig i_IPSafeConfig)
+    {
+        return this.ipSafeConfigDAO.queryByByIPTypeIP(i_IPSafeConfig);
+    }
+    
+    
+    
+    /**
      * 按类型，查询系统安全访问IP黑白名单
      * 
      * @author      ZhengWei(HY)
@@ -229,6 +250,101 @@ public class IPSafeConfigService implements IIPSafeConfigService ,Serializable
     
     
     /**
+     * 将数据库数据转为缓存数据
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2025-09-09
+     * @version     v1.0
+     *
+     * @param io_IPs     缓存数据
+     * @param i_IPDatas  数据库数据
+     */
+    private void putIPs(TablePartitionRID<String ,IPSafeConfig> io_IPs ,Map<String ,IPSafeConfig> i_IPDatas)
+    {
+        if ( Help.isNull(i_IPDatas) )
+        {
+            return;
+        }
+        
+        for (IPSafeConfig v_IP : i_IPDatas.values())
+        {
+            if ( Help.isNull(v_IP.getIpMax()) )
+            {
+                io_IPs.putRow(v_IP.getIpType() ,v_IP.getIpSafeKey() ,v_IP);
+                continue;
+            }
+            
+            if ( v_IP.getIp().endsWith(".0") && v_IP.getIpMax().endsWith(".255") )
+            {
+                long v_IPStart = ipToLong(v_IP.getIp());
+                long v_IPEnd   = ipToLong(v_IP.getIpMax());
+                
+                do
+                {
+                    IPSafeConfig v_New = new IPSafeConfig();
+                    v_New.setId(v_IP.getId());
+                    v_New.setIpType(v_IP.getIpType());
+                    v_New.setIp(ipToString3(v_IPStart));
+                    v_New.setModuleCode(v_IP.getModuleCode());
+                    v_New.setUrl(v_IP.getUrl());
+                    io_IPs.putRow(v_New.getIpType() ,v_New.getIpSafeKey() ,v_New);
+                    
+                    v_IPStart += 256;
+                } while ( v_IPStart < v_IPEnd );
+            }
+            else
+            {
+                long v_IPStart = ipToLong(v_IP.getIp());
+                long v_IPEnd   = ipToLong(v_IP.getIpMax());
+                
+                if ( v_IP.getIp().endsWith(".0") )
+                {
+                    while ( v_IPStart + 256 < v_IPEnd )
+                    {
+                        IPSafeConfig v_New = new IPSafeConfig();
+                        v_New.setId(v_IP.getId());
+                        v_New.setIpType(v_IP.getIpType());
+                        v_New.setIp(ipToString3(v_IPStart));
+                        v_New.setModuleCode(v_IP.getModuleCode());
+                        v_New.setUrl(v_IP.getUrl());
+                        io_IPs.putRow(v_New.getIpType() ,v_New.getIpSafeKey() ,v_New);
+                        
+                        v_IPStart += 256;
+                    }
+                }
+                else if ( v_IP.getIpMax().endsWith(".255") )
+                {
+                    while ( v_IPStart < v_IPEnd - 256 )
+                    {
+                        IPSafeConfig v_New = new IPSafeConfig();
+                        v_New.setId(v_IP.getId());
+                        v_New.setIpType(v_IP.getIpType());
+                        v_New.setIp(ipToString3(v_IPEnd));
+                        v_New.setModuleCode(v_IP.getModuleCode());
+                        v_New.setUrl(v_IP.getUrl());
+                        io_IPs.putRow(v_New.getIpType() ,v_New.getIpSafeKey() ,v_New);
+                        
+                        v_IPEnd -= 256;
+                    }
+                }
+                
+                for (long v_IPIndex=v_IPStart; v_IPIndex<=v_IPEnd; v_IPIndex++)
+                {
+                    IPSafeConfig v_New = new IPSafeConfig();
+                    v_New.setId(v_IP.getId());
+                    v_New.setIpType(v_IP.getIpType());
+                    v_New.setIp(ipToString(v_IPIndex));
+                    v_New.setModuleCode(v_IP.getModuleCode());
+                    v_New.setUrl(v_IP.getUrl());
+                    io_IPs.putRow(v_New.getIpType() ,v_New.getIpSafeKey() ,v_New);
+                }
+            }
+        }
+    }
+    
+    
+    
+    /**
      * 刷新黑白名单缓存
      * 
      * @author      ZhengWei(HY)
@@ -240,90 +356,18 @@ public class IPSafeConfigService implements IIPSafeConfigService ,Serializable
     @Override
     public synchronized TablePartitionRID<String ,IPSafeConfig> cacheIPSafesRefurbish()
     {
+        $Logger.info("开始：刷新黑白名单缓存");
+        
         TablePartitionRID<String ,IPSafeConfig> v_Datas = this.ipSafeConfigDAO.queryAll();
         TablePartitionRID<String ,IPSafeConfig> v_IPs   = new TablePartitionRID<String ,IPSafeConfig>();
         
-        Map<String ,IPSafeConfig> v_BackList = v_Datas.get(IPSafeConfig.$Type_BackList);
-        for (IPSafeConfig v_IP : v_BackList.values())
-        {
-            if ( Help.isNull(v_IP.getIpMax()) )
-            {
-                v_IPs.putRow(v_IP.getIpType() ,v_IP.getIpSafeKey() ,v_IP);
-                continue;
-            }
-            
-            if ( v_IP.getIp().endsWith(".0") && v_IP.getIp().endsWith(".255") )
-            {
-                long v_IPStart = ipToLong(v_IP.getIp());
-                long v_IPEnd   = ipToLong(v_IP.getIpMax());
-                
-                do
-                {
-                    IPSafeConfig v_New = new IPSafeConfig();
-                    v_New.initNotNull(v_IP);
-                    v_New.setIp(ipToString3(v_IPStart));
-                    v_New.setIpMax(null);
-                    v_IPs.putRow(v_New.getIpType() ,v_New.getIpSafeKey() ,v_New);
-                    
-                    v_IPStart += 255;
-                } while ( v_IPStart < v_IPEnd );
-            }
-            else
-            {
-                long v_IPStart = ipToLong(v_IP.getIp());
-                long v_IPEnd   = ipToLong(v_IP.getIpMax());
-                
-                for (long v_IPIndex=v_IPStart; v_IPIndex<=v_IPEnd; v_IPIndex++)
-                {
-                    IPSafeConfig v_New = new IPSafeConfig();
-                    v_New.initNotNull(v_IP);
-                    v_New.setIp(ipToString(v_IPIndex));
-                    v_New.setIpMax(null);
-                    v_IPs.putRow(v_New.getIpType() ,v_New.getIpSafeKey() ,v_New);
-                }
-            }
-        }
+        this.putIPs(v_IPs ,v_Datas.get(IPSafeConfig.$Type_BackList));
+        this.putIPs(v_IPs ,v_Datas.get(IPSafeConfig.$Type_WhiteList));
         
-        Map<String ,IPSafeConfig> v_WhiteList = v_Datas.get(IPSafeConfig.$Type_WhiteList);
-        for (IPSafeConfig v_IP : v_WhiteList.values())
-        {
-            if ( Help.isNull(v_IP.getIpMax()) )
-            {
-                v_IPs.putRow(IPSafeConfig.$Type_WhiteList ,v_IP.getIpSafeKey() ,v_IP);
-                continue;
-            }
-            
-            if ( v_IP.getIp().endsWith(".0") && v_IP.getIp().endsWith(".255") )
-            {
-                long v_IPStart = ipToLong(v_IP.getIp());
-                long v_IPEnd   = ipToLong(v_IP.getIpMax());
-                
-                do
-                {
-                    IPSafeConfig v_New = new IPSafeConfig();
-                    v_New.initNotNull(v_IP);
-                    v_New.setIp(ipToString3(v_IPStart));
-                    v_New.setIpMax(null);
-                    v_IPs.putRow(v_New.getIpType() ,v_New.getIpSafeKey() ,v_New);
-                    
-                    v_IPStart += 255;
-                } while ( v_IPStart < v_IPEnd );
-            }
-            else
-            {
-                long v_IPStart = ipToLong(v_IP.getIp());
-                long v_IPEnd   = ipToLong(v_IP.getIpMax());
-                
-                for (long v_IPIndex=v_IPStart; v_IPIndex<=v_IPEnd; v_IPIndex++)
-                {
-                    IPSafeConfig v_New = new IPSafeConfig();
-                    v_New.initNotNull(v_IP);
-                    v_New.setIp(ipToString(v_IPIndex));
-                    v_New.setIpMax(null);
-                    v_IPs.putRow(v_New.getIpType() ,v_New.getIpSafeKey() ,v_New);
-                }
-            }
-        }
+        $Logger.info("完成：刷新黑白名单缓存：库行数" + v_Datas.rowCount()  + "，缓存行数" + v_IPs.rowCount());
+        
+        v_Datas.clear();
+        v_Datas = null;
         
         $CacheIPSafes = v_IPs;
         $IPSafeHits.clear();  // 清空命中的历史信息

@@ -69,6 +69,21 @@ public interface IIPSafeConfigDAO
     
     
     /**
+     * 按IP类型和IP地址，查询系统安全访问IP黑白名单
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2025-09-09
+     * @version     v1.0
+     *
+     * @param i_IPSafeConfig  统安全访问IP黑白名单
+     * @return
+     */
+    @Xsql(id="XSQL_Common_IPSafeConfig_Query_ByIPTypeIP" ,returnOne=true)
+    public IPSafeConfig queryByByIPTypeIP(IPSafeConfig i_IPSafeConfig);
+    
+    
+    
+    /**
      * 按类型，查询系统安全访问IP黑白名单
      * 
      * @author      ZhengWei(HY)

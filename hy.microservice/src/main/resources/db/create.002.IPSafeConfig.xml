@@ -32,6 +32,7 @@
                 );/
                 
                 ALTER TABLE TIPSafeConfig ADD CONSTRAINT PK_IPSafeConfig PRIMARY KEY (id);/
+                CREATE INDEX IDX_TIPSafeConfig_IP        ON TIPSafeConfig (ip ,ipType);/
                 
                 COMMENT ON TABLE  TIPSafeConfig                    IS '系统安全访问IP黑白名单';/
                 COMMENT ON COLUMN TIPSafeConfig.id                 IS '主键';/
@@ -80,6 +81,7 @@
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;/
                 
                 ALTER TABLE TIPSafeConfig ADD CONSTRAINT PK_IPSafeConfig PRIMARY KEY (id);/
+                CREATE INDEX IDX_TIPSafeConfig_IP USING BTREE ON TIPSafeConfig (ip ,ipType);/
                 
                 Alter TABLE TIPSafeConfig COMMENT = '系统安全访问IP黑白名单';/
                 
@@ -149,6 +151,7 @@
                 );/
                 
                 CREATE UNIQUE INDEX PK_IPSafeConfig ON TIPSafeConfig (id);/
+                CREATE INDEX IDX_TIPSafeConfig_IP   ON TIPSafeConfig (ip ,ipType);/
                 
                 CREATE TABLE TUpgrade20230808
                 (
