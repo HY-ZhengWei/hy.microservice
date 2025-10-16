@@ -429,7 +429,10 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         String [] v_Urls = v_Url.split("/");
         
         // 分析中心、静态资源，不记录访问日志
-        if ( StringHelp.isContains(v_Url ,"analyse" ,".") || v_Urls.length < 3 )
+        // 上传文件时也不解析
+        if ( StringHelp.isContains(v_Url ,"analyse" ,".") 
+          || v_Urls.length < 3 
+          || StringHelp.isContains(i_ServletRequest.getContentType().toLowerCase() ,"multipart/form-data") )
         {
             i_ServletResponse.setCharacterEncoding($CharacterEncoding);
             i_FilterChain.doFilter(i_ServletRequest ,i_ServletResponse);
@@ -450,7 +453,7 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         try
         {
             // 解释用户账号信息。有Sesssion时，可直接从会话信息中取登录用户的信息
-            if ( !Help.isNull(v_Request.getBodyString()) )
+            if ( !Help.isNull(v_Request.getBodyString()) && StringHelp.isContains(i_ServletRequest.getContentType().toLowerCase() ,"json") )
             {
                 XJSON        v_XJson = new XJSON();
                 BaseViewMode v_BMode = (BaseViewMode) v_XJson.toJava(v_Request.getBodyString() ,BaseViewMode.class);
