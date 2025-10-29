@@ -54,6 +54,7 @@ import org.hy.microservice.common.operationLog.OperationLogApi;
  *              v5.0  2023-09-01  添加：没有配置 @RequestMapping(name) 的方法不记录访问日志
  *              v6.0  2023-11-30  添加：接口的个性化 "访问量达到上限" 的限制
  *              v7.0  2025-09-09  添加：允许哪些国家、地区访问的限制
+ *              v7.1  2025-10-29  修正：WebSocket协议本身没有HTTP中的ContentType字段。发现人：王雨墨
  */
 @WebFilter(filterName="logFilter" ,urlPatterns="/*" ,initParams={
         @WebInitParam(name="exclusions" ,value="*.js,*.gif,*.jpg,*.png,*.css,*.ico,*.swf,*.txt,*.log,*.xml,*.md")
@@ -432,7 +433,7 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         // 上传文件时也不解析
         if ( StringHelp.isContains(v_Url ,"analyse" ,".") 
           || v_Urls.length < 3 
-          || StringHelp.isContains(i_ServletRequest.getContentType().toLowerCase() ,"multipart/form-data") )
+          || StringHelp.isContains(Help.NVL(i_ServletRequest.getContentType()).toLowerCase() ,"multipart/form-data") )
         {
             i_ServletResponse.setCharacterEncoding($CharacterEncoding);
             i_FilterChain.doFilter(i_ServletRequest ,i_ServletResponse);
@@ -453,7 +454,7 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         try
         {
             // 解释用户账号信息。有Sesssion时，可直接从会话信息中取登录用户的信息
-            if ( !Help.isNull(v_Request.getBodyString()) && StringHelp.isContains(i_ServletRequest.getContentType().toLowerCase() ,"json") )
+            if ( !Help.isNull(v_Request.getBodyString()) && StringHelp.isContains(Help.NVL(i_ServletRequest.getContentType()).toLowerCase() ,"json") )
             {
                 XJSON        v_XJson = new XJSON();
                 BaseViewMode v_BMode = (BaseViewMode) v_XJson.toJava(v_Request.getBodyString() ,BaseViewMode.class);
