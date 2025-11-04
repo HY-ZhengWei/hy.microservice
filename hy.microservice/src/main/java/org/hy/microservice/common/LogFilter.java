@@ -464,23 +464,23 @@ public class LogFilter extends XSQLFilter implements XRequestListener
             {
                 v_OLog.setUserID("");
             }
-            
-            v_OLog.setLogName(v_LogConfig.getLogName());
-            v_OLog.setCreateTime(new Date());
-            v_OLog.setSystemCode(this.systemCode);
-            v_OLog.setId(StringHelp.getUUID9n());
-            v_OLog.setUrl(v_Url);
-            v_OLog.setUrlRequest(v_Request.getQueryString());
-            v_OLog.setUserIP(getIpAddress(v_Request));
-            v_OLog.setModuleCode(v_Urls[1]);
-            v_OLog.setUrlRequestBody(this.getUrlRequestBody(v_OLog.getUrl() ,v_Request.getBodyString()));
-            
-            this.backWhiteCheck(v_OLog);
         }
         catch (Exception exce)
         {
-            $Logger.error(exce);
+            $Logger.error("Request's Json = " + v_Request.getBodyString() ,exce);
         }
+        
+        v_OLog.setLogName(v_LogConfig.getLogName());
+        v_OLog.setCreateTime(new Date());
+        v_OLog.setSystemCode(this.systemCode);
+        v_OLog.setId(StringHelp.getUUID9n());
+        v_OLog.setUrl(v_Url);
+        v_OLog.setUrlRequest(v_Request.getQueryString());
+        v_OLog.setUserIP(getIpAddress(v_Request));
+        v_OLog.setModuleCode(v_Urls[1]);
+        v_OLog.setUrlRequestBody(this.getUrlRequestBody(v_OLog.getUrl() ,v_Request.getBodyString()));
+        
+        this.backWhiteCheck(v_OLog);
         
         ServletOutputStream           v_Output   = null;
         LogHttpServletResponseWrapper v_Response = new LogHttpServletResponseWrapper((HttpServletResponse) i_ServletResponse);
