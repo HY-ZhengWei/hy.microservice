@@ -74,6 +74,9 @@ public class LogFilter extends XSQLFilter implements XRequestListener
     /** 字符集 */
     public  static       String                      $CharacterEncoding = "UTF-8";
     
+    /** 属性名称：客户端IP地址 */
+    public  static final String                      $ATTR_UserIP       = "MS_Common_UserIP";
+    
     
     
     private IIPSafeConfigService       ipSafeConfigService;
@@ -426,8 +429,9 @@ public class LogFilter extends XSQLFilter implements XRequestListener
     @Override
     public void doFilter(ServletRequest i_ServletRequest ,ServletResponse i_ServletResponse ,FilterChain i_FilterChain) throws IOException ,ServletException
     {
-        String    v_Url  = ((HttpServletRequest) i_ServletRequest).getServletPath();
-        String [] v_Urls = v_Url.split("/");
+        HttpServletRequest v_HttpServletRequest = (HttpServletRequest) i_ServletRequest;
+        String             v_Url                = v_HttpServletRequest.getServletPath();
+        String []          v_Urls               = v_Url.split("/");
         
         // 分析中心、静态资源，不记录访问日志
         // 上传文件时也不解析
@@ -448,11 +452,13 @@ public class LogFilter extends XSQLFilter implements XRequestListener
             return;
         }
         
-        LogHttpServletRequestWrapper v_Request = new LogHttpServletRequestWrapper((HttpServletRequest) i_ServletRequest);
+        LogHttpServletRequestWrapper v_Request = new LogHttpServletRequestWrapper(v_HttpServletRequest);
+        String                       v_UserIP  = this.getIpAddress(v_Request);
         OperationLog                 v_OLog    = new OperationLog();
         
         try
         {
+            v_Request.setAttribute($ATTR_UserIP ,v_UserIP);
             // 解释用户账号信息。有Sesssion时，可直接从会话信息中取登录用户的信息
             if ( !Help.isNull(v_Request.getBodyString()) && StringHelp.isContains(Help.NVL(i_ServletRequest.getContentType()).toLowerCase() ,"json") )
             {
@@ -476,7 +482,7 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         v_OLog.setId(StringHelp.getUUID9n());
         v_OLog.setUrl(v_Url);
         v_OLog.setUrlRequest(v_Request.getQueryString());
-        v_OLog.setUserIP(getIpAddress(v_Request));
+        v_OLog.setUserIP(v_UserIP);
         v_OLog.setModuleCode(v_Urls[1]);
         v_OLog.setUrlRequestBody(this.getUrlRequestBody(v_OLog.getUrl() ,v_Request.getBodyString()));
         
