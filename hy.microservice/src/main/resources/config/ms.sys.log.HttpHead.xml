@@ -199,6 +199,21 @@
                 <comment>关于消息实体的警告信息</comment>
             </head>
             
+            <head>
+                <name>X-forwarded-for</name>
+                <comment>负载识别原始IP地址</comment>
+            </head>
+            
+            <head>
+                <name>x-forwarded-proto</name>
+                <comment>负载识别客户端发起请求时使用的协议（HTTP或HTTPS）</comment>
+            </head>
+            
+            <head>
+                <name>x-real-ip</name>
+                <comment>负载识别原始请求的IP地址</comment>
+            </head>
+            
         </httpHeads>
         
     </xobjects>
