@@ -13,6 +13,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
+import org.hy.common.StringHelp;
+
 
 
 
@@ -37,17 +39,39 @@ public class LogHttpServletRequestWrapper extends HttpServletRequestWrapper
     private final byte [] body;
     
     private final String  bodyString;
+    
+    private final String  pageUrlMappings;
 
 
 
-    public LogHttpServletRequestWrapper(HttpServletRequest i_Request) throws IOException
+    public LogHttpServletRequestWrapper(HttpServletRequest i_Request ,final String i_PageUrlMappings) throws IOException
     {
         super(i_Request);
-        this.bodyString = this.getBodyString(i_Request);
-        this.body       = this.bodyString.getBytes(Charset.forName("UTF-8"));
+        this.bodyString      = this.getBodyString(i_Request);
+        this.body            = this.bodyString.getBytes(Charset.forName("UTF-8"));
+        this.pageUrlMappings = i_PageUrlMappings;
     }
-
-
+    
+    
+    
+    /**
+     * 为了使Spring能识别定制化的后缀 *.page
+     *
+     * @author      ZhengWei(HY)
+     * @createDate  2026-01-27
+     * @version     v1.0
+     *
+     * @return
+     *
+     * @see javax.servlet.http.HttpServletRequestWrapper#getRequestURI()
+     */
+    @Override
+    public String getRequestURI()
+    {
+        return StringHelp.replaceLast(super.getRequestURI() ,this.pageUrlMappings ,"");
+    }
+    
+    
     
     /**
      * 获取：请求体的数据

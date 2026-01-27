@@ -3,8 +3,10 @@ package org.hy.microservice;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.hy.common.Help;
 import org.hy.common.PartitionMap;
 import org.hy.common.TablePartition;
+import org.hy.common.xml.XJava;
 import org.hy.common.xml.plugins.AppBaseServlet;
 import org.hy.common.xml.plugins.XJavaSpringAnnotationConfigServletWebServerApplicationContext;
 import org.hy.common.xml.plugins.analyse.AnalyseObjectServlet;
@@ -24,6 +26,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.DispatcherServlet;
 
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 
@@ -38,6 +41,7 @@ import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
  * @createDate  2020-11-19
  * @version     v1.0
  *              v2.0  2021-02-19  添加：支持SpringBoot 2.4.0版本
+ *              v3.0  2026-01-27  添加：请求后缀可通过配置文件配置。如 *.page 。建议人：程志华
  */
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, DruidDataSourceAutoConfigure.class})
 @EnableAspectJAutoProxy
@@ -159,12 +163,20 @@ public class ProjectStart extends SpringBootServletInitializer
      * @return
      * @see SuffixRequestMappingHandlerMapping 还需启用它
      */
-//    @Bean
-//    public ServletRegistrationBean<DispatcherServlet> servletRegistrationBean(DispatcherServlet i_DispatcherServlet)
-//    {
-//        ServletRegistrationBean<DispatcherServlet> v_Bean = new ServletRegistrationBean<DispatcherServlet>(i_DispatcherServlet);
-//        v_Bean.addUrlMappings("*.page");
-//        return v_Bean;
-//    }
+    @Bean
+    public ServletRegistrationBean<DispatcherServlet> servletRegistrationBean(DispatcherServlet i_DispatcherServlet)
+    {
+        String v_PageUrlMappings = Help.NVL(XJava.getParam("MS_Common_Page_UrlMappings").getValue()).trim();
+        ServletRegistrationBean<DispatcherServlet> v_Bean = new ServletRegistrationBean<DispatcherServlet>(i_DispatcherServlet);
+        if ( Help.isNull(v_PageUrlMappings) || "*".equals(v_PageUrlMappings) )
+        {
+            v_Bean.addUrlMappings("/");
+        }
+        else
+        {
+            v_Bean.addUrlMappings(v_PageUrlMappings);
+        }
+        return v_Bean;
+    }
     
 }

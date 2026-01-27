@@ -29,6 +29,10 @@
                 <value>config/ms.sys.DNS.xml</value>
             </item>
             
+            <item>
+                <value>config/ms.sys.log.HttpHead.xml</value>
+            </item>
+            
             <item if="MS_Common_IsHeartbeat.getValue == 启用">
                 <value>config/ms.sys.Redis.xml</value>
             </item>
@@ -50,6 +54,11 @@
             <!-- 加载数据库目录所有配置文件 -->
             <item>
                 <value>dbGroup/</value>
+            </item>
+            
+            <!-- 加载数据库目录所有配置文件 -->
+            <item>
+                <value>callflow/</value>
             </item>
             
         </startupConfig>

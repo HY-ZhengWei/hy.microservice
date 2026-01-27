@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  * @author      ZhengWei(HY)
  * @createDate  2023-04-10
  * @version     v1.0
+ *              v2.0  2026-01-27  添加：请求头
  */
 public class OperationLog extends BaseViewMode
 {
@@ -37,6 +38,9 @@ public class OperationLog extends BaseViewMode
         
     /** 操作的请求参数 */
     private String                  urlRequest;
+    
+    /** 操作的请求头 */
+    private String                  urlRequestHead;
     
     /** 操作的请求体数据 */
     private String                  urlRequestBody;
@@ -229,8 +233,30 @@ public class OperationLog extends BaseViewMode
         this.urlRequest = i_UrlRequest;
     }
 
+    
+    
+    /**
+     * 获取：操作的请求头
+     */
+    public String getUrlRequestHead()
+    {
+        return urlRequestHead;
+    }
+
 
     
+    /**
+     * 设置：操作的请求头
+     * 
+     * @param i_UrlRequestHead 操作的请求头
+     */
+    public void setUrlRequestHead(String i_UrlRequestHead)
+    {
+        this.urlRequestHead = i_UrlRequestHead;
+    }
+
+
+
     /**
      * 获取：操作的请求体数据
      */

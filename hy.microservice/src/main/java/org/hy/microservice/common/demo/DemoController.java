@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @version     v1.0
  */
 @Controller
-@RequestMapping("/demo")   // 总体的访问父路径为：http://ip:port/WebName/demo
+@RequestMapping(value="demo" ,name="演示")   // 总体的访问父路径为：http://ip:port/WebName/demo
 public class DemoController extends BaseController
 {
     
@@ -54,6 +54,8 @@ public class DemoController extends BaseController
     @Qualifier("RocketMQProducer")
     private RocketMQProducer messageProducer;
     
+    
+    
     /**
      * 无参数，直接跳转的。
      * 
@@ -65,7 +67,7 @@ public class DemoController extends BaseController
      *
      * @return
      */
-    @RequestMapping(value="/test01")
+    @RequestMapping(name="演示用例01" ,value="test01")
     public String test01()
     {
         if ( operationLogService != null && operationLogDAO != null && xsql != null )
@@ -90,7 +92,7 @@ public class DemoController extends BaseController
      *
      * @return
      */
-    @RequestMapping(value="/sendMQ01")
+    @RequestMapping(name="演示发消息" ,value="sendMQ01")
     public String sendMQ01()
     {
         // 发送测试消息
@@ -119,7 +121,7 @@ public class DemoController extends BaseController
      * @param i_User
      * @return
      */
-    @RequestMapping(value="/test02")
+    @RequestMapping(name="演示用例02" ,value="test02")
     public String test02(UserSSO i_User)
     {
         System.out.println(i_User.getUserName());
@@ -145,7 +147,7 @@ public class DemoController extends BaseController
      * @param io_Model     响应结果
      * @return
      */
-    @RequestMapping(value="/test03")
+    @RequestMapping(name="演示用例03" ,value="test03")
     public String test02(HttpServletRequest i_Request ,HttpServletResponse i_Response ,UserSSO i_User ,ModelMap io_Model)
     {
         UserSSO v_New = new UserSSO();           // 响应数据
@@ -175,7 +177,7 @@ public class DemoController extends BaseController
      * @param io_Model     响应结果
      * @return
      */
-    @RequestMapping(value="/test04")
+    @RequestMapping(name="演示用例04" ,value="test04")
     public String test04(HttpServletRequest i_Request ,HttpServletResponse i_Response ,UserSSO i_User ,ModelMap io_Model)
     {
         UserSSO v_New = new UserSSO();            // 响应数据
@@ -200,7 +202,7 @@ public class DemoController extends BaseController
      * @param i_User      请求参数
      * @param i_Response  响应对象
      */
-    @RequestMapping(value="/test04_Ajax")
+    @RequestMapping(name="演示Ajax" ,value="test04_Ajax")
     public void ajaxDemo(UserSSO i_User ,HttpServletResponse i_Response)
     {
         Map<String ,Object> v_JsonMap = new HashMap<String ,Object>();  // 响应数据

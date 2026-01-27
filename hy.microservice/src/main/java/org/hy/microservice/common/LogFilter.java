@@ -3,6 +3,7 @@ package org.hy.microservice.common;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import org.hy.common.Help;
 import org.hy.common.Return;
 import org.hy.common.StringHelp;
 import org.hy.common.TimeGroupTotal;
+import org.hy.common.app.Param;
 import org.hy.common.xml.XJSON;
 import org.hy.common.xml.XJava;
 import org.hy.common.xml.event.XRequestListener;
@@ -29,6 +31,7 @@ import org.hy.common.xml.log.Logger;
 import org.hy.common.xml.plugins.AppInterfaces;
 import org.hy.common.xml.plugins.AppMessage;
 import org.hy.common.xml.plugins.XSQLFilter;
+
 import org.hy.microservice.common.ipSafe.IIPSafeConfigService;
 import org.hy.microservice.common.ipSafe.IPSafeConfig;
 import org.hy.microservice.common.openapi.OpenApiConfig;
@@ -55,6 +58,7 @@ import org.hy.microservice.common.operationLog.OperationLogApi;
  *              v6.0  2023-11-30  添加：接口的个性化 "访问量达到上限" 的限制
  *              v7.0  2025-09-09  添加：允许哪些国家、地区访问的限制
  *              v7.1  2025-10-29  修正：WebSocket协议本身没有HTTP中的ContentType字段。发现人：王雨墨
+ *              v8.0  2026-01-27  添加：日志记录请求头中的信息
  */
 @WebFilter(filterName="logFilter" ,urlPatterns="/*" ,initParams={
         @WebInitParam(name="exclusions" ,value="*.js,*.gif,*.jpg,*.png,*.css,*.ico,*.swf,*.txt,*.log,*.xml,*.md")
@@ -101,8 +105,14 @@ public class LogFilter extends XSQLFilter implements XRequestListener
     /** 服务名称，产品运维时使用 */
     private String                     systemCode;
     
+    /** 页面资源后缀 */
+    private String                     pageUrlMappings;
+    
     /** IP地址与地区 */
     private IP2Region                  ip2Region;
+    
+    /** 过滤无须日志记录的Http请求头 */ 
+    private Map<String ,Param>         logHttpHeads;
     
     
     
@@ -118,6 +128,8 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         this.apiSimpleMap              = (Map<String ,OpenApiConfig>) XJava.getObject("MS_Common_ApiSimpleMap");
         this.systemCode                = XJava.getParam("MS_Common_ServiceName").getValue();
         this.ip2Region                 = (IP2Region) XJava.getObject("IP2Region");
+        this.pageUrlMappings           = StringHelp.replaceAll(XJava.getParam("MS_Common_Page_UrlMappings").getValue() ,"*" ,"");
+        this.logHttpHeads              = (Map<String ,Param>) XJava.getObject("MS_Common_Log_Filter_HttpHeads");
         
         AppInterfaces.setListener(this);
     }
@@ -386,6 +398,52 @@ public class LogFilter extends XSQLFilter implements XRequestListener
     
     
     /**
+     * 获取请求头，并且转为类似于Json的格式，但不是Json格式的字符串。
+     * 
+     *   key1值:value1值 + 回车
+     *   key2值:value2值 + 回车
+     *   ... ...
+     *   keyN值:valueN值 + 回车
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-01-26
+     * @version     v1.0
+     *
+     * @param i_Request
+     * @return
+     */
+    private String getUrlRequestHead(HttpServletRequest i_Request)
+    {
+        StringBuilder       v_Buffer    = new StringBuilder();
+        Enumeration<String> v_HeadNames = i_Request.getHeaderNames();
+        int                 v_Count     = 0;
+        
+        while ( v_HeadNames.hasMoreElements() )
+        {
+            String v_HeadName = v_HeadNames.nextElement();
+            if ( this.logHttpHeads.containsKey(v_HeadName) )
+            {
+                continue;
+            }
+            
+            String v_HeadData = i_Request.getHeader(v_HeadName);
+            v_Buffer.append(v_HeadName).append(":").append(v_HeadData).append("\n");
+            v_Count++;
+        }
+        
+        if ( v_Count >= 1 )
+        {
+            return v_Buffer.toString();
+        }
+        else
+        {
+            return "";
+        }
+    }
+    
+    
+    
+    /**
      * 减轻数据库日志压力，简单信息 或是 正常信息
      * 
      * @author      ZhengWei(HY)
@@ -435,9 +493,19 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         
         // 分析中心、静态资源，不记录访问日志
         // 上传文件时也不解析
-        if ( StringHelp.isContains(v_Url ,"analyse" ,".") 
-          || v_Urls.length < 3 
+        
+        if ( v_Urls.length < 3 
           || StringHelp.isContains(Help.NVL(i_ServletRequest.getContentType()).toLowerCase() ,"multipart/form-data") )
+        {
+             i_ServletResponse.setCharacterEncoding($CharacterEncoding);
+             i_FilterChain.doFilter(i_ServletRequest ,i_ServletResponse);
+             return;
+        }
+        else if ( v_Url.endsWith(this.pageUrlMappings) )
+        {
+            // Nothing.
+        }
+        else if ( StringHelp.isContains(v_Url ,"analyse" ,".") )
         {
             i_ServletResponse.setCharacterEncoding($CharacterEncoding);
             i_FilterChain.doFilter(i_ServletRequest ,i_ServletResponse);
@@ -445,14 +513,21 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         }
         
         // 没有配置 @RequestMapping(name) 的方法不记录访问日志
-        OperationLogApi v_LogConfig = ProjectStartBase.$RequestMappingMethods.getRow(v_Urls[1] ,v_Url);
+        OperationLogApi v_LogConfig = ProjectStartBase.$RequestMappingMethods.getRow(v_Urls[1] ,StringHelp.replaceLast(v_Url ,this.pageUrlMappings ,""));
         if ( v_LogConfig == null )
         {
-            i_FilterChain.doFilter(i_ServletRequest ,i_ServletResponse);
+            if ( v_Url.endsWith(this.pageUrlMappings) )
+            {
+                i_FilterChain.doFilter(new LogHttpServletRequestWrapper(v_HttpServletRequest ,this.pageUrlMappings) ,i_ServletResponse);
+            }
+            else
+            {
+                i_FilterChain.doFilter(i_ServletRequest ,i_ServletResponse);
+            }
             return;
         }
         
-        LogHttpServletRequestWrapper v_Request = new LogHttpServletRequestWrapper(v_HttpServletRequest);
+        LogHttpServletRequestWrapper v_Request = new LogHttpServletRequestWrapper(v_HttpServletRequest ,this.pageUrlMappings);
         String                       v_UserIP  = this.getIpAddress(v_Request);
         OperationLog                 v_OLog    = new OperationLog();
         
@@ -484,6 +559,7 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         v_OLog.setUrlRequest(v_Request.getQueryString());
         v_OLog.setUserIP(v_UserIP);
         v_OLog.setModuleCode(v_Urls[1]);
+        v_OLog.setUrlRequestHead(this.getUrlRequestHead(v_HttpServletRequest));
         v_OLog.setUrlRequestBody(this.getUrlRequestBody(v_OLog.getUrl() ,v_Request.getBodyString()));
         
         this.backWhiteCheck(v_OLog);
@@ -608,6 +684,7 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         v_OLog.setId(StringHelp.getUUID());
         v_OLog.setUrl("/app/" + io_RequestData.getSid());
         v_OLog.setUrlRequest(i_Request.getQueryString());
+        v_OLog.setUrlRequestHead(this.getUrlRequestHead(i_Request));
         v_OLog.setUrlRequestBody(i_Message);
         v_OLog.setUserIP(getIpAddress(i_Request));
         v_OLog.setSystemCode(this.systemCode);

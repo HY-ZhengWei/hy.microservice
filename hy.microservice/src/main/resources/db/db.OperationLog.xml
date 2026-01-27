@@ -24,6 +24,7 @@
                         ,moduleCode
                         ,url
                         ,urlRequest
+                        ,urlRequestHead
                         ,urlRequestBody
                         ,urlResponse
                         ,resultCode
@@ -41,6 +42,7 @@
                         ,':moduleCode'
                         ,':url'
                         ,':urlRequest'
+                        ,':urlRequestHead'
                         ,':urlRequestBody'
                         ,':urlResponse'
                         ,':resultCode'
@@ -93,6 +95,7 @@
                         ,moduleCode
                         ,url
                         ,urlRequest
+                        ,urlRequestHead
                         ,urlRequestBody
                         ,urlResponse
                         ,resultCode
@@ -124,6 +127,7 @@
                         ,moduleCode
                         ,url
                         ,urlRequest
+                        ,urlRequestHead
                         ,urlRequestBody
                         ,urlResponse
                         ,resultCode
@@ -155,6 +159,7 @@
                         ,moduleCode
                         ,url
                         ,urlRequest
+                        ,urlRequestHead
                         ,urlRequestBody
                         ,urlResponse
                         ,resultCode

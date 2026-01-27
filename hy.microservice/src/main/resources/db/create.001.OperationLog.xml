@@ -23,6 +23,7 @@
                 ,moduleCode                 VARCHAR2(64)   NOT NULL
                 ,url                        VARCHAR2(256)  NOT NULL
                 ,urlRequest                 VARCHAR2(4000)
+                ,urlRequestHead             VARCHAR2(1000)
                 ,urlRequestBody             VARCHAR2(4000)
                 ,urlResponse                VARCHAR2(4000)
                 ,resultCode                 VARCHAR2(64)
@@ -46,6 +47,7 @@
                 COMMENT ON COLUMN TOperationLog.moduleCode         IS '模块编号';/
                 COMMENT ON COLUMN TOperationLog.url                IS '操作的URL地址';/
                 COMMENT ON COLUMN TOperationLog.urlRequest         IS '操作的请求参数';/
+                COMMENT ON COLUMN TOperationLog.urlRequestHead     IS '操作的请求头数据';/
                 COMMENT ON COLUMN TOperationLog.urlRequestBody     IS '操作的请求体数据';/
                 COMMENT ON COLUMN TOperationLog.urlResponse        IS '操作的响应信息';/
                 COMMENT ON COLUMN TOperationLog.resultCode         IS '操作的响应结果编号';/
@@ -63,6 +65,13 @@
                 ,createTime                 DATE           NOT NULL
                 ,updateTime                 DATE
                 );/
+                
+                CREATE TABLE TUpgrade20260126
+                (
+                 id                         VARCHAR2(64)   NOT NULL
+                ,createTime                 DATE           NOT NULL
+                ,updateTime                 DATE
+                );/
                 ]]>
             </content>
         
@@ -75,6 +84,7 @@
                 ,moduleCode                 VARCHAR(64)   NOT NULL COMMENT '模块编号'
                 ,url                        VARCHAR(256)  NOT NULL COMMENT '操作的URL地址'
                 ,urlRequest                 TEXT                   COMMENT '操作的请求参数'
+                ,urlRequestHead             VARCHAR(1000)          COMMENT '操作的请求头数据'
                 ,urlRequestBody             TEXT                   COMMENT '操作的请求体数据'
                 ,urlResponse                TEXT                   COMMENT '操作的响应信息'
                 ,resultCode                 VARCHAR(64)            COMMENT '操作的响应结果编号'
@@ -100,6 +110,13 @@
                 ,createTime                 DATETIME      NOT NULL COMMENT '创建时间'
                 ,updateTime                 DATETIME               COMMENT '修改时间'
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;/
+                
+                CREATE TABLE TUpgrade20260126
+                (
+                 id                         VARCHAR(64)   NOT NULL COMMENT '主键'
+                ,createTime                 DATETIME      NOT NULL COMMENT '创建时间'
+                ,updateTime                 DATETIME               COMMENT '修改时间'
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;/
                 ]]>
             </content>
             
@@ -112,7 +129,8 @@
                 ,moduleCode                 TEXT(64)   NOT NULL
                 ,url                        TEXT(256)  NOT NULL 
                 ,urlRequest                 TEXT                  
-                ,urlRequestBody             TEXT                  
+                ,urlRequestHead             TEXT(1000)
+                ,urlRequestBody             TEXT
                 ,urlResponse                TEXT               
                 ,resultCode                 TEXT(64)           
                 ,userID                     TEXT(64)   NOT NULL
@@ -131,6 +149,13 @@
                 CREATE INDEX IDX_TOperationLog_CreateTime ON TOperationLog (createTime);/
                 
                 CREATE TABLE TUpgrade20230526
+                (
+                 id                         TEXT(64)   NOT NULL
+                ,createTime                 TEXT(32)   NOT NULL
+                ,updateTime                 TEXT(32)
+                );/
+                
+                CREATE TABLE TUpgrade20260126
                 (
                  id                         TEXT(64)   NOT NULL
                 ,createTime                 TEXT(32)   NOT NULL
@@ -159,6 +184,7 @@
                 ,moduleCode                 VARCHAR2(64)   NOT NULL
                 ,url                        VARCHAR2(256)  NOT NULL
                 ,urlRequest                 VARCHAR2(4000)
+                ,urlRequestHead             VARCHAR2(1000)
                 ,urlRequestBody             VARCHAR2(4000)
                 ,urlResponse                VARCHAR2(4000)
                 ,resultCode                 VARCHAR2(64)
@@ -182,6 +208,7 @@
                 COMMENT ON COLUMN TOperationLogTemplate.moduleCode         IS '模块编号';/
                 COMMENT ON COLUMN TOperationLogTemplate.url                IS '操作的URL地址';/
                 COMMENT ON COLUMN TOperationLogTemplate.urlRequest         IS '操作的请求参数';/
+                COMMENT ON COLUMN TOperationLogTemplate.urlRequestHead     IS '操作的请求头数据';/
                 COMMENT ON COLUMN TOperationLogTemplate.urlRequestBody     IS '操作的请求体数据';/
                 COMMENT ON COLUMN TOperationLogTemplate.urlResponse        IS '操作的响应信息';/
                 COMMENT ON COLUMN TOperationLogTemplate.resultCode         IS '操作的响应结果编号';/
@@ -204,6 +231,7 @@
                 ,moduleCode                 VARCHAR(64)   NOT NULL COMMENT '模块编号'
                 ,url                        VARCHAR(256)  NOT NULL COMMENT '操作的URL地址'
                 ,urlRequest                 TEXT                   COMMENT '操作的请求参数'
+                ,urlRequestHead             VARCHAR(1000)          COMMENT '操作的请求头数据'
                 ,urlRequestBody             TEXT                   COMMENT '操作的请求体数据'
                 ,urlResponse                TEXT                   COMMENT '操作的响应信息'
                 ,resultCode                 VARCHAR(64)            COMMENT '操作的响应结果编号'
@@ -234,6 +262,7 @@
                 ,moduleCode                 TEXT(64)   NOT NULL
                 ,url                        TEXT(256)  NOT NULL 
                 ,urlRequest                 TEXT
+                ,urlRequestHead             TEXT(1000)
                 ,urlRequestBody             TEXT
                 ,urlResponse                TEXT
                 ,resultCode                 TEXT(64)

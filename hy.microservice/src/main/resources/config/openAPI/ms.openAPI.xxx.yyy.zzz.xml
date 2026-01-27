@@ -13,22 +13,22 @@
     <!-- maxCount 等于0 表示不限制访问量； 小与0 表示取默认值 -->
     <xconfig>
     
-    	<openapi id="MS_Common_OpenApi_xxx_yyy_xxx">
-    		<url>接口路径</url>
+        <openapi id="MS_Common_OpenApi_xxx_yyy_xxx">
+            <url>接口路径</url>
             <maxCountMinute>-1</maxCountMinute>
             <maxCountMinute10>-1</maxCountMinute10>
             <simpleClassName></simpleClassName>
-    	</openapi>
-    	
-    	
-    	
-    	<!-- 减轻数据库日志压力，简单信息的配置 -->
-    	<openapis id="MS_Common_ApiSimpleMap" this="MS_Common_ApiSimpleMap" key="url">
+        </openapi>
+        
+        
+        
+        <!-- 减轻数据库日志压力，简单信息的配置 -->
+        <openapis id="MS_Common_ApiSimpleMap" this="MS_Common_ApiSimpleMap" key="url">
             <openapi ref="MS_Common_OpenApi_xxx_yyy_xxx" />
         </openapis>
-    	
-    	
-		
+        
+        
+        
         <!-- 每分钟最大允许的请求量。当没有对接口个性化配置时，默认使用 ms.sys.Config.xml 中的默认值 -->
         <openapis id="MS_Common_ApiUseMaxCountMinuteMap" this="MS_Common_ApiUseMaxCountMinuteMap" key="url">
             <openapi ref="MS_Common_OpenApi_xxx_yyy_xxx" />

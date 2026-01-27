@@ -29,7 +29,7 @@
             
             <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
-                INSERT INTO TUpgrade20250908 (id ,createTime) VALUES ('API接口类型' ,NOW());/
+                INSERT INTO TUpgrade20250908 (id ,createTime) VALUES ('IP地址范围的最大值' ,NOW());/
 
                 ALTER TABLE TIPSafeConfig ADD ipMax VARCHAR(128) NULL COMMENT 'IP地址范围的最大值';/
                 CREATE INDEX IDX_TIPSafeConfig_IP USING BTREE ON TIPSafeConfig (ip ,ipType);/
@@ -49,7 +49,7 @@
                 ]]>
             </content>
             
-            <comment>API接口类型</comment>
+            <comment>IP地址范围的最大值</comment>
             
         </sql>
         

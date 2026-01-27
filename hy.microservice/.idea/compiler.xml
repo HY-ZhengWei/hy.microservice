@@ -10,10 +10,6 @@
         <module name="lps.microservice" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="hy.common" target="17" />
-      <module name="hy.common.callflow" target="17" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
