@@ -59,6 +59,7 @@ import org.hy.microservice.common.operationLog.OperationLogApi;
  *              v7.0  2025-09-09  添加：允许哪些国家、地区访问的限制
  *              v7.1  2025-10-29  修正：WebSocket协议本身没有HTTP中的ContentType字段。发现人：王雨墨
  *              v8.0  2026-01-27  添加：日志记录请求头中的信息
+ *              v9.0  2026-01-29  添加：日志记录幂等请求ID与用户可定制化的数据
  */
 @WebFilter(filterName="logFilter" ,urlPatterns="/*" ,initParams={
         @WebInitParam(name="exclusions" ,value="*.js,*.gif,*.jpg,*.png,*.css,*.ico,*.swf,*.txt,*.log,*.xml,*.md")
@@ -501,7 +502,7 @@ public class LogFilter extends XSQLFilter implements XRequestListener
              i_FilterChain.doFilter(i_ServletRequest ,i_ServletResponse);
              return;
         }
-        else if ( v_Url.endsWith(this.pageUrlMappings) )
+        else if ( !Help.isNull(this.pageUrlMappings) && v_Url.endsWith(this.pageUrlMappings) )
         {
             // Nothing.
         }
@@ -565,7 +566,7 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         this.backWhiteCheck(v_OLog);
         
         ServletOutputStream           v_Output   = null;
-        LogHttpServletResponseWrapper v_Response = new LogHttpServletResponseWrapper((HttpServletResponse) i_ServletResponse);
+        LogHttpServletResponseWrapper v_Response = new LogHttpServletResponseWrapper((HttpServletResponse) i_ServletResponse ,v_OLog);
         
         // 阻止访问
         if ( !Help.isNull(v_OLog.getUrlResponse()) )

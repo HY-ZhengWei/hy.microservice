@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  * @createDate  2023-04-10
  * @version     v1.0
  *              v2.0  2026-01-27  添加：请求头
+ *              v3.0  2026-01-29  添加：幂等请求ID与用户可定制化的数据
  */
 public class OperationLog extends BaseViewMode
 {
@@ -56,6 +57,12 @@ public class OperationLog extends BaseViewMode
     
     /** 操作人IP地址 */
     private String                  userIP;
+    
+    /** 用户可定制化的数据 */
+    private String                  userDatas;
+    
+    /** 幂等请求ID */
+    private String                  requestID;
                    
     /** 请求时间 */
     private Long                    requestTime;
@@ -145,8 +152,30 @@ public class OperationLog extends BaseViewMode
         this.id = i_Id;
     }
 
+    
+    
+    /**
+     * 获取：幂等请求ID
+     */
+    public String getRequestID()
+    {
+        return requestID;
+    }
+
 
     
+    /**
+     * 设置：幂等请求ID
+     * 
+     * @param i_RequestID 幂等请求ID
+     */
+    public void setRequestID(String i_RequestID)
+    {
+        this.requestID = i_RequestID;
+    }
+
+
+
     /**
      * 获取：系统编号
      */
@@ -367,8 +396,30 @@ public class OperationLog extends BaseViewMode
         this.userIP = i_UserIP;
     }
 
+    
+    
+    /**
+     * 获取：用户可定制化的数据
+     */
+    public String getUserDatas()
+    {
+        return userDatas;
+    }
+
 
     
+    /**
+     * 设置：用户可定制化的数据
+     * 
+     * @param i_UserDatas 用户可定制化的数据
+     */
+    public void setUserDatas(String i_UserDatas)
+    {
+        this.userDatas = i_UserDatas;
+    }
+
+
+
     /**
      * 获取：请求时间
      */

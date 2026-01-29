@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.hy.common.xml.XSQL;
 import org.hy.microservice.common.BaseController;
+import org.hy.microservice.common.LogHttpServletResponse;
 import org.hy.microservice.common.operationLog.IOperationLogDAO;
 import org.hy.microservice.common.operationLog.IOperationLogService;
 import org.hy.microservice.common.rocketMQ.RocketMQProducer;
@@ -153,6 +154,9 @@ public class DemoController extends BaseController
         UserSSO v_New = new UserSSO();           // 响应数据
         
         v_New.setUserName(i_User.getUserName()); // 好比这里是业务处理
+        
+        ((LogHttpServletResponse) i_Response).getOperationLog().setUserDatas("用户层面对操作日志的可读可控");
+        ((LogHttpServletResponse) i_Response).getOperationLog().setRequestID("幂等请求ID");
         
         io_Model.put("data" ,v_New);             // 响应页面返回传参
         

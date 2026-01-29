@@ -12,6 +12,8 @@ import javax.servlet.WriteListener;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
+import org.hy.microservice.common.operationLog.OperationLog;
+
 
 
 
@@ -22,8 +24,9 @@ import javax.servlet.http.HttpServletResponseWrapper;
  * @author      ZhengWei(HY)
  * @createDate  2023-04-11
  * @version     v1.0
+ *              v2.0  2026-01-29  添加：操作日志，允许最终用户的控制层Controller对操作日志的可读可控
  */
-public class LogHttpServletResponseWrapper extends HttpServletResponseWrapper
+public class LogHttpServletResponseWrapper extends HttpServletResponseWrapper implements LogHttpServletResponse
 {
 
     private ByteArrayOutputStream buffer = null;   // 输出到byte array
@@ -31,15 +34,29 @@ public class LogHttpServletResponseWrapper extends HttpServletResponseWrapper
     private ServletOutputStream   out    = null;
 
     private PrintWriter           writer = null;
+    
+    /** 操作日志，允许最终用户的控制层Controller对操作日志的可读可控 */
+    private OperationLog          log    = null;
 
 
 
-    public LogHttpServletResponseWrapper(HttpServletResponse i_Response) throws IOException
+    public LogHttpServletResponseWrapper(HttpServletResponse i_Response ,OperationLog i_Log) throws IOException
     {
         super(i_Response);
+        this.log    = i_Log;
         this.buffer = new ByteArrayOutputStream();      // 真正存储数据的流
         this.out    = new WapperedOutputStream(this.buffer);
         this.writer = new PrintWriter(new OutputStreamWriter(this.buffer ,Charset.forName("UTF-8")));
+    }
+
+
+    
+    /**
+     * 获取：操作日志，允许最终用户的控制层Controller对操作日志的可读可控
+     */
+    public OperationLog getOperationLog()
+    {
+        return log;
     }
 
 

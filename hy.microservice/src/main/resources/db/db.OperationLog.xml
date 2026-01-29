@@ -30,6 +30,8 @@
                         ,resultCode
                         ,userID
                         ,userIP
+                        ,userDatas
+                        ,requestID
                         ,requestTime
                         ,responseTime
                         ,timeLen
@@ -48,6 +50,8 @@
                         ,':resultCode'
                         ,':userID'
                         ,':userIP'
+                        ,':userDatas'
+                        ,':requestID'
                         ,':requestTime'
                         ,':responseTime'
                         ,':timeLen'
@@ -76,6 +80,8 @@
                        ,resultCode     = ':resultCode'
                        ,responseTime   = ':responseTime'
                        ,timeLen        = ':timeLen'
+                       ,userDatas      = ':userDatas'
+                       ,requestID      = ':requestID'
                  WHERE  id             = ':id'
                 ]]>
             </content>
@@ -101,6 +107,8 @@
                         ,resultCode
                         ,userID
                         ,userIP
+                        ,userDatas
+                        ,requestID
                         ,requestTime
                         ,responseTime
                         ,timeLen
@@ -133,6 +141,8 @@
                         ,resultCode
                         ,userID
                         ,userIP
+                        ,userDatas
+                        ,requestID
                         ,requestTime
                         ,responseTime
                         ,timeLen
@@ -165,6 +175,8 @@
                         ,resultCode
                         ,userID
                         ,userIP
+                        ,userDatas
+                        ,requestID
                         ,requestTime
                         ,responseTime
                         ,timeLen

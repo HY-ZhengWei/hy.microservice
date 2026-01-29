@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="sqls"            class="java.util.ArrayList" />
+    <import name="sql"             class="org.hy.common.xml.XSQL" />
+
+
+
+    <!-- 2026-01-29升级版本的自动化脚本的相关SQL -->
+    <sqls>
+    
+        <sql id="XSQL_Upgrade_20260129_Step001">
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT INTO TUpgrade20260129 (id ,createTime) VALUES ('操作日志记录幂等请求ID与用户可定制化的数据' ,SYSDATE);/
+                
+                ALTER TABLE TOperationLog ADD requestID VARCHAR2(64);/
+                ALTER TABLE TOperationLog ADD userDatas VARCHAR2(4000);/
+                COMMENT ON COLUMN TOperationLog.requestID IS '幂等请求ID';/
+                COMMENT ON COLUMN TOperationLog.requestID IS '用户可定制化的数据';/
+                
+                UPDATE TUpgrade20260129 SET updateTime = SYSDATE WHERE id = '操作日志记录幂等请求ID与用户可定制化的数据';/
+                ]]>
+            </content>
+            
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT INTO TUpgrade20260129 (id ,createTime) VALUES ('操作日志记录幂等请求ID与用户可定制化的数据' ,NOW());/
+
+                ALTER TABLE TOperationLog ADD requestID VARCHAR(64)   NULL COMMENT '幂等请求ID';/
+                ALTER TABLE TOperationLog ADD userDatas VARCHAR(4000) NULL COMMENT '用户可定制化的数据';/
+                
+                UPDATE TUpgrade20260129 SET updateTime = NOW() WHERE id = '操作日志记录幂等请求ID与用户可定制化的数据';/
+                ]]>
+            </content>
+            
+            <content if="SQLITE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT INTO TUpgrade20260129 (id ,createTime) VALUES ('操作日志记录幂等请求ID与用户可定制化的数据' ,DATETIME('now'));/
+                
+                ALTER TABLE TOperationLog ADD requestID TEXT(64) NULL;/
+                ALTER TABLE TOperationLog ADD userDatas TEXT     NULL;/
+                
+                UPDATE TUpgrade20260129 SET updateTime = DATETIME('now') WHERE id = '操作日志记录幂等请求ID与用户可定制化的数据';/
+                ]]>
+            </content>
+            
+            <comment>操作日志记录幂等请求ID与用户可定制化的数据</comment>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Create_Upgrade_20260129">
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TUpgrade20260129
+                (
+                 id                         VARCHAR2(64)   NOT NULL
+                ,createTime                 DATE           NOT NULL
+                ,updateTime                 DATE
+                );/
+                
+                ALTER TABLE TUpgrade20260129 ADD CONSTRAINT PK_TUpgrade20260129 PRIMARY KEY (id);/
+                
+                COMMENT ON TABLE  TUpgrade20260129                    IS '2026-01-29升级版本';/
+                COMMENT ON COLUMN TUpgrade20260129.id                 IS '主键';/
+                COMMENT ON COLUMN TUpgrade20260129.createTime         IS '创建时间';/
+                COMMENT ON COLUMN TUpgrade20260129.updateTime         IS '修改时间';/
+                ]]>
+            </content>
+            
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TUpgrade20260129
+                (
+                 id                         VARCHAR(64)   NOT NULL COMMENT '主键'
+                ,createTime                 DATETIME      NOT NULL COMMENT '创建时间'
+                ,updateTime                 DATETIME               COMMENT '修改时间'
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;/
+                
+                ALTER TABLE TUpgrade20260129 ADD CONSTRAINT PK_TUpgrade20260129 PRIMARY KEY (id);/
+                
+                Alter TABLE TUpgrade20260129 COMMENT = '2026-01-29升级版本';/
+                ]]>
+            </content>
+            
+            <content if="SQLITE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TUpgrade20260129
+                (
+                 id                         TEXT(64)   NOT NULL
+                ,createTime                 TEXT(32)   NOT NULL
+                ,updateTime                 TEXT(32)   
+                );/
+                
+                CREATE UNIQUE INDEX PK_TUpgrade20260129 ON TUpgrade20260129 (id);/
+                ]]>
+            </content>
+            
+            <trigger>
+                <create ref="XSQL_Upgrade_20260129_Step001" />
+            </trigger>
+            
+            <comment>2026-01-29升级版本</comment>
+            <create if="启用 == IsCreateDB_MS_Common.getValue">TUpgrade20260129</create>
+            
+        </sql>
+        
+    </sqls>
+    
+</config>

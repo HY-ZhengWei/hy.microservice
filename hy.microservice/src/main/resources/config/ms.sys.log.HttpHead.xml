@@ -83,13 +83,10 @@
                 <comment>发出请求的用户的Email</comment>
             </head>
             
-            <!--
-            记录到日志中
             <head>
                 <name>host</name>
                 <comment>指定请求的服务器的域名和端口号</comment>
             </head>
-            -->
             
             <head>
                 <name>if-match</name>
@@ -181,13 +178,10 @@
                 <comment>安全升级请求头</comment>
             </head>
             
-            <!--
-            记录到日志中
             <head>
                 <name>user-agent</name>
                 <comment>User-Agent的内容包含发出请求的用户信息</comment>
             </head>
-            -->
             
             <head>
                 <name>via</name>
@@ -200,7 +194,7 @@
             </head>
             
             <head>
-                <name>X-forwarded-for</name>
+                <name>x-forwarded-for</name>
                 <comment>负载识别原始IP地址</comment>
             </head>
             
