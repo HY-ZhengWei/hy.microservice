@@ -235,7 +235,7 @@ public class IPSafeConfigService implements IIPSafeConfigService ,Serializable
      * @return
      */
     @Override
-    public TablePartitionRID<String ,IPSafeConfig> queryAll()
+    public synchronized TablePartitionRID<String ,IPSafeConfig> queryAll()
     {
         if ( Help.isNull($CacheIPSafes) )
         {
