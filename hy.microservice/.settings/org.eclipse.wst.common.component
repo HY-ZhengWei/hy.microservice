@@ -359,7 +359,7 @@
     
     
     
-    <wb-module deploy-name="hy.microservice-1.20.6">
+    <wb-module deploy-name="hy.microservice-1.20.7">
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
         
         
@@ -1129,7 +1129,7 @@
         <dependent-module archiveName="hy.common.callflow-1.7.7.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/hy.common.callflow/hy.common.callflow">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="hy.common.plc-1.2.5.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/hy.common.plc/hy.common.plc">
+        <dependent-module archiveName="hy.common.plc-1.2.6.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/hy.common.plc/hy.common.plc">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="hy.common.hart-1.0.9.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/hy.common.hart/hy.common.hart">
