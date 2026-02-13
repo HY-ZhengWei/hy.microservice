@@ -5,7 +5,7 @@
     
     <groupId>cn.openapis</groupId>
     <artifactId>hy.microservice</artifactId>
-    <version>1.20.7</version>
+    <version>1.20.8</version>
     <packaging>war</packaging>
     
     <name>cn.openapis.hy.microservice</name>
@@ -78,6 +78,10 @@
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.ow2.asm</groupId>
+                    <artifactId>asm</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -203,6 +207,14 @@
                     <groupId>com.google.protobuf</groupId>
                     <artifactId>protobuf-java</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.j2objc</groupId>
+                    <artifactId>j2objc-annotations</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -227,7 +239,7 @@
         <dependency>
             <groupId>cn.openapis</groupId>
             <artifactId>hy.common</artifactId>
-            <version>4.3.2</version>
+            <version>4.3.3</version>
             <type>pom</type>
             <exclusions>
                 <exclusion>
