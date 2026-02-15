@@ -104,7 +104,7 @@
             
             <item id="MS_Common_Version">
                 <name>MS_Common_Version</name>
-                <value>1.20.8</value>
+                <value>1.20.9</value>
                 <comment>边缘计算服务的版本号</comment>
                 <onlyRead>false</onlyRead>
             </item>
@@ -155,6 +155,14 @@
                 <name>MS_Common_ApiUseMaxCountMinute10</name>
                 <valueInt>1500</valueInt>
                 <comment>每个API接口每10分钟最大允许的请求量（全体接口的默认值）</comment>
+                <onlyRead>false</onlyRead>
+            </item>
+            
+            
+            <item id="MS_Common_OperationLog_MaxThreadCount">
+                <name>MS_Common_OperationLog_MaxThreadCount</name>
+                <valueInt>1</valueInt>
+                <comment>日志写入任务的最大线程数量</comment>
                 <onlyRead>false</onlyRead>
             </item>
             

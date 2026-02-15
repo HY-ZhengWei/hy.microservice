@@ -5,7 +5,7 @@
     
     <groupId>cn.openapis</groupId>
     <artifactId>hy.microservice</artifactId>
-    <version>1.20.8</version>
+    <version>1.20.9</version>
     <packaging>war</packaging>
     
     <name>cn.openapis.hy.microservice</name>
@@ -239,7 +239,7 @@
         <dependency>
             <groupId>cn.openapis</groupId>
             <artifactId>hy.common</artifactId>
-            <version>4.3.3</version>
+            <version>4.3.4</version>
             <type>pom</type>
             <exclusions>
                 <exclusion>

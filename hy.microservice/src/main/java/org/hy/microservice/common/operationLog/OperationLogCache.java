@@ -1,5 +1,6 @@
 package org.hy.microservice.common.operationLog;
 
+import org.hy.common.Help;
 import org.hy.common.Queue;
 import org.hy.common.app.Param;
 import org.hy.common.xml.XJava;
@@ -17,6 +18,7 @@ import org.hy.common.xml.log.Logger;
  * @createDate  2023-08-11
  * @version     v1.0
  *              v2.0  2024-01-04  添加：每次写入操作日志后释放CPU资源的间隔时长（单位：毫秒）
+ *              v3.0  2026-02-15  添加：多线程写入日志
  */
 @Xjava
 public class OperationLogCache
@@ -62,6 +64,11 @@ public class OperationLogCache
         XJava.putObject("MS_Common_OperationLogCache" ,$LogCaches);
     }
     
+    
+    
+    /** 日志写入任务的最大线程数量 */
+    @Xjava(ref="MS_Common_OperationLog_MaxThreadCount")
+    Param                     maxThreadCount;
     
     /** 每次写入操作日志后释放CPU资源的间隔时长（单位：毫秒），小于等于0时无效 */
     @Xjava(ref="MS_Common_OperationLog_WriteSleep")
@@ -114,15 +121,23 @@ public class OperationLogCache
      */
     public void saveLogs()
     {
+        int v_MaxThreadCount = Help.max(Help.NVL(this.maxThreadCount.getValueInt()) ,1);
         synchronized (this)
         {
-            if ( this.isRunning >= 1 )
+            if ( this.isRunning >= v_MaxThreadCount )
             {
                 return;
             }
             else
             {
-                this.isRunning = 1;
+                if ( this.isRunning < 0 )
+                {
+                    this.isRunning  = 1;
+                }
+                else
+                {
+                    this.isRunning += 1;
+                }
             }
         }
         
@@ -185,7 +200,10 @@ public class OperationLogCache
         }
         finally
         {
-            this.isRunning = 0;
+            synchronized (this)
+            {
+                this.isRunning -= 1;
+            }
         }
     }
     
