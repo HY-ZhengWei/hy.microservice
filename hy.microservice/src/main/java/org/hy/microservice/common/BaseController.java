@@ -3,7 +3,7 @@ package org.hy.microservice.common;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.hy.common.xml.XJSON;
 

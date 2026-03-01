@@ -1,6 +1,6 @@
 package org.hy.microservice.common.webSocket;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 
 
 

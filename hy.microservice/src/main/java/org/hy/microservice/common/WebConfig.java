@@ -1,6 +1,6 @@
 package org.hy.microservice.common;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import org.hy.common.xml.XJava;
 import org.springframework.context.annotation.Configuration;

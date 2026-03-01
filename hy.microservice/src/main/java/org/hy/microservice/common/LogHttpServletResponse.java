@@ -1,6 +1,6 @@
 package org.hy.microservice.common;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.hy.microservice.common.operationLog.OperationLog;
 
