@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="xconfig"         class="java.util.ArrayList" />
+    <import name="xparam"          class="java.util.Hashtable" />
+    <import name="item"            class="org.hy.common.app.Param" />
+    <import name="option"          class="org.springframework.ai.deepseek.DeepSeekChatOptions" />
+    
+    
+    
+    <!-- AI配置参数信息 -->
+    <xconfig>
+
+        <option id="qq">
+            <temperature>0.7</temperature>
+            <maxTokens>200</maxTokens>
+        </option>
+        
+
+        <xparam id="MS_Common_AI" key="name" this="MS_Common_AI">
+            
+            <item id="MS_Common_AI_DeepSeek_BaseUrl">
+                <name>MS_Common_AI_DeepSeek_BaseUrl</name>
+                <value>https://api.deepseek.com</value>
+                <comment>接口URL地址</comment>
+                <onlyRead>false</onlyRead>
+            </item>
+            
+            
+            <item id="MS_Common_AI_DeepSeek_ApiKey">
+                <name>MS_Common_AI_DeepSeek_ApiKey</name>
+                <value>sk-8619567e700b4546b6c7c7bef5c813b9</value>
+                <comment>接口密钥</comment>
+                <onlyRead>false</onlyRead>
+            </item>
+            
+            
+            <item id="MS_Common_AI_DeepSeek_MaxTokens">
+                <name>MS_Common_AI_DeepSeek_MaxTokens</name>
+                <valueInt>200</valueInt>
+                <comment>最大票据数量</comment>
+                <onlyRead>false</onlyRead>
+            </item>
+            
+            
+            <item id="MS_Common_AI_DeepSeek_Temperature">
+                <name>MS_Common_AI_DeepSeek_Temperature</name>
+                <valueDouble>0.7</valueDouble>
+                <comment>大模型生成回答时随机性/创造性的参数</comment>
+                <onlyRead>false</onlyRead>
+            </item>
+            
+        </xparam>
+        
+    </xconfig>
+    
+</config>

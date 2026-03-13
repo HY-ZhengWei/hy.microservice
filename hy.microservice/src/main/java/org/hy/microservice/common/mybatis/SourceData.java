@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 
 
 /**
- * 定义 @DataSource 注解，标记当前使用的数据源
+ * 定义 @SourceData 注解，标记当前使用的数据源
  * 
  * @author      ZDF
  * @createDate  2022-01-06

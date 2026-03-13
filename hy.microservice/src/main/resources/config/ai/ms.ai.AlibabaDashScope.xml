@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="xconfig"         class="java.util.ArrayList" />
+    <import name="xparam"          class="java.util.Hashtable" />
+    <import name="item"            class="org.hy.common.app.Param" />
+    
+    
+    
+    <!-- AI配置参数信息 -->
+    <xconfig>
+
+        <xparam id="MS_Common_AI" key="name" this="MS_Common_AI">
+            
+            <item id="MS_Common_AI_AlibabaDashScope_BaseUrl">
+                <name>MS_Common_AI_AlibabaDashScope_BaseUrl</name>
+                <value>https://dashscope.aliyuncs.com</value>
+                <comment>接口URL地址</comment>
+                <onlyRead>false</onlyRead>
+            </item>
+            
+            
+            <item id="MS_Common_AI_AlibabaDashScope_ApiKey">
+                <name>MS_Common_AI_AlibabaDashScope_ApiKey</name>
+                <value>sk-fbb0dfa063714dada4b19ec9946505ad</value>
+                <comment>接口密钥</comment>
+                <onlyRead>false</onlyRead>
+            </item>
+            
+            
+            <item id="MS_Common_AI_AlibabaDashScope_MaxTokens">
+                <name>MS_Common_AI_AlibabaDashScope_MaxTokens</name>
+                <valueInt>200</valueInt>
+                <comment>最大票据数量</comment>
+                <onlyRead>false</onlyRead>
+            </item>
+            
+            
+            <item id="MS_Common_AI_AlibabaDashScope_Temperature">
+                <name>MS_Common_AI_AlibabaDashScope_Temperature</name>
+                <valueDouble>0.7</valueDouble>
+                <comment>大模型生成回答时随机性/创造性的参数</comment>
+                <onlyRead>false</onlyRead>
+            </item>
+            
+        </xparam>
+        
+    </xconfig>
+    
+</config>

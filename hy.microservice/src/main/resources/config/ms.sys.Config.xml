@@ -104,7 +104,7 @@
             
             <item id="MS_Common_Version">
                 <name>MS_Common_Version</name>
-                <value>1.21.1</value>
+                <value>1.21.2</value>
                 <comment>边缘计算服务的版本号</comment>
                 <onlyRead>false</onlyRead>
             </item>
@@ -193,6 +193,22 @@
                 <name>MS_Common_PagePerCount</name>
                 <valueLong>30</valueLong>
                 <comment>默认分页的每页显示数量</comment>
+                <onlyRead>false</onlyRead>
+            </item>
+            
+            
+            
+            <item id="MS_Common_FileUpload_MaxFileSize">
+                <name>MS_Common_FileUpload_MaxFileSize</name>
+                <valueInt>100</valueInt>
+                <comment>文件上传：单文件最大大小：100MB</comment>
+                <onlyRead>false</onlyRead>
+            </item>
+            
+            <item id="MS_Common_FileUpload_MaxRequestSize">
+                <name>MS_Common_FileUpload_MaxRequestSize</name>
+                <valueInt>500</valueInt>
+                <comment>文件上传：单次请求总大小：100MB</comment>
                 <onlyRead>false</onlyRead>
             </item>
             

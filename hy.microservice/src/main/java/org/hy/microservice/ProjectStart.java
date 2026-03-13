@@ -29,6 +29,8 @@ import org.hy.microservice.common.config.XJavaSpringInitialzer;
 import org.hy.microservice.common.operationLog.OperationLogApi;
 import org.hy.microservice.common.operationLog.OperationLogModule;
 
+import jakarta.servlet.MultipartConfigElement;
+
 import com.alibaba.druid.spring.boot3.autoconfigure.DruidDataSourceAutoConfigure;
 
 
@@ -44,6 +46,7 @@ import com.alibaba.druid.spring.boot3.autoconfigure.DruidDataSourceAutoConfigure
  *              v2.0  2021-02-19  添加：支持SpringBoot 2.4.0版本
  *              v3.0  2026-01-27  添加：请求后缀可通过配置文件配置。如 *.page 。建议人：程志华
  *              v4.0  2026-03-01  升级：SpringBoot 2.7.18 升级为 3.5.11
+ *              v4.1  2026-03-12  兼容：修正上传文件报异常的问题。合作解决人：李浩
  */
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class ,DruidDataSourceAutoConfigure.class})
 @EnableAspectJAutoProxy
@@ -160,16 +163,20 @@ public class ProjectStart extends SpringBootServletInitializer
      * @author      ZhengWei(HY)
      * @createDate  2022-10-25
      * @version     v1.0
+     *              v2.0  2026-03-12  兼容：修正上传文件报异常的问题
      * 
      * @param i_DispatcherServlet
+     * @param i_MultipartConfigElement  Spring3与2不同的地方，有它之后才能上传文件
      * @return
      * @see SuffixRequestMappingHandlerMapping 还需启用它
      */
     @Bean
-    public ServletRegistrationBean<DispatcherServlet> servletRegistrationBean(DispatcherServlet i_DispatcherServlet)
+    public ServletRegistrationBean<DispatcherServlet> servletRegistrationBean(DispatcherServlet i_DispatcherServlet ,MultipartConfigElement i_MultipartConfigElement)
     {
         String v_PageUrlMappings = Help.NVL(XJava.getParam("MS_Common_Page_UrlMappings").getValue()).trim();
         ServletRegistrationBean<DispatcherServlet> v_Bean = new ServletRegistrationBean<DispatcherServlet>(i_DispatcherServlet);
+        
+        v_Bean.setMultipartConfig(i_MultipartConfigElement);         // 解决报错：由于没有提供multi-part配置，无法处理parts
         if ( Help.isNull(v_PageUrlMappings) || "*".equals(v_PageUrlMappings) )
         {
             v_Bean.addUrlMappings("/");
