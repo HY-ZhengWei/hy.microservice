@@ -23,7 +23,7 @@
             
             <item id="MS_Common_AI_AlibabaDashScope_ApiKey">
                 <name>MS_Common_AI_AlibabaDashScope_ApiKey</name>
-                <value>sk-fbb0dfa063714dada4b19ec9946505ad</value>
+                <value>xxxxx</value>
                 <comment>接口密钥</comment>
                 <onlyRead>false</onlyRead>
             </item>

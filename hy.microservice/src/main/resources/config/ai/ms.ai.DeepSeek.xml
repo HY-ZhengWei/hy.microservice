@@ -30,7 +30,7 @@
             
             <item id="MS_Common_AI_DeepSeek_ApiKey">
                 <name>MS_Common_AI_DeepSeek_ApiKey</name>
-                <value>sk-8619567e700b4546b6c7c7bef5c813b9</value>
+                <value>xxxxx</value>
                 <comment>接口密钥</comment>
                 <onlyRead>false</onlyRead>
             </item>
