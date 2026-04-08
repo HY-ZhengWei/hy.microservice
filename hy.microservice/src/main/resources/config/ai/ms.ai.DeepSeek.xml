@@ -12,12 +12,6 @@
     <!-- AI配置参数信息 -->
     <xconfig>
 
-        <option id="qq">
-            <temperature>0.7</temperature>
-            <maxTokens>200</maxTokens>
-        </option>
-        
-
         <xparam id="MS_Common_AI" key="name" this="MS_Common_AI">
             
             <item id="MS_Common_AI_DeepSeek_BaseUrl">

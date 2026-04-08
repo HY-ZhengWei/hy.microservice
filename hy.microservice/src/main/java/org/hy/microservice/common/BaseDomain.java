@@ -23,6 +23,9 @@ public class BaseDomain<Data extends BaseData> extends SerializableDef
     /** 服务启动时间 */
     public final static Date $StartupTime = BaseData.$StartupTime;
     
+    /** 有效标记 */
+    public final static int  $Valid       = 1;
+    
     
     
     /** 数据对象 */

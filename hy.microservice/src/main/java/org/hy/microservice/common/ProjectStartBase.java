@@ -40,7 +40,8 @@ import org.hy.microservice.common.operationLog.OperationLogModule;
  * @version     v1.0
  *              v2.0  2021-02-19  添加：支持SpringBoot 2.4.0版本
  *              v3.0  2025-08-07  添加：从名称name中解析出日志表名称的后缀。
- *                                     可支持不同业务的日志保存在不同的表中。
+ *                                     可支持不同业务的日志保存在不同的表中。合作解决人：李浩 
+ *              v4.0  2026-04-01  修正：对类级RequestMapping(value="/xx/yy/zz")路径的支持。合作解决人：李浩 
  */
 public class ProjectStartBase
 {
@@ -53,6 +54,9 @@ public class ProjectStartBase
      * Map.key  为/模块编码/接口编码，即 URL访问路径
      **/
     public static final TablePartitionRID<String ,OperationLogApi> $RequestMappingMethods = new TablePartitionRID<String ,OperationLogApi>();
+    
+    /** 资源路径中分割日志名称的分割符 */
+    public static final String                                     $UrlSplit              = "/";
     
     /** 名称name中分割日志名称的分割符 */
     public static final String                                     $NameLogSplit          = "/";
@@ -105,6 +109,11 @@ public class ProjectStartBase
             OperationLogModule v_OModule = new OperationLogModule();
             v_OModule.setModuleCode(v_RequestMapping.value()[0]);
             v_OModule.setModuleName(v_RequestMapping.name());
+            if ( v_OModule.getModuleCode().startsWith($UrlSplit) )
+            {
+                // 前缀不以/开头
+                v_OModule.setModuleCode(v_OModule.getModuleCode().substring(1));
+            }
             
             int v_LastIndex = v_OModule.getModuleName().lastIndexOf($NameLogSplit);
             if ( v_LastIndex > 0 && v_LastIndex < v_OModule.getModuleName().length() - 1 )
@@ -135,32 +144,33 @@ public class ProjectStartBase
                     continue;
                 }
                 
-                String [] v_Url   = v_Pattern.split("/");
                 String [] v_Names = k.getName().split("#");
                 if ( Help.isNull(v_Names) || v_Names.length < 2 )
                 {
                     continue;
                 }
                 
-                if ( Help.isNull(v_Url) || v_Url.length < 2 )
+                int v_LastIndex = v_Pattern.lastIndexOf($UrlSplit);
+                if ( v_LastIndex <= 0 || v_LastIndex >= v_Pattern.length() - 1 )
                 {
                     continue;
                 }
                 
-                OperationLogModule v_OLModule = $RequestMappingModules.get(v_Url[1]);
+                String             v_ModuleCode = v_Pattern.substring(1 ,v_LastIndex);
+                OperationLogModule v_OLModule   = $RequestMappingModules.get(v_ModuleCode);
                 if ( v_OLModule == null )
                 {
                     continue;
                 }
                 
                 OperationLogApi v_OApi = new OperationLogApi();
-                v_OApi.setModuleCode(v_Url[1]);
+                v_OApi.setModuleCode(v_ModuleCode);
                 v_OApi.setModuleName(v_OLModule.getModuleName());
                 v_OApi.setUrl(v_Pattern);
                 v_OApi.setUrlName(v_Names[1]);
                 v_OApi.setUrlType("http");
                 
-                int v_LastIndex = v_OApi.getUrlName().lastIndexOf($NameLogSplit);
+                v_LastIndex = v_OApi.getUrlName().lastIndexOf($NameLogSplit);
                 if ( v_LastIndex > 0 && v_LastIndex < v_OApi.getUrlName().length() - 1 )
                 {
                     v_OApi.setLogName(v_OApi.getUrlName().substring(v_LastIndex + 1));

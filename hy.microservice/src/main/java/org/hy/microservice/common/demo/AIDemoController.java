@@ -21,8 +21,8 @@ import reactor.core.publisher.Flux;
 
 
 @Controller
-@RequestMapping(name="AI" ,value="aidemo")
-public class AIController extends BaseController
+@RequestMapping(name="aidemo" ,value="aidemo")
+public class AIDemoController extends BaseController
 {
     
     @Autowired

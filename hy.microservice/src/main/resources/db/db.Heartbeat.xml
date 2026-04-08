@@ -87,6 +87,42 @@
                 ]]>
             </content>
             
+            <content if="SQLITE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT  INTO THeartbeat
+                       (
+                        edgeIP
+                       ,hostIP
+                       ,osType
+                       ,edgeStartTime
+                       ,osTime
+                       ,claimCount
+                       ,taskOKCount
+                       ,isValid
+                       ,invalidTime
+                       ,projectID
+                       ,comment
+                       ,createTime
+                       ,updateTime
+                       )
+                VALUES (
+                        ':edgeIP'
+                       ,':hostIP'
+                       ,':osType'
+                       ,':edgeStartTime'
+                       ,':osTime'
+                       ,':claimCount'
+                       ,':taskOKCount'
+                       ,':isValid'
+                       ,NULL
+                       ,':projectID'
+                       ,':comment'
+                       ,DATETIME('now')
+                       ,DATETIME('now')
+                       )
+                ]]>
+            </content>
+            
         </sql>
         
         
@@ -123,6 +159,22 @@
                        ,isValid       = ':isValid'
                <[      ,invalidTime   = IFNULL(invalidTime ,':invalidTime')    ]>
                        ,updateTime    = NOW()
+                 WHERE  edgeIP        = ':edgeIP'
+                ]]>
+            </content>
+            
+            <content if="SQLITE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                UPDATE  THeartbeat
+                   SET  hostIP        = ':hostIP'
+                       ,osType        = ':osType'
+                       ,edgeStartTime = ':edgeStartTime'
+                       ,osTime        = ':osTime'
+                       ,claimCount    = ':claimCount'
+                       ,taskOKCount   = ':taskOKCount'
+                       ,isValid       = ':isValid'
+               <[      ,invalidTime   = IFNULL(invalidTime ,':invalidTime')    ]>
+                       ,updateTime    = DATETIME('now')
                  WHERE  edgeIP        = ':edgeIP'
                 ]]>
             </content>
@@ -218,6 +270,32 @@
              <[    AND  A.osTime     >= Date_Add(Now() ,Interval :second Second)   ]>
              <[    AND  A.edgeIP      = ':edgeIP'                                  ]>
              <[    AND  A.projectID   = ':projectID'                               ]>
+                 ORDER  BY A.edgeStartTime 
+                          ,A.edgeIP
+                ]]>
+            </content>
+            
+            <content if="SQLITE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT  A.edgeIP
+                       ,A.hostIP
+                       ,A.osType
+                       ,A.edgeStartTime
+                       ,A.osTime
+                       ,A.claimCount
+                       ,A.taskOKCount
+                       ,A.isValid
+                       ,A.invalidTime
+                       ,A.projectID
+                       ,A.comment
+                       ,A.createTime   
+                       ,A.updateTime   
+                  FROM  THeartbeat  A
+                 WHERE  A.isValid     = 1
+             <[    AND  A.updateTime >= DATETIME('now' ,'+:second Second')   ]>
+             <[    AND  A.osTime     >= DATETIME('now' ,'+:second Second')   ]>
+             <[    AND  A.edgeIP      = ':edgeIP'                            ]>
+             <[    AND  A.projectID   = ':projectID'                         ]>
                  ORDER  BY A.edgeStartTime 
                           ,A.edgeIP
                 ]]>

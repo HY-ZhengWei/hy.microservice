@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.hy.common.xml.XJSON;
+import org.springframework.http.MediaType;
 
 
 
@@ -20,6 +21,10 @@ import org.hy.common.xml.XJSON;
  */
 public class BaseController
 {
+    
+    public static final String $Text_Html_UTF8 = MediaType.TEXT_HTML_VALUE + ";charset=UTF-8";
+    
+    
     
     /**
      * 页面响应Json格式的数据

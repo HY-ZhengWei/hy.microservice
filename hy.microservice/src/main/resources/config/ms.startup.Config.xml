@@ -41,22 +41,22 @@
                 <value>config/ms.sys.MQ.xml</value>
             </item>
             
-            <!-- 加载数据库目录所有配置文件 -->
+            <!-- 加载接口所有配置文件 -->
             <item>
-                <value>config/openAPI</value>
+                <value>config/openAPI/</value>
             </item>
             
-            <!-- 加载数据库目录所有配置文件 -->
+            <!-- 加载数据库所有配置文件 -->
             <item>
                 <value>db/</value>
             </item>
             
-            <!-- 加载数据库目录所有配置文件 -->
+            <!-- 加载数据库组所有配置文件 -->
             <item>
                 <value>dbGroup/</value>
             </item>
             
-            <!-- 加载数据库目录所有配置文件 -->
+            <!-- 加载柔性编排所有配置文件 -->
             <item>
                 <value>callflow/</value>
             </item>

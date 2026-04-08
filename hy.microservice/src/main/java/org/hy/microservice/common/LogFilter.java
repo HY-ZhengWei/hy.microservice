@@ -60,8 +60,9 @@ import org.hy.microservice.common.operationLog.OperationLogApi;
  *              v7.1  2025-10-29  修正：WebSocket协议本身没有HTTP中的ContentType字段。发现人：王雨墨
  *              v8.0  2026-01-27  添加：日志记录请求头中的信息
  *              v9.0  2026-01-29  添加：日志记录幂等请求ID与用户可定制化的数据
+ *              v10.0 2026-03-04  添加：开启异步支持。配合SpringAI回显问题时，一行一行的显示（即对Flux<String>的支持）
  */
-@WebFilter(filterName="logFilter" ,urlPatterns="/*" ,initParams={
+@WebFilter(filterName="logFilter" ,urlPatterns="/*" ,asyncSupported=true ,initParams={
         @WebInitParam(name="exclusions" ,value="*.js,*.gif,*.jpg,*.png,*.css,*.ico,*.swf,*.txt,*.log,*.xml,*.md")
        ,@WebInitParam(name="cachesize"  ,value="1000")
        ,@WebInitParam(name="timeout"    ,value="60")

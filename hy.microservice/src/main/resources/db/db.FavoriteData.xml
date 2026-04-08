@@ -29,7 +29,7 @@
                        ,favoriteName
                        ,orderBy
                        ,projectID
-                       ,comment
+                       ,"COMMENT"
                        ,isValid
                        ,isDel
                        ,createUserID
@@ -91,6 +91,42 @@
                 ]]>
             </content>
             
+            <content if="SQLITE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT  INTO TFavoriteData
+                       (
+                        id
+                       ,serviceType
+                       ,dataID
+                       ,favoriteName
+                       ,orderBy
+                       ,projectID
+                       ,comment
+                       ,isValid
+                       ,isDel
+                       ,createUserID
+                       ,updateUserID
+                       ,createTime
+                       ,updateTime
+                       )
+                VALUES (
+                        ':id'
+                       ,':serviceType'
+                       ,':dataID'
+                       ,':favoriteName'
+                       ,':orderBy'
+                       ,':projectID'
+                       ,':comment'
+                       ,':isValid'
+                       ,':isDel'
+                       ,':createUserID'
+                       ,':updateUserID'
+                       ,DATETIME('now')
+                       ,DATETIME('now')
+                       )
+                ]]>
+            </content>
+            
         </sql>
         
         
@@ -99,10 +135,40 @@
         
             <dataSourceGroup ref="DSG_MS_Common" />
             
-            <content>
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                UPDATE  TFavoriteData
+                   SET  updateTime   = SYSDATE
+                       ,updateUserID = ':updateUserID'
+                    <[ ,favoriteName = ':favoriteName'  ]>
+                    <[ ,orderBy      = ':orderBy'       ]>
+                    <[ ,projectID    = ':projectID'     ]>
+                    <[ ,comment      = ':comment'       ]>
+                    <[ ,isValid      = ':isValid'       ]>
+                    <[ ,isDel        = ':isDel'         ]>
+                 WHERE  id           = ':id'
+                ]]>
+            </content>
+            
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 UPDATE  TFavoriteData
                    SET  updateTime   = NOW()
+                       ,updateUserID = ':updateUserID'
+                    <[ ,favoriteName = ':favoriteName'  ]>
+                    <[ ,orderBy      = ':orderBy'       ]>
+                    <[ ,projectID    = ':projectID'     ]>
+                    <[ ,comment      = ':comment'       ]>
+                    <[ ,isValid      = ':isValid'       ]>
+                    <[ ,isDel        = ':isDel'         ]>
+                 WHERE  id           = ':id'
+                ]]>
+            </content>
+            
+            <content if="SQLITE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                UPDATE  TFavoriteData
+                   SET  updateTime   = DATETIME('now')
                        ,updateUserID = ':updateUserID'
                     <[ ,favoriteName = ':favoriteName'  ]>
                     <[ ,orderBy      = ':orderBy'       ]>
