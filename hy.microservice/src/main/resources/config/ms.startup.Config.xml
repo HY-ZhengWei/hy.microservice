@@ -41,6 +41,11 @@
                 <value>config/ms.sys.MQ.xml</value>
             </item>
             
+            <!-- 加载AI所有配置文件 -->
+            <item>
+                <value>config/ai/</value>
+            </item>
+            
             <!-- 加载接口所有配置文件 -->
             <item>
                 <value>config/openAPI/</value>
