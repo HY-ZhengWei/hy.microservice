@@ -1,8 +1,6 @@
 package org.hy.microservice.common.config;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.hy.microservice.common.LogFilter;
 
 
@@ -16,14 +14,14 @@ import org.hy.microservice.common.LogFilter;
  * @createDate  2026-03-04
  * @version     v1.0
  */
-@Configuration
+// @Configuration
 public class AsyncSupportConfig
 {
 
     /**
      * 为自定义 LogFilter 开启异步支持（如果过滤器不是通过@WebFilter注册）
      */
-    @Bean
+    // @Bean
     public FilterRegistrationBean<LogFilter> logFilterRegistration()
     {
         FilterRegistrationBean<LogFilter> registration = new FilterRegistrationBean<>();
