@@ -492,8 +492,6 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         HttpServletRequest v_HttpServletRequest = (HttpServletRequest) i_ServletRequest;
         String             v_Url                = v_HttpServletRequest.getServletPath();
         String []          v_Urls               = v_Url.split(ProjectStartBase.$UrlSplit);
-        int                v_LastIndex          = v_Url.lastIndexOf(ProjectStartBase.$UrlSplit);
-        String             v_ModuleCode         = v_Url.substring(1 ,v_LastIndex);
         
         // 分析中心、静态资源，不记录访问日志
         // 上传文件时也不解析
@@ -515,9 +513,10 @@ public class LogFilter extends XSQLFilter implements XRequestListener
             return;
         }
         
-        // 没有配置 @RequestMapping(name) 的方法不记录访问日志
+        int    v_LastIndex  = v_Url.lastIndexOf(ProjectStartBase.$UrlSplit);
+        String v_ModuleCode = v_Url.substring(1 ,v_LastIndex);
         OperationLogApi v_LogConfig = ProjectStartBase.$RequestMappingMethods.getRow(v_ModuleCode ,StringHelp.replaceLast(v_Url ,this.pageUrlMappings ,""));
-        if ( v_LogConfig == null )
+        if ( v_LogConfig == null )   // 没有配置 @RequestMapping(name) 的方法不记录访问日志
         {
             if ( v_Url.endsWith(this.pageUrlMappings) )
             {

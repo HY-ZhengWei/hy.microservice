@@ -19,6 +19,42 @@
                 <defaultNull>true</defaultNull>
             </contentDB>
             
+            <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT  INTO TFavoriteData
+                       (
+                        id
+                       ,serviceType
+                       ,dataID
+                       ,favoriteName
+                       ,orderBy
+                       ,projectID
+                       ,"COMMENT"
+                       ,isValid
+                       ,isDel
+                       ,createUserID
+                       ,updateUserID
+                       ,createTime
+                       ,updateTime
+                       )
+                VALUES (
+                        ':id'
+                       ,':serviceType'
+                       ,':dataID'
+                       ,':favoriteName'
+                       ,':orderBy'
+                       ,':projectID'
+                       ,':comment'
+                       ,':isValid'
+                       ,':isDel'
+                       ,':createUserID'
+                       ,':updateUserID'
+                       ,SYSDATE
+                       ,SYSDATE
+                       )
+                ]]>
+            </content>
+            
             <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 INSERT  INTO TFavoriteData
@@ -135,6 +171,21 @@
         
             <dataSourceGroup ref="DSG_MS_Common" />
             
+            <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                UPDATE  TFavoriteData
+                   SET  updateTime   = SYSDATE
+                       ,updateUserID = ':updateUserID'
+                    <[ ,favoriteName = ':favoriteName'  ]>
+                    <[ ,orderBy      = ':orderBy'       ]>
+                    <[ ,projectID    = ':projectID'     ]>
+                    <[ ,"COMMENT"    = ':comment'       ]>
+                    <[ ,isValid      = ':isValid'       ]>
+                    <[ ,isDel        = ':isDel'         ]>
+                 WHERE  id           = ':id'
+                ]]>
+            </content>
+            
             <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 UPDATE  TFavoriteData
@@ -143,7 +194,7 @@
                     <[ ,favoriteName = ':favoriteName'  ]>
                     <[ ,orderBy      = ':orderBy'       ]>
                     <[ ,projectID    = ':projectID'     ]>
-                    <[ ,comment      = ':comment'       ]>
+                    <[ ,"COMMENT"    = ':comment'       ]>
                     <[ ,isValid      = ':isValid'       ]>
                     <[ ,isDel        = ':isDel'         ]>
                  WHERE  id           = ':id'
@@ -220,6 +271,60 @@
                        ,A.orderBy
                        ,A.projectID
                        ,A.comment
+                       ,A.isValid
+                       ,A.isDel
+                       ,A.createUserID
+                       ,A.updateUserID
+                       ,A.createTime
+                       ,A.updateTime
+                  FROM  TFavoriteData  A
+                 WHERE  A.isDel        = 0
+              <[   AND  A.updateUserID = ':userID'       ]>
+              <[   AND  A.id           = ':id'           ]>
+              <[   AND  A.serviceType  = ':serviceType'  ]>
+              <[   AND  A.dataID       = ':dataID'       ]>
+              <[   AND  A.projectID    = ':projectID'    ]>
+                 ORDER  BY A.orderBy 
+                          ,A.updateTime DESC
+                ]]>
+            </content>
+            
+            <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT  A.id
+                       ,A.serviceType
+                       ,A.dataID
+                       ,A.favoriteName
+                       ,A.orderBy
+                       ,A.projectID
+                       ,A."COMMENT"
+                       ,A.isValid
+                       ,A.isDel
+                       ,A.createUserID
+                       ,A.updateUserID
+                       ,A.createTime
+                       ,A.updateTime
+                  FROM  TFavoriteData  A
+                 WHERE  A.isDel        = 0
+              <[   AND  A.updateUserID = ':userID'       ]>
+              <[   AND  A.id           = ':id'           ]>
+              <[   AND  A.serviceType  = ':serviceType'  ]>
+              <[   AND  A.dataID       = ':dataID'       ]>
+              <[   AND  A.projectID    = ':projectID'    ]>
+                 ORDER  BY A.orderBy 
+                          ,A.updateTime DESC
+                ]]>
+            </content>
+            
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT  A.id
+                       ,A.serviceType
+                       ,A.dataID
+                       ,A.favoriteName
+                       ,A.orderBy
+                       ,A.projectID
+                       ,A."COMMENT"
                        ,A.isValid
                        ,A.isDel
                        ,A.createUserID

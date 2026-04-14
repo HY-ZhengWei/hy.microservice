@@ -94,6 +94,40 @@
             
             <dataSourceGroup ref="DSG_MS_Common" />
             
+            <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT   id
+                        ,systemCode
+                        ,moduleCode
+                        ,url
+                        ,urlRequest
+                        ,urlRequestHead
+                        ,urlRequestBody
+                        ,urlResponse
+                        ,resultCode
+                        ,userID
+                        ,userIP
+                        ,userDatas
+                        ,requestID
+                        ,requestTime
+                        ,responseTime
+                        ,timeLen
+                        ,createTime
+                        ,attackType
+                  FROM  TOperationLog:logName
+                 WHERE  createTime >= SYSDATE - 360
+                   AND  userID      = ':userID'          
+              <[   AND  userIP      = ':userIP'            ]>
+              <[   AND  systemCode  = ':systemCode'        ]>
+              <[   AND  moduleCode  = ':moduleCode'        ]>
+              <[   AND  url         = ':url'               ]>
+              <[   AND  resultCode  = ':resultCode'        ]>
+              <[   AND  createTime >= ':createTime'        ]>
+              <[   AND  timeLen    >= ':timeLen'           ]>
+                 ORDER  BY createTime DESC
+                ]]>
+            </content>
+            
             <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 SELECT   id

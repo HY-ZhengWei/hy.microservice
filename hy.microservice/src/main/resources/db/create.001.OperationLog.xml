@@ -14,6 +14,78 @@
         
             <dataSourceGroup ref="DSG_MS_Common" />
             
+            <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TOperationLog
+                (
+                 id                         VARCHAR2(64)   NOT NULL
+                ,systemCode                 VARCHAR2(64)   NOT NULL
+                ,moduleCode                 VARCHAR2(64)   NOT NULL
+                ,url                        VARCHAR2(256)  NOT NULL
+                ,urlRequest                 VARCHAR2(4000)
+                ,urlRequestHead             VARCHAR2(1000)
+                ,urlRequestBody             VARCHAR2(4000)
+                ,urlResponse                VARCHAR2(4000)
+                ,resultCode                 VARCHAR2(64)
+                ,userID                     VARCHAR2(64)   NOT NULL
+                ,userIP                     VARCHAR2(64)   NOT NULL
+                ,userDatas                  VARCHAR2(4000)
+                ,requestID                  VARCHAR2(64)
+                ,requestTime                NUMBER(15)     NOT NULL
+                ,responseTime               NUMBER(15)
+                ,timeLen                    NUMBER(15)
+                ,attackType                 VARCHAR2(64)
+                ,createTime                 DATE
+                );/
+                
+                ALTER TABLE TOperationLog ADD CONSTRAINT PK_OperationLog PRIMARY KEY (id);/
+                CREATE INDEX IDX_TOperationLog_Url        ON TOperationLog (systemCode ,moduleCode ,url);/
+                CREATE INDEX IDX_TOperationLog_ResultCode ON TOperationLog (resultCode);/
+                CREATE INDEX IDX_TOperationLog_CreateTime ON TOperationLog (createTime);/
+                
+                COMMENT ON TABLE  TOperationLog                    IS '系统操作日志';/
+                COMMENT ON COLUMN TOperationLog.id                 IS '主键';/
+                COMMENT ON COLUMN TOperationLog.systemCode         IS '系统编号';/ 
+                COMMENT ON COLUMN TOperationLog.moduleCode         IS '模块编号';/
+                COMMENT ON COLUMN TOperationLog.url                IS '操作的URL地址';/
+                COMMENT ON COLUMN TOperationLog.urlRequest         IS '操作的请求参数';/
+                COMMENT ON COLUMN TOperationLog.urlRequestHead     IS '操作的请求头数据';/
+                COMMENT ON COLUMN TOperationLog.urlRequestBody     IS '操作的请求体数据';/
+                COMMENT ON COLUMN TOperationLog.urlResponse        IS '操作的响应信息';/
+                COMMENT ON COLUMN TOperationLog.resultCode         IS '操作的响应结果编号';/
+                COMMENT ON COLUMN TOperationLog.userID             IS '操作人ID';/
+                COMMENT ON COLUMN TOperationLog.userIP             IS '操作人IP地址';/
+                COMMENT ON COLUMN TOperationLog.userDatas          IS '用户可定制化的数据';/
+                COMMENT ON COLUMN TOperationLog.requestID          IS '幂等请求ID';/
+                COMMENT ON COLUMN TOperationLog.requestTime        IS '请求时间';/
+                COMMENT ON COLUMN TOperationLog.responseTime       IS '响应时间';/
+                COMMENT ON COLUMN TOperationLog.timeLen            IS '操作时长（单位：毫秒）';/
+                COMMENT ON COLUMN TOperationLog.attackType         IS '攻击类型';/
+                COMMENT ON COLUMN TOperationLog.createTime         IS '数据库的创建时间';/
+                
+                CREATE TABLE TUpgrade20230526
+                (
+                 id                         VARCHAR2(64)   NOT NULL
+                ,createTime                 DATE           NOT NULL
+                ,updateTime                 DATE
+                );/
+                
+                CREATE TABLE TUpgrade20260126
+                (
+                 id                         VARCHAR2(64)   NOT NULL
+                ,createTime                 DATE           NOT NULL
+                ,updateTime                 DATE
+                );/
+                
+                CREATE TABLE TUpgrade20260129
+                (
+                 id                         VARCHAR2(64)   NOT NULL
+                ,createTime                 DATE           NOT NULL
+                ,updateTime                 DATE
+                );/
+                ]]>
+            </content>
+            
             <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 CREATE TABLE TOperationLog
@@ -203,6 +275,57 @@
         <sql id="XSQL_Common_Create_OperationLog_Template">
         
             <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TOperationLogTemplate
+                (
+                 id                         VARCHAR2(64)   NOT NULL
+                ,systemCode                 VARCHAR2(64)   NOT NULL
+                ,moduleCode                 VARCHAR2(64)   NOT NULL
+                ,url                        VARCHAR2(256)  NOT NULL
+                ,urlRequest                 VARCHAR2(4000)
+                ,urlRequestHead             VARCHAR2(1000)
+                ,urlRequestBody             VARCHAR2(4000)
+                ,urlResponse                VARCHAR2(4000)
+                ,resultCode                 VARCHAR2(64)
+                ,userID                     VARCHAR2(64)   NOT NULL
+                ,userIP                     VARCHAR2(64)   NOT NULL
+                ,userDatas                  VARCHAR2(4000)
+                ,requestID                  VARCHAR2(64)
+                ,requestTime                NUMBER(15)     NOT NULL
+                ,responseTime               NUMBER(15)
+                ,timeLen                    NUMBER(15)
+                ,attackType                 VARCHAR2(64)
+                ,createTime                 DATE
+                );/
+                
+                ALTER TABLE TOperationLogTemplate ADD CONSTRAINT PK_OperationLogTemplate PRIMARY KEY (id);/
+                CREATE INDEX IDX_TOperationLogTemplate_Url        ON TOperationLogTemplate (systemCode ,moduleCode ,url);/
+                CREATE INDEX IDX_TOperationLogTemplate_ResultCode ON TOperationLogTemplate (resultCode);/
+                CREATE INDEX IDX_TOperationLogTemplate_CreateTime ON TOperationLogTemplate (createTime);/
+                
+                COMMENT ON TABLE  TOperationLogTemplate                    IS '系统操作日志';/
+                COMMENT ON COLUMN TOperationLogTemplate.id                 IS '主键';/
+                COMMENT ON COLUMN TOperationLogTemplate.systemCode         IS '系统编号';/ 
+                COMMENT ON COLUMN TOperationLogTemplate.moduleCode         IS '模块编号';/
+                COMMENT ON COLUMN TOperationLogTemplate.url                IS '操作的URL地址';/
+                COMMENT ON COLUMN TOperationLogTemplate.urlRequest         IS '操作的请求参数';/
+                COMMENT ON COLUMN TOperationLogTemplate.urlRequestHead     IS '操作的请求头数据';/
+                COMMENT ON COLUMN TOperationLogTemplate.urlRequestBody     IS '操作的请求体数据';/
+                COMMENT ON COLUMN TOperationLogTemplate.urlResponse        IS '操作的响应信息';/
+                COMMENT ON COLUMN TOperationLogTemplate.resultCode         IS '操作的响应结果编号';/
+                COMMENT ON COLUMN TOperationLogTemplate.userID             IS '操作人ID';/
+                COMMENT ON COLUMN TOperationLogTemplate.userIP             IS '操作人IP地址';/
+                COMMENT ON COLUMN TOperationLogTemplate.userDatas          IS '用户可定制化的数据';/
+                COMMENT ON COLUMN TOperationLogTemplate.requestID          IS '幂等请求ID';/
+                COMMENT ON COLUMN TOperationLogTemplate.requestTime        IS '请求时间';/
+                COMMENT ON COLUMN TOperationLogTemplate.responseTime       IS '响应时间';/
+                COMMENT ON COLUMN TOperationLogTemplate.timeLen            IS '操作时长（单位：毫秒）';/
+                COMMENT ON COLUMN TOperationLogTemplate.attackType         IS '攻击类型';/
+                COMMENT ON COLUMN TOperationLogTemplate.createTime         IS '数据库的创建时间';/
+                ]]>
+            </content>
             
             <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[

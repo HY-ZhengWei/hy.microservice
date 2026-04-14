@@ -11,11 +11,21 @@
     <!-- 数据库配置信息 -->
     <sqls>
 
-        <dataSource id="DS_MS_Common" >
+        <dataSource id="DS_MS_Common">
+            
             <driverClassName>com.mysql.cj.jdbc.Driver</driverClassName>
             <url><![CDATA[jdbc:mysql://127.0.0.1:3306/common?keepAlive=true&autoReconnect=true&autoReconnectForPools=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8]]></url>
-            <username encrypt="org.hy.common.StringHelp"></username>
+            <username encrypt="org.hy.common.StringHelp">root</username>
             <password encrypt="org.hy.common.StringHelp"></password>
+            
+            <!-- 达梦数据库DM8的示例 -->
+            <!-- 
+            <driverClassName>dm.jdbc.driver.DmDriver</driverClassName>
+            <url><![CDATA[jdbc:dm://127.0.0.1:5236?schema=common&compatible_mode=4&keywords=keywords&case_sensitive=0&ignore_case=true]]></url>
+            <username encrypt="org.hy.common.StringHelp">SYSDBA</username>
+            <password encrypt="org.hy.common.StringHelp"></password>
+            -->
+            
             <filters>stat,wall,log4j2</filters>
             <initialSize>5</initialSize>
             <minIdle>5</minIdle>
@@ -27,6 +37,7 @@
             <minEvictableIdleTimeMillis>300000</minEvictableIdleTimeMillis>
             <validationQuery>SELECT 1</validationQuery>
             <validationQuery if="oracle.jdbc.OracleDriver == this.getDriverClassName">SELECT 1 FROM DUAL</validationQuery>
+            <validationQuery if="dm.jdbc.driver.DmDriver == this.getDriverClassName">SELECT 1 FROM DUAL</validationQuery>
             <testWhileIdle>true</testWhileIdle>
             <testOnBorrow>false</testOnBorrow>
             <testOnReturn>false</testOnReturn>

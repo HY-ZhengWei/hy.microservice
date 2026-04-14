@@ -15,6 +15,38 @@
         
             <dataSourceGroup ref="DSG_MS_Common" />
             
+            <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT  INTO TIPSafeConfig
+                       (
+                         id          
+                        ,ipType      
+                        ,ip
+                        ,ipMax
+                        ,moduleCode
+                        ,url
+                        ,"COMMENT"
+                        ,isDel       
+                        ,createUserID
+                        ,createTime  
+                        ,updateTime  
+                       )
+                VALUES (
+                         ':id'
+                        ,':ipType'
+                        ,':ip'
+                        ,':ipMax'
+                        ,':moduleCode'
+                        ,':url'
+                        ,':comment'
+                        ,':isDel'
+                        ,':createUserID'
+                        ,SYSDATE
+                        ,SYSDATE
+                       )
+                ]]>
+            </content>
+            
             <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 INSERT  INTO TIPSafeConfig
@@ -119,6 +151,21 @@
         
             <dataSourceGroup ref="DSG_MS_Common" />
             
+            <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                UPDATE  TIPSafeConfig
+                   SET  updateTime = SYSDATE
+              <[       ,ipType     = ':ipType'      ]>
+              <[       ,ip         = ':ip'          ]>
+              <[       ,ipMax      = ':ipMax'       ]>
+              <[       ,moduleCode = ':moduleCode'  ]>
+              <[       ,url        = ':url'         ]>
+              <[       ,"COMMENT"  = ':comment'     ]>
+              <[       ,isDel      = ':isDel'       ]>
+                 WHERE  id         = ':id'
+                ]]>
+            </content>
+            
             <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 UPDATE  TIPSafeConfig
@@ -181,6 +228,27 @@
                         ,moduleCode
                         ,url
                         ,comment
+                        ,isDel       
+                        ,createUserID
+                        ,createTime  
+                        ,updateTime  
+                  FROM  TIPSafeConfig
+                 WHERE  isDel  = 0
+                   ANd  ipType = ':ipType'
+                 ORDER  BY ipType
+                          ,ip
+                ]]>
+            </content>
+            
+            <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT   id
+                        ,ipType      
+                        ,ip
+                        ,ipMax
+                        ,moduleCode
+                        ,url
+                        ,"COMMENT"
                         ,isDel       
                         ,createUserID
                         ,createTime  
@@ -274,6 +342,24 @@
                 ]]>
             </content>
             
+            <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT   id
+                        ,ipType      
+                        ,ip
+                        ,ipMax
+                        ,moduleCode
+                        ,url       
+                        ,"COMMENT"     
+                        ,isDel       
+                        ,createUserID
+                        ,createTime  
+                        ,updateTime  
+                  FROM  TIPSafeConfig
+                 WHERE  id  = ':id'
+                ]]>
+            </content>
+            
             <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 SELECT   id
@@ -314,6 +400,25 @@
                         ,moduleCode
                         ,url       
                         ,comment
+                        ,isDel       
+                        ,createUserID
+                        ,createTime  
+                        ,updateTime  
+                  FROM  TIPSafeConfig
+                 WHERE  ipType = ':ipType'
+                   AND  ip     = ':ip'
+                ]]>
+            </content>
+            
+            <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT   id
+                        ,ipType      
+                        ,ip
+                        ,ipMax
+                        ,moduleCode
+                        ,url       
+                        ,"COMMENT"     
                         ,isDel       
                         ,createUserID
                         ,createTime  

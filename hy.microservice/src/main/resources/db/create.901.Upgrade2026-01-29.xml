@@ -14,6 +14,19 @@
         
             <dataSourceGroup ref="DSG_MS_Common" />
             
+            <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT INTO TUpgrade20260129 (id ,createTime) VALUES ('操作日志记录幂等请求ID与用户可定制化的数据' ,SYSDATE);/
+                
+                ALTER TABLE TOperationLog ADD requestID VARCHAR2(64);/
+                ALTER TABLE TOperationLog ADD userDatas VARCHAR2(4000);/
+                COMMENT ON COLUMN TOperationLog.requestID IS '幂等请求ID';/
+                COMMENT ON COLUMN TOperationLog.requestID IS '用户可定制化的数据';/
+                
+                UPDATE TUpgrade20260129 SET updateTime = SYSDATE WHERE id = '操作日志记录幂等请求ID与用户可定制化的数据';/
+                ]]>
+            </content>
+            
             <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 INSERT INTO TUpgrade20260129 (id ,createTime) VALUES ('操作日志记录幂等请求ID与用户可定制化的数据' ,SYSDATE);/
@@ -58,6 +71,24 @@
         <sql id="XSQL_Create_Upgrade_20260129">
         
             <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TUpgrade20260129
+                (
+                 id                         VARCHAR2(64)   NOT NULL
+                ,createTime                 DATE           NOT NULL
+                ,updateTime                 DATE
+                );/
+                
+                ALTER TABLE TUpgrade20260129 ADD CONSTRAINT PK_TUpgrade20260129 PRIMARY KEY (id);/
+                
+                COMMENT ON TABLE  TUpgrade20260129                    IS '2026-01-29升级版本';/
+                COMMENT ON COLUMN TUpgrade20260129.id                 IS '主键';/
+                COMMENT ON COLUMN TUpgrade20260129.createTime         IS '创建时间';/
+                COMMENT ON COLUMN TUpgrade20260129.updateTime         IS '修改时间';/
+                ]]>
+            </content>
             
             <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
