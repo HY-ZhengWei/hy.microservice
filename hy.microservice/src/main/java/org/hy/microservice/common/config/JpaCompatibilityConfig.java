@@ -22,7 +22,7 @@ import javax.sql.DataSource;
 /**
  * JPA兼容梦达DM8数据库
  *
- * @author      李浩、ZhengWei(HY)
+ * @author      LiHao、ZhengWei(HY)
  * @createDate  2026-04-13
  * @version     v1.0
  */

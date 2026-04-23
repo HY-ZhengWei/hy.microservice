@@ -1,9 +1,8 @@
 package org.hy.microservice.common.config;
 
 import org.hy.common.xml.XJava;
-import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
-import org.springframework.boot.web.servlet.MultipartConfigFactory;
-import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
+import org.springframework.boot.tomcat.servlet.TomcatServletWebServerFactory;
+import org.springframework.boot.web.server.servlet.ConfigurableServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.unit.DataSize;
@@ -19,9 +18,9 @@ import jakarta.servlet.MultipartConfigElement;
 /**
  * Multipart 配置类 - 用于配置文件上传支持
  * 
- * Author:  LiHao、ZhengWei(HY)
- * Date:    2026-03-11
- * Version: 1.0
+ * @author      LiHao、ZhengWei(HY)
+ * @createDate  2026-03-11
+ * @version     v1.0
  */
 @Configuration
 public class FileUploadMultipartConfig
@@ -39,6 +38,7 @@ public class FileUploadMultipartConfig
     @Bean
     public MultipartConfigElement multipartConfigElement() 
     {
+        /*
         MultipartConfigFactory v_Factory = new MultipartConfigFactory();
         
         v_Factory.setMaxFileSize(   DataSize.ofMegabytes(XJava.getParam("MS_Common_FileUpload_MaxFileSize")   .getValueInt()));
@@ -46,6 +46,19 @@ public class FileUploadMultipartConfig
         v_Factory.setFileSizeThreshold(DataSize.ofBytes(0));       // 文件写入磁盘的阈值：0（默认值，可省略）
         
         return v_Factory.createMultipartConfig();
+        */
+        
+        // 直接构造 MultipartConfigElement（替代已废弃的 MultipartConfigFactory）
+        String   v_Location          = ""; // 文件临时存储位置（空字符串使用默认位置）
+        DataSize v_MaxFileSize       = DataSize.ofMegabytes(XJava.getParam("MS_Common_FileUpload_MaxFileSize").getValueInt());
+        DataSize v_MaxRequestSize    = DataSize.ofMegabytes(XJava.getParam("MS_Common_FileUpload_MaxRequestSize").getValueInt());
+        DataSize v_FileSizeThreshold = DataSize.ofBytes(0);
+        
+        return new MultipartConfigElement(
+                v_Location,
+                v_MaxFileSize.toBytes(),
+                v_MaxRequestSize.toBytes(),
+                (int) v_FileSizeThreshold.toBytes());
     }
     
 

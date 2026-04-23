@@ -8,13 +8,12 @@ import org.hy.common.PartitionMap;
 import org.hy.common.TablePartition;
 import org.hy.common.xml.XJava;
 import org.hy.common.xml.plugins.AppBaseServlet;
-import org.hy.common.xml.plugins.XJavaSpringAnnotationConfigServletWebServerApplicationContext;
 import org.hy.common.xml.plugins.analyse.AnalyseObjectServlet;
 import org.hy.common.xml.plugins.analyse.AnalysesServlet;
 import org.springframework.boot.ApplicationContextFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -25,6 +24,7 @@ import org.springframework.web.servlet.DispatcherServlet;
 
 import org.hy.microservice.common.ProjectStartBase;
 import org.hy.microservice.common.VueServlet;
+import org.hy.microservice.common.config.XJavaSpringAnnotationConfigServletWebServerApplicationContext;
 import org.hy.microservice.common.config.XJavaSpringInitialzer;
 import org.hy.microservice.common.operationLog.OperationLogApi;
 import org.hy.microservice.common.operationLog.OperationLogModule;
@@ -47,6 +47,7 @@ import com.alibaba.druid.spring.boot3.autoconfigure.DruidDataSourceAutoConfigure
  *              v3.0  2026-01-27  添加：请求后缀可通过配置文件配置。如 *.page 。建议人：程志华
  *              v4.0  2026-03-01  升级：SpringBoot 2.7.18 升级为 3.5.11
  *              v4.1  2026-03-12  兼容：修正上传文件报异常的问题。合作解决人：李浩
+ *              v5.0  2026-04-18  升级：按运行时动态支持SpringBoot 3.5.11 和 4.0.5
  */
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class ,DruidDataSourceAutoConfigure.class})
 @EnableAspectJAutoProxy
@@ -58,7 +59,7 @@ public class ProjectStart extends SpringBootServletInitializer
     
     
     
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused"})
     public static void main(String[] args)
     {
         SpringApplication v_SpringApp = new SpringApplication(ProjectStart.class);

@@ -20,11 +20,10 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 public class SuffixRequestMappingHandlerMapping extends RequestMappingHandlerMapping implements Ordered
 {
 
-    @SuppressWarnings("deprecation")
     public SuffixRequestMappingHandlerMapping()
     {
         // 该方法也是被弃用的，后续可能需要自定义匹配规则。
-        super.setUseSuffixPatternMatch(true);
+        // super.setUseSuffixPatternMatch(true);
     }
 
     

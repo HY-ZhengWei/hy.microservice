@@ -104,7 +104,7 @@
             
             <item id="MS_Common_Version">
                 <name>MS_Common_Version</name>
-                <value>1.21.7</value>
+                <value>1.21.9</value>
                 <comment>边缘计算服务的版本号</comment>
                 <onlyRead>false</onlyRead>
             </item>
@@ -191,7 +191,7 @@
             
             <item id="MS_Common_PagePerCount">
                 <name>MS_Common_PagePerCount</name>
-                <valueLong>50</valueLong>
+                <valueLong>100</valueLong>
                 <comment>默认分页的每页显示数量</comment>
                 <onlyRead>false</onlyRead>
             </item>

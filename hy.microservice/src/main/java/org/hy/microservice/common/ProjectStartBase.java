@@ -3,17 +3,25 @@ package org.hy.microservice.common;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeoutException;
 
 import org.hy.common.Help;
+import org.hy.common.Return;
 import org.hy.common.StringHelp;
 import org.hy.common.TablePartitionRID;
+import org.hy.common.callflow.CallFlow;
+import org.hy.common.callflow.execute.ExecuteResult;
+import org.hy.common.callflow.language.JavaConfig;
+import org.hy.common.callflow.language.java.CacheJavaInfo;
 import org.hy.common.xml.XJava;
+import org.hy.common.xml.log.Logger;
 import org.hy.common.xml.plugins.AppBaseServlet;
-import org.hy.common.xml.plugins.XJavaSpringAnnotationConfigServletWebServerApplicationContext;
+import org.hy.common.xml.plugins.XJavaSpringBootLoadingText;
 import org.hy.common.xml.plugins.analyse.AnalyseObjectServlet;
 import org.hy.common.xml.plugins.analyse.AnalysesServlet;
 import org.springframework.boot.ApplicationContextFactory;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.web.server.servlet.context.AnnotationConfigServletWebServerApplicationContext;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.WebApplicationContext;
@@ -23,6 +31,7 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import com.google.common.collect.ImmutableMap;
+import org.hy.microservice.common.config.XJavaSpringAnnotationConfigServletWebServerApplicationContext;
 import org.hy.microservice.common.config.XJavaSpringInitialzer;
 import org.hy.microservice.common.operationLog.IOperationLogService;
 import org.hy.microservice.common.operationLog.OperationLogApi;
@@ -42,9 +51,12 @@ import org.hy.microservice.common.operationLog.OperationLogModule;
  *              v3.0  2025-08-07  添加：从名称name中解析出日志表名称的后缀。
  *                                     可支持不同业务的日志保存在不同的表中。合作解决人：李浩 
  *              v4.0  2026-04-01  修正：对类级RequestMapping(value="/xx/yy/zz")路径的支持。合作解决人：李浩 
+ *              v5.0  2026-04-18  升级：按运行时动态支持SpringBoot 3.5.11 和 4.0.5
  */
 public class ProjectStartBase
 {
+    private static final Logger                                    $Logger                = new Logger(ProjectStartBase.class ,true);
+    
     /** 系统模块的集合。Map.key 为模块编码，即配置了 @RequestMapping(value="模块编码" ,name="模块名称") name属性的映射类 */
     public static final Map<String ,OperationLogModule>            $RequestMappingModules = new HashMap<String ,OperationLogModule>();
     
@@ -192,7 +204,7 @@ public class ProjectStartBase
     }
     
     
-
+    
     /**
      * 注册Vue独立处理机制
      * 
@@ -257,6 +269,62 @@ public class ProjectStartBase
         v_SRB.setInitParameters(ImmutableMap.of("password", StringHelp.md5(XJava.getParam("MS_Common_Analyses_Password").getValue() ,StringHelp.$MD5_Type_Hex)));
         
         return v_SRB;
+    }
+    
+    /**
+     * 按运行时中不同的SpringBoot版本，运行创建 AnnotationConfigServletWebServerApplicationContext 的实例
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-04-18
+     * @version     v1.0
+     *
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static Class<AnnotationConfigServletWebServerApplicationContext> getAnnotationConfigServletWebServerApplicationContext()
+    {
+        Class<AnnotationConfigServletWebServerApplicationContext> v_Ret               = null;
+        JavaConfig                                                v_JConfig           = new JavaConfig();
+        int                                                       v_SpringBootVersion = XJavaSpringBootLoadingText.getVersion();
+        v_JConfig.setXid("XJavaSpringBoot");
+        v_JConfig.setJava(StringHelp.replaceFirst(XJavaSpringBootLoadingText.getJava(v_SpringBootVersion) ,"package org.hy.common.xml.plugins" ,"package com.lps.microservice.callflow"));
+        v_JConfig.setReturnID("XAnnotationConfigServletWebServerApplicationContext");
+        
+        Return<Object> v_CheckRet = CallFlow.getHelpCheck().check(v_JConfig);
+        if ( !v_CheckRet.get() )
+        {
+            $Logger.error(v_CheckRet.getParamStr());  // 打印静态检查不合格的原因
+            return null;
+        }
+        
+        // 没有此步下面的执行编排无法成功，因为XJava在初始本对象的过程还没有完成呢
+        XJava.putObject(v_JConfig.getXid() ,v_JConfig);
+        
+        Map<String ,Object> v_Context = new HashMap<String ,Object>();
+        ExecuteResult       v_Result  = CallFlow.execute(v_JConfig ,v_Context);
+        if ( !v_Result.isSuccess() )
+        {
+            StringBuilder v_ErrorLog = new StringBuilder();
+            v_ErrorLog.append("Error XID = " + v_Result.getExecuteXID()).append("\n");
+            v_ErrorLog.append("Error Msg = " + v_Result.getException().getMessage());
+            if ( v_Result.getException() instanceof TimeoutException )
+            {
+                v_ErrorLog.append("is TimeoutException");
+            }
+            $Logger.error(v_ErrorLog.toString() ,v_Result.getException());
+        }
+        else
+        {
+            CacheJavaInfo v_CacheJavaInfo = (CacheJavaInfo) v_Context.get("XAnnotationConfigServletWebServerApplicationContext");
+            if ( v_CacheJavaInfo != null )
+            {
+                v_Ret = (Class<AnnotationConfigServletWebServerApplicationContext>) v_CacheJavaInfo.getClazz();
+            }
+        }
+        
+        v_Context.clear();
+        v_Context = null;
+        return v_Ret;
     }
 
 }

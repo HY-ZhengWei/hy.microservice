@@ -6,13 +6,13 @@ import java.util.Map;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import org.apache.rocketmq.client.producer.SendResult;
+//import org.apache.rocketmq.client.producer.SendResult;
 import org.hy.common.xml.XSQL;
 import org.hy.microservice.common.BaseController;
 import org.hy.microservice.common.LogHttpServletResponse;
 import org.hy.microservice.common.operationLog.IOperationLogDAO;
 import org.hy.microservice.common.operationLog.IOperationLogService;
-import org.hy.microservice.common.rocketMQ.RocketMQProducer;
+//import org.hy.microservice.common.rocketMQ.RocketMQProducer;
 import org.hy.microservice.common.user.UserSSO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -51,9 +51,9 @@ public class DemoController extends BaseController
     @Qualifier("XSQL_Common_OperationLog_Query")
     private XSQL                 xsql;
 
-    @Autowired
-    @Qualifier("RocketMQProducer")
-    private RocketMQProducer messageProducer;
+    //@Autowired
+    //@Qualifier("RocketMQProducer")
+    //private RocketMQProducer messageProducer;
     
     
     
@@ -93,21 +93,21 @@ public class DemoController extends BaseController
      *
      * @return
      */
-    @RequestMapping(name="演示发消息" ,value="sendMQ01")
-    public String sendMQ01()
-    {
-        // 发送测试消息
-        String topic = "LPS_Test_Topice";
-        String tag = "LPS_tag";
-        String content = "集成测试消息：" + System.currentTimeMillis();
-
-        // 执行发送
-        SendResult result = messageProducer.sendMessage(topic, tag, content);
-
-        // 验证结果
-        System.out.println("消息发送成功，消息ID：" + result.toString());
-        return "消息发送成功，消息ID：" + result.getSendStatus();
-    }
+//    @RequestMapping(name="演示发消息" ,value="sendMQ01")
+//    public String sendMQ01()
+//    {
+//        // 发送测试消息
+//        String topic = "LPS_Test_Topice";
+//        String tag = "LPS_tag";
+//        String content = "集成测试消息：" + System.currentTimeMillis();
+//
+//        // 执行发送
+//        SendResult result = messageProducer.sendMessage(topic, tag, content);
+//
+//        // 验证结果
+//        System.out.println("消息发送成功，消息ID：" + result.toString());
+//        return "消息发送成功，消息ID：" + result.getSendStatus();
+//    }
     
     
     /**
