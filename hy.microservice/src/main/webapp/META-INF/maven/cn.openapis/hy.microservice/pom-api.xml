@@ -5,7 +5,7 @@
     
     <groupId>org</groupId>
     <artifactId>hy.microservice</artifactId>
-    <version>1.21.9</version>
+    <version>1.22.0</version>
     <packaging>jar</packaging>
     
     <name>org.hy.microservice</name>
@@ -362,7 +362,7 @@
         <dependency>
             <groupId>cn.openapis</groupId>
             <artifactId>hy.common</artifactId>
-            <version>4.6.1</version>
+            <version>4.6.7</version>
             <type>pom</type>
             <exclusions>
                 <exclusion>
