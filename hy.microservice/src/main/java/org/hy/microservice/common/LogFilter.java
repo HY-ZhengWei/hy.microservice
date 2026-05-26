@@ -518,7 +518,7 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         OperationLogApi v_LogConfig = ProjectStartBase.$RequestMappingMethods.getRow(v_ModuleCode ,StringHelp.replaceLast(v_Url ,this.pageUrlMappings ,""));
         if ( v_LogConfig == null )   // 没有配置 @RequestMapping(name) 的方法不记录访问日志
         {
-            if ( v_Url.endsWith(this.pageUrlMappings) )
+            if ( !"".equals(this.pageUrlMappings) && v_Url.endsWith(this.pageUrlMappings) )
             {
                 i_FilterChain.doFilter(new LogHttpServletRequestWrapper(v_HttpServletRequest ,this.pageUrlMappings) ,i_ServletResponse);
             }

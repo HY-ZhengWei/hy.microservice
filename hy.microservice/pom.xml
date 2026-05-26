@@ -5,7 +5,7 @@
     
     <groupId>cn.openapis</groupId>
     <artifactId>hy.microservice</artifactId>
-    <version>1.22.1</version>
+    <version>1.22.3</version>
     <packaging>war</packaging>
     
     <name>cn.openapis.hy.microservice</name>
@@ -64,8 +64,8 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.5</version>
-        <!-- SpringBoot 4.x 时使用 <spring.ai.version>4.0.5</spring.ai.version> -->
+        <version>4.0.6</version>
+        <!-- SpringBoot 4.x 时使用 <spring.ai.version>4.0.6</spring.ai.version> -->
         <!-- SpringBoot 3.x 时使用 <spring.ai.version>3.5.11</spring.ai.version> -->
     </parent>
 
@@ -78,6 +78,14 @@
                 <exclusion>
                     <groupId>org.apache.logging.log4j</groupId>
                     <artifactId>log4j-to-slf4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-core</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -106,6 +114,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         
         <dependency>
@@ -172,6 +186,12 @@
             <scope>import</scope>
         </dependency>
         
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-client-chat</artifactId>
+            <version>${spring.ai.version}</version>
+        </dependency>
+        
         <!-- AI：Deepseek -->
         <dependency>
             <groupId>org.springframework.ai</groupId>
@@ -190,8 +210,26 @@
         <dependency>
             <groupId>com.alibaba.cloud.ai</groupId>
             <artifactId>spring-ai-alibaba-dashscope</artifactId>
-            <version>1.1.2.2</version>
+            <version>2.0.0-M1.1</version>
             <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.ai</groupId>
+                    <artifactId>spring-ai-commons</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.ai</groupId>
+                    <artifactId>spring-ai-model</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.ai</groupId>
+                    <artifactId>spring-ai-retry</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.ai</groupId>
+                    <artifactId>spring-ai-rag</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!--
         <dependency>
@@ -219,7 +257,7 @@
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-zhipuai</artifactId>
-            <version>${spring.ai.version}</version>
+            <version>2.0.0-M4</version>
         </dependency>
         <!--
         <dependency>
@@ -233,7 +271,7 @@
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-vertex-ai-gemini</artifactId>
-            <version>${spring.ai.version}</version>
+            <version>2.0.0-M4</version>
         </dependency>
         <!--
         <dependency>
@@ -393,7 +431,7 @@
         <dependency>
             <groupId>cn.openapis</groupId>
             <artifactId>hy.common</artifactId>
-            <version>4.6.9</version>
+            <version>4.7.3</version>
             <type>pom</type>
             <exclusions>
                 <exclusion>
@@ -448,6 +486,14 @@
                     <groupId>com.alibaba</groupId>
                     <artifactId>fastjson</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-core</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
     </dependencies>
@@ -482,6 +528,8 @@
                             </includes>
                         </resource>
                     </webResources>
+                    <!-- 排除 Tomcat 自带的 logback 相关 jar（如果需要） -->
+                    <packagingExcludes>WEB-INF/lib/logback-*.jar</packagingExcludes>
                 </configuration>
             </plugin>
             
