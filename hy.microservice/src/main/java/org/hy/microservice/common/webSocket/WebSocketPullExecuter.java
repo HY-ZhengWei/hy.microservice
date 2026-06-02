@@ -1,5 +1,6 @@
 package org.hy.microservice.common.webSocket;
 
+import java.io.IOException;
 import java.net.URI;
 
 import jakarta.websocket.ClientEndpoint;
@@ -38,6 +39,9 @@ public class WebSocketPullExecuter implements WSPullExecuter
     
     private WSPullData data;
     
+    /** 连接会话 */
+    private Session    session;
+    
     
     
     /**
@@ -49,6 +53,22 @@ public class WebSocketPullExecuter implements WSPullExecuter
      */
     public WebSocketPullExecuter()
     {
+    }
+    
+    
+    
+    /**
+     * 获取连接会话
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-06-01
+     * @version     v1.0
+     *
+     * @return
+     */
+    public Session getSession()
+    {
+        return session;
     }
     
     
@@ -82,7 +102,7 @@ public class WebSocketPullExecuter implements WSPullExecuter
             WebSocketContainer v_Container = ContainerProvider.getWebSocketContainer();
             URI                v_URI       = URI.create(this.data.getWsURL());
             
-            v_Container.connectToServer(this ,v_URI);
+            this.session = v_Container.connectToServer(this ,v_URI);
             return true;
         }
         catch (Exception error)
@@ -91,6 +111,59 @@ public class WebSocketPullExecuter implements WSPullExecuter
         }
         
         return true;
+    }
+    
+    
+    
+    /**
+     * 发消息（文本消息）
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-06-01
+     * @version     v1.0
+     *
+     * @param i_Text  文本消息
+     * @return  是否发送成功
+     */
+    public boolean sendText(String i_Text)
+    {
+        try
+        {
+            this.session.getBasicRemote().sendText(i_Text);
+            return true;
+        }
+        catch (IOException exce)
+        {
+            $Logger.error(exce);
+            return false;
+        }
+    }
+    
+    
+    
+    /**
+     * 关闭会话释放资源
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-06-02
+     * @version     v1.0
+     *
+     */
+    public void close()
+    {
+        if ( this.session != null )
+        {
+            try
+            {
+                this.session.close();
+            }
+            catch (IOException exce)
+            {
+                $Logger.error(exce);
+            }
+            
+            this.session = null;
+        }
     }
     
     
@@ -113,7 +186,7 @@ public class WebSocketPullExecuter implements WSPullExecuter
     {
         this.onMessage(this.data ,i_Message);
     }
-
+    
 
 
     @OnClose
