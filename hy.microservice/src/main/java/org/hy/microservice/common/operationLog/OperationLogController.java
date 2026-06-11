@@ -104,6 +104,8 @@ public class OperationLogController extends BaseController
                 }
             }
             
+            i_OperationLog.setLogUserID(Help.NVL(i_OperationLog.getLogUserID() ,i_OperationLog.getUserID()));
+            
             List<OperationLog> v_DataList = this.operationLogService.queryListByPage(i_OperationLog);
             v_Count = v_DataList.size();
             v_Total = this.operationLogService.queryCount(i_OperationLog);

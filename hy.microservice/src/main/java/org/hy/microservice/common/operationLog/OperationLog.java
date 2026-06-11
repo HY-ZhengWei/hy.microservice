@@ -33,10 +33,16 @@ public class OperationLog extends BaseViewMode
     
     /** 模块编号 */
     private String                  moduleCode;
+    
+    /** 模块名称 */
+    private String                  moduleName;
                                     
     /** 操作的URL地址 */
     private String                  url;
-        
+    
+    /** 操作的URL名称 */
+    private String                  urlName;
+    
     /** 操作的请求参数 */
     private String                  urlRequest;
     
@@ -93,6 +99,9 @@ public class OperationLog extends BaseViewMode
     
     /** 日志名称。即日志表名称的后缀 */
     private String                  logName;
+    
+    /** 查询谁的日志 */
+    private String                  logUserID;
     
 
     
@@ -218,8 +227,30 @@ public class OperationLog extends BaseViewMode
         this.moduleCode = i_ModuleCode;
     }
 
+    
+    
+    /**
+     * 获取：模块名称
+     */
+    public String getModuleName()
+    {
+        return moduleName;
+    }
+
 
     
+    /**
+     * 设置：模块名称
+     * 
+     * @param i_ModuleName 模块名称
+     */
+    public void setModuleName(String i_ModuleName)
+    {
+        this.moduleName = i_ModuleName;
+    }
+
+
+
     /**
      * 获取：操作的URL地址
      */
@@ -240,8 +271,30 @@ public class OperationLog extends BaseViewMode
         this.url = i_Url;
     }
 
+    
+    
+    /**
+     * 获取：操作的URL名称
+     */
+    public String getUrlName()
+    {
+        return urlName;
+    }
+
 
     
+    /**
+     * 设置：操作的URL名称
+     * 
+     * @param i_UrlName 操作的URL名称
+     */
+    public void setUrlName(String i_UrlName)
+    {
+        this.urlName = i_UrlName;
+    }
+
+
+
     /**
      * 获取：操作的请求参数
      */
@@ -607,6 +660,28 @@ public class OperationLog extends BaseViewMode
     public void setLogName(String i_LogName)
     {
         this.logName = i_LogName;
+    }
+
+
+    
+    /**
+     * 获取：查询谁的日志
+     */
+    public String getLogUserID()
+    {
+        return logUserID;
+    }
+
+
+    
+    /**
+     * 设置：查询谁的日志
+     * 
+     * @param i_LogUserID 查询谁的日志
+     */
+    public void setLogUserID(String i_LogUserID)
+    {
+        this.logUserID = i_LogUserID;
     }
 
 }

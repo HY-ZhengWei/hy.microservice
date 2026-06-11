@@ -84,11 +84,6 @@
             </head>
             
             <head>
-                <name>host</name>
-                <comment>指定请求的服务器的域名和端口号</comment>
-            </head>
-            
-            <head>
                 <name>if-match</name>
                 <comment>只有请求内容与实体相匹配才有效</comment>
             </head>
@@ -194,19 +189,26 @@
             </head>
             
             <head>
-                <name>x-forwarded-for</name>
-                <comment>负载识别原始IP地址</comment>
+                <name>x-forwarded-proto</name>
+                <comment>负载识别客户端发起请求时使用的协议（HTTP或HTTPS）</comment>
+            </head>
+            
+            <!-- 
+            <head>
+                <name>host</name>
+                <comment>指定请求的服务器的域名和端口号</comment>
             </head>
             
             <head>
-                <name>x-forwarded-proto</name>
-                <comment>负载识别客户端发起请求时使用的协议（HTTP或HTTPS）</comment>
+                <name>x-forwarded-for</name>
+                <comment>负载识别原始IP地址</comment>
             </head>
             
             <head>
                 <name>x-real-ip</name>
                 <comment>负载识别原始请求的IP地址</comment>
             </head>
+            -->
             
         </httpHeads>
         

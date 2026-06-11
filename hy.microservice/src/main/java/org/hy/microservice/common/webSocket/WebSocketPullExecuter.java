@@ -58,22 +58,6 @@ public class WebSocketPullExecuter implements WSPullExecuter
     
     
     /**
-     * 获取连接会话
-     * 
-     * @author      ZhengWei(HY)
-     * @createDate  2026-06-01
-     * @version     v1.0
-     *
-     * @return
-     */
-    public Session getSession()
-    {
-        return session;
-    }
-    
-    
-    
-    /**
      * 初始化点拉元素的执行者
      * 
      * @author      ZhengWei(HY)

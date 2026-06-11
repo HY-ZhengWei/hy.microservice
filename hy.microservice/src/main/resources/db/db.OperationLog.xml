@@ -117,13 +117,15 @@
                   FROM  TOperationLog:logName
                  WHERE  createTime >= SYSDATE - 360
                    AND  userID      = ':userID'          
-              <[   AND  userIP      = ':userIP'            ]>
-              <[   AND  systemCode  = ':systemCode'        ]>
-              <[   AND  moduleCode  = ':moduleCode'        ]>
-              <[   AND  url         = ':url'               ]>
-              <[   AND  resultCode  = ':resultCode'        ]>
-              <[   AND  createTime >= ':createTime'        ]>
-              <[   AND  timeLen    >= ':timeLen'           ]>
+              <[   AND  userIP      = ':userIP'       ]>
+              <[   AND  systemCode  = ':systemCode'   ]>
+              <[   AND  moduleCode  = ':moduleCode'   ]>
+              <[   AND  url         = ':url'          ]>
+              <[   AND  resultCode  = ':resultCode'   ]>
+              <[   AND  createTime >= ':createTime'   ]>
+              <[   AND  timeLen    >= ':timeLen'      ]>
+              <[   AND  createTime >= ':startTime'    ]>
+              <[   AND  createTime <  ':endTime'      ]>
                  ORDER  BY createTime DESC
                 ]]>
             </content>
@@ -151,13 +153,15 @@
                   FROM  TOperationLog:logName
                  WHERE  createTime >= SYSDATE - 360
                    AND  userID      = ':userID'          
-              <[   AND  userIP      = ':userIP'            ]>
-              <[   AND  systemCode  = ':systemCode'        ]>
-              <[   AND  moduleCode  = ':moduleCode'        ]>
-              <[   AND  url         = ':url'               ]>
-              <[   AND  resultCode  = ':resultCode'        ]>
-              <[   AND  createTime >= ':createTime'        ]>
-              <[   AND  timeLen    >= ':timeLen'           ]>
+              <[   AND  userIP      = ':userIP'       ]>
+              <[   AND  systemCode  = ':systemCode'   ]>
+              <[   AND  moduleCode  = ':moduleCode'   ]>
+              <[   AND  url         = ':url'          ]>
+              <[   AND  resultCode  = ':resultCode'   ]>
+              <[   AND  createTime >= ':createTime'   ]>
+              <[   AND  timeLen    >= ':timeLen'      ]>
+              <[   AND  createTime >= ':startTime'    ]>
+              <[   AND  createTime <  ':endTime'      ]>
                  ORDER  BY createTime DESC
                 ]]>
             </content>
@@ -185,13 +189,15 @@
                   FROM  TOperationLog:logName
                  WHERE  createTime >= DATE_ADD(NOW(), INTERVAL -360 DAY)
                    AND  userID      = ':userID'          
-              <[   AND  userIP      = ':userIP'            ]>
-              <[   AND  systemCode  = ':systemCode'        ]>
-              <[   AND  moduleCode  = ':moduleCode'        ]>
-              <[   AND  url         = ':url'               ]>
-              <[   AND  resultCode  = ':resultCode'        ]>
-              <[   AND  createTime >= ':createTime'        ]>
-              <[   AND  timeLen    >= ':timeLen'           ]>
+              <[   AND  userIP      = ':userIP'       ]>
+              <[   AND  systemCode  = ':systemCode'   ]>
+              <[   AND  moduleCode  = ':moduleCode'   ]>
+              <[   AND  url         = ':url'          ]>
+              <[   AND  resultCode  = ':resultCode'   ]>
+              <[   AND  createTime >= ':createTime'   ]>
+              <[   AND  timeLen    >= ':timeLen'      ]>
+              <[   AND  createTime >= ':startTime'    ]>
+              <[   AND  createTime <  ':endTime'      ]>
                  ORDER  BY createTime DESC
                 ]]>
             </content>
@@ -219,13 +225,15 @@
                   FROM  TOperationLog:logName
                  WHERE  createTime >= DATETIME('now' ,'-360 day')
                    AND  userID      = ':userID'          
-              <[   AND  userIP      = ':userIP'            ]>
-              <[   AND  systemCode  = ':systemCode'        ]>
-              <[   AND  moduleCode  = ':moduleCode'        ]>
-              <[   AND  url         = ':url'               ]>
-              <[   AND  resultCode  = ':resultCode'        ]>
-              <[   AND  createTime >= ':createTime'        ]>
-              <[   AND  timeLen    >= ':timeLen'           ]>
+              <[   AND  userIP      = ':userIP'       ]>
+              <[   AND  systemCode  = ':systemCode'   ]>
+              <[   AND  moduleCode  = ':moduleCode'   ]>
+              <[   AND  url         = ':url'          ]>
+              <[   AND  resultCode  = ':resultCode'   ]>
+              <[   AND  createTime >= ':createTime'   ]>
+              <[   AND  timeLen    >= ':timeLen'      ]>
+              <[   AND  createTime >= ':startTime'    ]>
+              <[   AND  createTime <  ':endTime'      ]>
                  ORDER  BY createTime DESC
                 ]]>
             </content>
@@ -260,13 +268,15 @@
                 SELECT  COUNT(1) AS totalCount
                   FROM  TOperationLog:logName
                  WHERE  userID      = ':userID'          
-              <[   AND  userIP      = ':userIP'            ]>
-              <[   AND  systemCode  = ':systemCode'        ]>
-              <[   AND  moduleCode  = ':moduleCode'        ]>
-              <[   AND  url         = ':url'               ]>
-              <[   AND  resultCode  = ':resultCode'        ]>
-              <[   AND  createTime >= ':createTime'        ]>
-              <[   AND  timeLen    >= ':timeLen'           ]>
+              <[   AND  userIP      = ':userIP'       ]>
+              <[   AND  systemCode  = ':systemCode'   ]>
+              <[   AND  moduleCode  = ':moduleCode'   ]>
+              <[   AND  url         = ':url'          ]>
+              <[   AND  resultCode  = ':resultCode'   ]>
+              <[   AND  createTime >= ':createTime'   ]>
+              <[   AND  timeLen    >= ':timeLen'      ]>
+              <[   AND  createTime >= ':startTime'    ]>
+              <[   AND  createTime <  ':endTime'      ]>
                 ]]>
             </content>
             

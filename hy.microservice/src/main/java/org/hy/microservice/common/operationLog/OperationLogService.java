@@ -9,6 +9,7 @@ import org.hy.common.app.Param;
 import org.hy.common.xml.XJava;
 import org.hy.common.xml.XSQL;
 import org.hy.common.xml.annotation.Xjava;
+import org.hy.microservice.common.ProjectStartBase;
 
 
 
@@ -153,7 +154,33 @@ public class OperationLogService implements IOperationLogService ,Serializable
         
         io_OperationLog.setPageIndex(Help.NVL(io_OperationLog.getPageIndex() ,1L));
         io_OperationLog.setPagePerCount(Help.min(Help.NVL(io_OperationLog.getPagePerCount() ,v_DefPagePerCount) ,v_DefPagePerCount));
-        return this.operationLogDAO.queryByPage(io_OperationLog);
+        
+        List<OperationLog> v_Datas = this.operationLogDAO.queryByPage(io_OperationLog);
+        if ( !Help.isNull(v_Datas) )
+        {
+            for (OperationLog v_Log : v_Datas)
+            {
+                if ( !Help.isNull(v_Log.getModuleCode()) )
+                {
+                    OperationLogModule v_Module = ProjectStartBase.$RequestMappingModules.get(v_Log.getModuleCode());
+                    if ( v_Module != null )
+                    {
+                        v_Log.setModuleName(v_Module.getModuleName());
+                    }
+                    
+                    if ( !Help.isNull(v_Log.getUrl()) )
+                    {
+                        OperationLogApi v_Api = ProjectStartBase.$RequestMappingMethods.getRow(v_Log.getModuleCode() ,v_Log.getUrl());
+                        if ( v_Api != null )
+                        {
+                            v_Log.setUrlName(v_Api.getUrlName());
+                        }
+                    }
+                }
+            }
+        }
+        
+        return v_Datas;
     }
     
     

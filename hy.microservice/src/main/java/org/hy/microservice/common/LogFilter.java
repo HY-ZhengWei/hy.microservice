@@ -423,7 +423,7 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         while ( v_HeadNames.hasMoreElements() )
         {
             String v_HeadName = v_HeadNames.nextElement();
-            if ( this.logHttpHeads.containsKey(v_HeadName) )
+            if ( this.logHttpHeads.containsKey(v_HeadName.toLowerCase()) )
             {
                 continue;
             }
@@ -805,7 +805,7 @@ public class LogFilter extends XSQLFilter implements XRequestListener
      */
     private String getIpAddress(HttpServletRequest i_Request)
     {
-        String ip = i_Request.getHeader("x-forwarded-for");
+        String ip = i_Request.getHeader("X-Forwarded-For");
         if ( ip == null || ip.length() == 0 || "unknow".equalsIgnoreCase(ip) )
         {
             ip = i_Request.getHeader("Proxy-Client-IP");
