@@ -27,8 +27,8 @@
                 ,"COMMENT"                  VARCHAR2(4000)
                 ,isDel                      NUMBER(1)      NOT NULL
                 ,createUserID               VARCHAR(64)    NOT NULL
-                ,createTime                 DATE           NOT NULL
-                ,updateTime                 DATE           NOT NULL
+                ,createTime                 DATETIME       NOT NULL
+                ,updateTime                 DATETIME       NOT NULL
                 );/
                 
                 ALTER TABLE TIPSafeConfig ADD CONSTRAINT PK_IPSafeConfig PRIMARY KEY (id);/
@@ -50,15 +50,15 @@
                 CREATE TABLE TUpgrade20230808
                 (
                  id                         VARCHAR2(64)   NOT NULL
-                ,createTime                 DATE          NOT NULL
-                ,updateTime                 DATE
+                ,createTime                 DATETIME       NOT NULL
+                ,updateTime                 DATETIME
                 );/
                 
                 CREATE TABLE TUpgrade20250908
                 (
                  id                         VARCHAR2(64)   NOT NULL
-                ,createTime                 DATE          NOT NULL
-                ,updateTime                 DATE
+                ,createTime                 DATETIME       NOT NULL
+                ,updateTime                 DATETIME
                 );/
                 ]]>
             </content>
@@ -99,14 +99,14 @@
                 CREATE TABLE TUpgrade20230808
                 (
                  id                         VARCHAR2(64)   NOT NULL
-                ,createTime                 DATE          NOT NULL
+                ,createTime                 DATE           NOT NULL
                 ,updateTime                 DATE
                 );/
                 
                 CREATE TABLE TUpgrade20250908
                 (
                  id                         VARCHAR2(64)   NOT NULL
-                ,createTime                 DATE          NOT NULL
+                ,createTime                 DATE           NOT NULL
                 ,updateTime                 DATE
                 );/
                 ]]>

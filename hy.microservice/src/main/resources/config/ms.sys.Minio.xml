@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="xconfig"     class="java.util.ArrayList" />
+    <import name="minioClient" class="io.minio.MinioClient" />
+    <import name="minioHelp"   class="org.hy.common.minio.MinioHelp" />
+    
+    
+    
+    <!-- Minio配置参数信息 -->
+    <xconfig>
+    
+        <minioClient id="MS_Common_Minio">
+            <builder>
+                <endpoint>
+                    <String>http://127.0.0.1:8888</String> <!-- Minio服务的地址 -->
+                </endpoint>
+                <credentials>
+                    <String encrypt="org.hy.common.StringHelp">AccessKey</String>  <!-- Minio服务的AccessKey -->
+                    <String encrypt="org.hy.common.StringHelp">SecretKey</String>  <!-- Minio服务的SecretKey -->
+                </credentials>
+                <region>us-west-1</region>
+            </builder>
+        </minioClient>
+        
+        
+        <minioHelp id="MS_Common_MinioHelp">
+            <constructor>
+                <minio ref="XMinioClient" />               <!-- Minio客户端对象 -->
+                <String>ms</String>                        <!-- 桶名称的前缀 -->
+            </constructor>
+        </minioHelp>
+        
+    </xconfig>
+    
+</config>

@@ -16,12 +16,14 @@
       <module name="hy.common.file" target="17" />
       <module name="hy.common.xcql" target="17" />
       <module name="hy.common.xjava" target="17" />
+      <module name="hy.microservice.message" target="17" />
       <module name="lps.microservice.llmgate" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="hy.microservice" options="-parameters" />
+      <module name="hy.microservice.message" options="-parameters" />
       <module name="lps.microservice" options="-parameters" />
       <module name="lps.microservice.llmgate" options="-parameters" />
     </option>

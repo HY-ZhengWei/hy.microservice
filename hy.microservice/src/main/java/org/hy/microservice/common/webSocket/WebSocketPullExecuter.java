@@ -86,6 +86,7 @@ public class WebSocketPullExecuter implements WSPullExecuter
             WebSocketContainer v_Container = ContainerProvider.getWebSocketContainer();
             URI                v_URI       = URI.create(this.data.getWsURL());
             
+            v_Container.setAsyncSendTimeout(60 * 1000);
             this.session = v_Container.connectToServer(this ,v_URI);
             return true;
         }

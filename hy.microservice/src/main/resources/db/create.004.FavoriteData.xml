@@ -29,8 +29,8 @@
                 ,isValid                    NUMBER(1 ,0)   NOT NULL
                 ,createUserID               VARCHAR2(64)   NOT NULL
                 ,updateUserID               VARCHAR2(64)   NOT NULL
-                ,createTime                 DATE           NOT NULL
-                ,updateTime                 DATE           NOT NULL
+                ,createTime                 DATETIME       NOT NULL
+                ,updateTime                 DATETIME       NOT NULL
                 );/
                 
                 ALTER TABLE TFavoriteData ADD CONSTRAINT PK_FavoriteData PRIMARY KEY (id);/

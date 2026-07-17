@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="xcallFlow" class="org.hy.common.callflow.common.CallFlowImports" />
+    
+    
+    
+    <!-- CFlow编排引擎配置 -->
+    <xconfig>
+        
+        <xsms id="XSMS">
+            <comment>短信元素</comment>
+            <message>:Message</message>
+            <cellPhoneNo>:CellPhoneNo</cellPhoneNo>
+            <userID>:UserID</userID>
+        </xsms>
+        
+    </xconfig>
+    
+</config>

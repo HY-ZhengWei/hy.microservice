@@ -477,6 +477,22 @@
                 ]]>
             </content>
             
+            <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT   id
+                        ,ipType
+                        ,ip
+                        ,ipMax
+                        ,moduleCode
+                        ,url
+                        ,"COMMENT"
+                  FROM  TIPSafeConfig
+                 WHERE  isDel = 0
+                 ORDER  BY ipType
+                          ,ip
+                ]]>
+            </content>
+            
             <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 SELECT   id

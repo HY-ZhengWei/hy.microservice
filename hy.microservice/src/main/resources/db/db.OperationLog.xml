@@ -116,7 +116,7 @@
                         ,attackType
                   FROM  TOperationLog:logName
                  WHERE  createTime >= SYSDATE - 360
-                   AND  userID      = ':userID'          
+                   AND  userID      = ':logUserID'          
               <[   AND  userIP      = ':userIP'       ]>
               <[   AND  systemCode  = ':systemCode'   ]>
               <[   AND  moduleCode  = ':moduleCode'   ]>
@@ -152,7 +152,7 @@
                         ,attackType
                   FROM  TOperationLog:logName
                  WHERE  createTime >= SYSDATE - 360
-                   AND  userID      = ':userID'          
+                   AND  userID      = ':logUserID'          
               <[   AND  userIP      = ':userIP'       ]>
               <[   AND  systemCode  = ':systemCode'   ]>
               <[   AND  moduleCode  = ':moduleCode'   ]>
@@ -188,7 +188,7 @@
                         ,attackType
                   FROM  TOperationLog:logName
                  WHERE  createTime >= DATE_ADD(NOW(), INTERVAL -360 DAY)
-                   AND  userID      = ':userID'          
+                   AND  userID      = ':logUserID'          
               <[   AND  userIP      = ':userIP'       ]>
               <[   AND  systemCode  = ':systemCode'   ]>
               <[   AND  moduleCode  = ':moduleCode'   ]>
@@ -224,7 +224,7 @@
                         ,attackType
                   FROM  TOperationLog:logName
                  WHERE  createTime >= DATETIME('now' ,'-360 day')
-                   AND  userID      = ':userID'          
+                   AND  userID      = ':logUserID'          
               <[   AND  userIP      = ':userIP'       ]>
               <[   AND  systemCode  = ':systemCode'   ]>
               <[   AND  moduleCode  = ':moduleCode'   ]>
@@ -267,7 +267,7 @@
                 <![CDATA[
                 SELECT  COUNT(1) AS totalCount
                   FROM  TOperationLog:logName
-                 WHERE  userID      = ':userID'          
+                 WHERE  userID      = ':logUserID'          
               <[   AND  userIP      = ':userIP'       ]>
               <[   AND  systemCode  = ':systemCode'   ]>
               <[   AND  moduleCode  = ':moduleCode'   ]>

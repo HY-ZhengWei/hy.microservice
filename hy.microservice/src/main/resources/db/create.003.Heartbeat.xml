@@ -29,8 +29,8 @@
                 ,invalidTime                DATE
                 ,projectID                  VARCHAR2(64)
                 ,"COMMENT"                  VARCHAR2(4000)
-                ,createTime                 DATE           NOT NULL
-                ,updateTime                 DATE           NOT NULL
+                ,createTime                 DATETIME       NOT NULL
+                ,updateTime                 DATETIME       NOT NULL
                 );/
                 
                 ALTER TABLE THeartbeat ADD CONSTRAINT PK_Heartbeat PRIMARY KEY (edgeIP);/

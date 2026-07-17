@@ -2,6 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../hy.microservice.message" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../../../WorkSpace_LPS_LLMGate" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../../../WorkSpace_LPS_MS" vcs="Git" />
   </component>

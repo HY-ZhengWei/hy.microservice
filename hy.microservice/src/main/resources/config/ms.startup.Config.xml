@@ -5,11 +5,17 @@
     <import name="xconfig"         class="java.util.ArrayList" />
     <import name="startupConfig"   class="java.util.ArrayList" />
     <import name="item"            class="org.hy.common.app.Param" />
+    <import name="xsms"            class="org.hy.microservice.common.message.SMSConfig" />
     
     
     
     <!-- 启动加载XML配置信息的列表 -->
     <xconfig>
+    
+        <!-- 加载编排元素 -->
+        <xsms></xsms>
+        
+        
         
         <startupConfig id="StartupConfig_MS_Common" this="StartupConfig_MS_Common">
         
@@ -39,6 +45,10 @@
 
             <item if="MS_Common_IsMQ.getValue == 启用">
                 <value>config/ms.sys.MQ.xml</value>
+            </item>
+            
+            <item if="MS_Common_IsMinio.getValue == 启用">
+                <value>config/ms.sys.Minio.xml</value>
             </item>
             
             <!-- 加载AI所有配置文件 -->

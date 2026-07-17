@@ -71,8 +71,8 @@
                 CREATE TABLE TUpgrade20230526
                 (
                  id                         VARCHAR2(64)   NOT NULL
-                ,createTime                 DATE           NOT NULL
-                ,updateTime                 DATE
+                ,createTime                 DATETIME       NOT NULL
+                ,updateTime                 DATETIME
                 );/
                 
                 ALTER TABLE TUpgrade20230526 ADD CONSTRAINT PK_TUpgrade20230526 PRIMARY KEY (id);/

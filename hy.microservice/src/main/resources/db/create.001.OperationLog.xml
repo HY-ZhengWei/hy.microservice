@@ -35,7 +35,7 @@
                 ,responseTime               NUMBER(15)
                 ,timeLen                    NUMBER(15)
                 ,attackType                 VARCHAR2(64)
-                ,createTime                 DATE
+                ,createTime                 DATETIME
                 );/
                 
                 ALTER TABLE TOperationLog ADD CONSTRAINT PK_OperationLog PRIMARY KEY (id);/
@@ -66,22 +66,22 @@
                 CREATE TABLE TUpgrade20230526
                 (
                  id                         VARCHAR2(64)   NOT NULL
-                ,createTime                 DATE           NOT NULL
-                ,updateTime                 DATE
+                ,createTime                 DATETIME       NOT NULL
+                ,updateTime                 DATETIME
                 );/
                 
                 CREATE TABLE TUpgrade20260126
                 (
                  id                         VARCHAR2(64)   NOT NULL
-                ,createTime                 DATE           NOT NULL
-                ,updateTime                 DATE
+                ,createTime                 DATETIME       NOT NULL
+                ,updateTime                 DATETIME
                 );/
                 
                 CREATE TABLE TUpgrade20260129
                 (
                  id                         VARCHAR2(64)   NOT NULL
-                ,createTime                 DATE           NOT NULL
-                ,updateTime                 DATE
+                ,createTime                 DATETIME       NOT NULL
+                ,updateTime                 DATETIME
                 );/
                 ]]>
             </content>
@@ -297,7 +297,7 @@
                 ,responseTime               NUMBER(15)
                 ,timeLen                    NUMBER(15)
                 ,attackType                 VARCHAR2(64)
-                ,createTime                 DATE
+                ,createTime                 DATETIME
                 );/
                 
                 ALTER TABLE TOperationLogTemplate ADD CONSTRAINT PK_OperationLogTemplate PRIMARY KEY (id);/
