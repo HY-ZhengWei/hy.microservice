@@ -17,16 +17,16 @@ import org.hy.common.callflow.node.APIConfig;
 
 
 /**
- * 短信元素。衍生于接口元素。
+ * 微信元素。衍生于接口元素。
  *
  * @author      ZhengWei(HY)
- * @createDate  2026-07-11
+ * @createDate  2026-07-19
  * @version     v1.0
  */
-public class SMSConfig extends APIConfig
+public class WeiXinConfig extends APIConfig
 {
     
-    private static final String $ElementType = "xsms";
+    private static final String $ElementType = "xweixin";
     
     public static        String $MessageURL  = "https://10.0.1.100";
     
@@ -34,13 +34,10 @@ public class SMSConfig extends APIConfig
     
     static
     {
-        CallFlow.getHelpExport().addImportHead($ElementType ,SMSConfig.class);
+        CallFlow.getHelpExport().addImportHead($ElementType ,WeiXinConfig.class);
     }
     
     
-    
-    /** 短信签名 */
-    private String messageType;
     
     /** 短消息微服务地址。默认为：$MessageURL */
     private String messageURL;
@@ -48,8 +45,11 @@ public class SMSConfig extends APIConfig
     /** 发布的消息。可以是数值、上下文变量、XID标识 */
     private String message;
     
-    /** 手机号。可以是数值、上下文变量、XID标识 */
-    private String cellPhoneNo;
+    /** 模板消息跳转链接。可以是数值、上下文变量、XID标识 */
+    private String gotoUrl;
+    
+    /** 微信OpenID。可以是数值、上下文变量、XID标识 */
+    private String openID;
     
     /** 用户ID。可以是数值、上下文变量、XID标识 */
     private String userID;
@@ -60,11 +60,11 @@ public class SMSConfig extends APIConfig
      * 构造器
      *
      * @author      ZhengWei(HY)
-     * @createDate  2026-07-11
+     * @createDate  2026-07-19
      * @version     v1.0
      *
      */
-    public SMSConfig()
+    public WeiXinConfig()
     {
         this(0L ,0L);
     }
@@ -75,17 +75,16 @@ public class SMSConfig extends APIConfig
      * 构造器
      *
      * @author      ZhengWei(HY)
-     * @createDate  2026-07-11
+     * @createDate  2026-07-19
      * @version     v1.0
      *
      * @param i_RequestTotal  累计的执行次数
      * @param i_SuccessTotal  累计的执行成功次数
      */
-    public SMSConfig(long i_RequestTotal ,long i_SuccessTotal)
+    public WeiXinConfig(long i_RequestTotal ,long i_SuccessTotal)
     {
         super(i_RequestTotal ,i_SuccessTotal);
         
-        this.messageType = "短信签名";
         this.setMessageURL($MessageURL);
         this.setRequestType("POST");
         this.setSucceedFlag("200");
@@ -99,7 +98,7 @@ public class SMSConfig extends APIConfig
      * 静态检查
      * 
      * @author      ZhengWei(HY)
-     * @createDate  2026-07-11
+     * @createDate  2026-07-19
      * @version     v1.0
      *
      * @param io_Result     表示检测结果
@@ -122,9 +121,9 @@ public class SMSConfig extends APIConfig
             io_Result.set(false).setParamStr("CFlowCheck：" + this.getClass().getSimpleName() + "[" + Help.NVL(this.getXid()) + "].message is null.");
             return false;
         }
-        if ( Help.isNull(this.getCellPhoneNo()) )
+        if ( Help.isNull(this.getOpenID()) )
         {
-            io_Result.set(false).setParamStr("CFlowCheck：" + this.getClass().getSimpleName() + "[" + Help.NVL(this.getXid()) + "].cellPhoneNo is null.");
+            io_Result.set(false).setParamStr("CFlowCheck：" + this.getClass().getSimpleName() + "[" + Help.NVL(this.getXid()) + "].openID is null.");
             return false;
         }
         if ( Help.isNull(this.getUserID()) )
@@ -142,36 +141,36 @@ public class SMSConfig extends APIConfig
      * 当用户没有设置XID时，可使用此方法生成
      * 
      * @author      ZhengWei(HY)
-     * @createDate  2026-07-11
+     * @createDate  2026-07-19
      * @version     v1.0
      *
      * @return
      */
     public String makeXID()
     {
-        return "XSMS_" + StringHelp.getUUID9n();
+        return "XWeiXin_" + StringHelp.getUUID9n();
     }
 
     
     
     /**
-     * 获取：短信签名
+     * 获取：模板消息跳转链接。可以是数值、上下文变量、XID标识
      */
-    public String getMessageType()
+    public String getGotoUrl()
     {
-        return messageType;
+        return gotoUrl;
     }
 
 
     
     /**
-     * 设置：短信签名
+     * 设置：模板消息跳转链接。可以是数值、上下文变量、XID标识
      * 
-     * @param i_MessageType 短信签名
+     * @param i_GotoUrl 模板消息跳转链接。可以是数值、上下文变量、XID标识
      */
-    public void setMessageType(String i_MessageType)
+    public void setGotoUrl(String i_GotoUrl)
     {
-        this.messageType = i_MessageType;
+        this.gotoUrl = i_GotoUrl;
         this.reset(this.getRequestTotal() ,this.getSuccessTotal());
         this.keyChange();
     }
@@ -203,7 +202,7 @@ public class SMSConfig extends APIConfig
         {
             this.messageURL = i_MessageURL;
         }
-        this.setUrl(this.messageURL + "/msMessage/message/sendSMS");
+        this.setUrl(this.messageURL + "/msMessage/message/sendWeiXin");
         this.reset(this.getRequestTotal() ,this.getSuccessTotal());
         this.keyChange();
     }
@@ -235,23 +234,23 @@ public class SMSConfig extends APIConfig
     
     
     /**
-     * 获取：手机号。可以是数值、上下文变量、XID标识
+     * 获取：微信OpenID。可以是数值、上下文变量、XID标识
      */
-    public String getCellPhoneNo()
+    public String getOpenID()
     {
-        return cellPhoneNo;
+        return openID;
     }
 
 
     
     /**
-     * 设置：手机号。可以是数值、上下文变量、XID标识
+     * 设置：微信OpenID。可以是数值、上下文变量、XID标识
      * 
-     * @param i_CellPhoneNo 手机号。可以是数值、上下文变量、XID标识
+     * @param i_OpenID 微信OpenID。可以是数值、上下文变量、XID标识
      */
-    public void setCellPhoneNo(String i_CellPhoneNo)
+    public void setOpenID(String i_OpenID)
     {
-        this.cellPhoneNo = i_CellPhoneNo;
+        this.openID = i_OpenID;
         this.reset(this.getRequestTotal() ,this.getSuccessTotal());
         this.keyChange();
     }
@@ -286,14 +285,14 @@ public class SMSConfig extends APIConfig
      * 元素的类型
      * 
      * @author      ZhengWei(HY)
-     * @createDate  2026-07-11
+     * @createDate  2026-07-19
      * @version     v1.0
      *
      * @return
      */
     public String getElementType()
     {
-        return "SMS";
+        return "WEIXIN";
     }
    
     
@@ -304,7 +303,7 @@ public class SMSConfig extends APIConfig
      * 建议：子类重写此方法
      * 
      * @author      ZhengWei(HY)
-     * @createDate  2026-07-11
+     * @createDate  2026-07-19
      * @version     v1.0
      *
      * @return
@@ -322,7 +321,7 @@ public class SMSConfig extends APIConfig
      * 建议：子类重写此方法
      * 
      * @author      ZhengWei(HY)
-     * @createDate  2026-07-11
+     * @createDate  2026-07-19
      * @version     v1.0
      *
      * @param io_Context  上下文类型的变量信息
@@ -337,14 +336,14 @@ public class SMSConfig extends APIConfig
             io_Params[0] = ValueHelp.replaceByContext(this.param ,io_Context);
         }
         
-        String v_CellPhoneNo = null;
-        if ( !Help.isNull(this.cellPhoneNo) )
+        String v_OpenID = null;
+        if ( !Help.isNull(this.openID) )
         {
-            v_CellPhoneNo = ValueHelp.replaceByContext(this.cellPhoneNo ,io_Context);
+            v_OpenID = ValueHelp.replaceByContext(this.openID ,io_Context);
         }
         else
         {
-            v_CellPhoneNo = "";
+            v_OpenID = "";
         }
         
         String v_Message = null;
@@ -355,6 +354,16 @@ public class SMSConfig extends APIConfig
         else
         {
             v_Message = "";
+        }
+        
+        String v_GotoUrl = null;
+        if ( !Help.isNull(this.gotoUrl) )
+        {
+            v_GotoUrl = ValueHelp.replaceByContext(this.gotoUrl ,io_Context);
+        }
+        else
+        {
+            v_GotoUrl = "";
         }
         
         String v_UserID = null;
@@ -369,14 +378,10 @@ public class SMSConfig extends APIConfig
         
         StringBuilder v_Body = new StringBuilder();
         v_Body.append("{");
-        v_Body.append("  \"phone\": \"").append(v_CellPhoneNo).append("\",");
-        v_Body.append("  \"message\": \"");
-        if ( !Help.isNull(this.messageType) )
-        {
-            v_Body.append("【").append(this.messageType).append("】");
-        }
-        v_Body.append(v_Message).append("\",");
-        v_Body.append("  \"userID\": \"").append(v_UserID).append("\"");
+        v_Body.append("  \"phone\": \"") .append(v_OpenID) .append("\",");
+        v_Body.append("  \"url\": \"")   .append(v_GotoUrl).append("\",");
+        v_Body.append("  \"messages\": ").append(v_Message).append(",");
+        v_Body.append("  \"userID\": \"").append(v_UserID) .append("\"");
         v_Body.append("}");
         io_Params[1] = v_Body.toString();
         
@@ -403,7 +408,7 @@ public class SMSConfig extends APIConfig
      * 建议：子类重写此方法
      * 
      * @author      ZhengWei(HY)
-     * @createDate  2026-07-11
+     * @createDate  2026-07-19
      * @version     v1.0
      *
      * @param io_Xml         XML内容的缓存区
@@ -420,25 +425,25 @@ public class SMSConfig extends APIConfig
     {
         String v_NewSpace = "\n" + i_LevelN + i_Level1;
         
-        if ( !Help.isNull(this.messageType) && !"六盘山实验室".equals(this.messageType) )
-        {
-            io_Xml.append(v_NewSpace).append(IToXml.toValue("messageType" ,this.messageType));
-        }
         if ( !Help.isNull(this.messageURL) && !$MessageURL.equals(this.messageURL) )
         {
             io_Xml.append(v_NewSpace).append(IToXml.toValue("messageURL" ,this.messageURL));
         }
-        if ( !Help.isNull(this.cellPhoneNo) )
+        if ( !Help.isNull(this.openID) )
         {
-            io_Xml.append(v_NewSpace).append(IToXml.toValue("cellPhoneNo" ,this.cellPhoneNo));
+            io_Xml.append(v_NewSpace).append(IToXml.toValue("openID"     ,this.openID));
+        }
+        if ( !Help.isNull(this.gotoUrl) )
+        {
+            io_Xml.append(v_NewSpace).append(IToXml.toValue("gotoUrl"    ,this.gotoUrl));
         }
         if ( !Help.isNull(this.message) )
         {
-            io_Xml.append(v_NewSpace).append(IToXml.toValue("message" ,this.message));
+            io_Xml.append(v_NewSpace).append(IToXml.toValue("message"    ,this.message));
         }
         if ( !Help.isNull(this.userID) )
         {
-            io_Xml.append(v_NewSpace).append(IToXml.toValue("userID" ,this.userID));
+            io_Xml.append(v_NewSpace).append(IToXml.toValue("userID"     ,this.userID));
         }
     }
     
@@ -452,7 +457,7 @@ public class SMSConfig extends APIConfig
      * 建议：子类重写此方法
      *
      * @author      ZhengWei(HY)
-     * @createDate  2026-07-11
+     * @createDate  2026-07-19
      * @version     v1.0
      *
      * @param i_Context  上下文类型的变量信息
@@ -482,7 +487,7 @@ public class SMSConfig extends APIConfig
         }
         
         v_Builder.append(":");
-        if ( Help.isNull(this.cellPhoneNo) )
+        if ( Help.isNull(this.openID) )
         {
             v_Builder.append("?");
         }
@@ -490,7 +495,7 @@ public class SMSConfig extends APIConfig
         {
             try
             {
-                v_Builder.append(ValueHelp.getValue(this.cellPhoneNo ,String.class ,this.cellPhoneNo ,i_Context));
+                v_Builder.append(ValueHelp.getValue(this.openID ,String.class ,this.openID ,i_Context));
             }
             catch (Exception exce)
             {
@@ -499,11 +504,6 @@ public class SMSConfig extends APIConfig
         }
         
         v_Builder.append(":");
-        if ( !Help.isNull(this.messageType) )
-        {
-            v_Builder.append("【").append(messageType).append("】");
-        }
-        
         if ( Help.isNull(this.message) )
         {
             v_Builder.append("?");
@@ -513,6 +513,23 @@ public class SMSConfig extends APIConfig
             try
             {
                 v_Builder.append(ValueHelp.getValue(this.message ,String.class ,this.message ,i_Context));
+            }
+            catch (Exception exce)
+            {
+                // Nothing.
+            }
+        }
+        
+        v_Builder.append(":");
+        if ( Help.isNull(this.gotoUrl) )
+        {
+            v_Builder.append("?");
+        }
+        else
+        {
+            try
+            {
+                v_Builder.append(ValueHelp.getValue(this.gotoUrl ,String.class ,this.gotoUrl ,i_Context));
             }
             catch (Exception exce)
             {
@@ -531,7 +548,7 @@ public class SMSConfig extends APIConfig
      * 建议：子类重写此方法
      *
      * @author      ZhengWei(HY)
-     * @createDate  2026-07-11
+     * @createDate  2026-07-19
      * @version     v1.0
      *
      * @return
@@ -546,15 +563,13 @@ public class SMSConfig extends APIConfig
         v_Builder.append(Help.NVL(this.getUserID() ,"?"));
         
         v_Builder.append(":");
-        v_Builder.append(Help.NVL(this.cellPhoneNo ,"?"));
+        v_Builder.append(Help.NVL(this.openID ,"?"));
         
         v_Builder.append(":");
-        if ( !Help.isNull(this.messageType) )
-        {
-            v_Builder.append("【").append(messageType).append("】");
-        }
-        
         v_Builder.append(Help.NVL(this.message ,"?"));
+        
+        v_Builder.append(":");
+        v_Builder.append(Help.NVL(this.gotoUrl ,"?"));
         
         return v_Builder.toString();
     }
@@ -567,14 +582,14 @@ public class SMSConfig extends APIConfig
      * 建议：子类重写此方法
      * 
      * @author      ZhengWei(HY)
-     * @createDate  2026-07-11
+     * @createDate  2026-07-19
      * @version     v1.0
      *
      * @return
      */
     public Object newMy()
     {
-        return new SMSConfig();
+        return new WeiXinConfig();
     }
     
     
@@ -587,19 +602,19 @@ public class SMSConfig extends APIConfig
      * 建议：子类重写此方法
      * 
      * @author      ZhengWei(HY)
-     * @createDate  2026-07-11
+     * @createDate  2026-07-19
      * @version     v1.0
      *
      */
     public Object cloneMyOnly()
     {
-        SMSConfig v_Clone = new SMSConfig();
+        WeiXinConfig v_Clone = new WeiXinConfig();
         
         this.cloneMyOnly(v_Clone);
-        v_Clone.setMessageType(   this.getMessageType());
         v_Clone.setMessageURL(    this.getMessageURL());
+        v_Clone.setOpenID(        this.getOpenID());
+        v_Clone.setGotoUrl(       this.getGotoUrl());
         v_Clone.setMessage(       this.getMessage());
-        v_Clone.setCellPhoneNo(   this.getCellPhoneNo());
         v_Clone.setUserID(        this.getUserID());
         v_Clone.setParam(         this.getParam());
         v_Clone.setHead(          this.getHead());
@@ -619,7 +634,7 @@ public class SMSConfig extends APIConfig
      * 建议：子类重写此方法
      * 
      * @author      ZhengWei(HY)
-     * @createDate  2026-07-11
+     * @createDate  2026-07-19
      * @version     v1.0
      *
      * @param io_Clone        克隆的复制品对象
@@ -633,16 +648,16 @@ public class SMSConfig extends APIConfig
     {
         if ( Help.isNull(this.xid) )
         {
-            throw new NullPointerException("Clone SMSConfig xid is null.");
+            throw new NullPointerException("Clone WeiXinConfig xid is null.");
         }
         
-        SMSConfig v_Clone = (SMSConfig) io_Clone;
+        WeiXinConfig v_Clone = (WeiXinConfig) io_Clone;
         ((ExecuteElement) this).clone(v_Clone ,i_ReplaceXID ,i_ReplaceByXID ,i_AppendXID ,io_XIDObjects);
         
-        v_Clone.setMessageType(   this.getMessageType());
         v_Clone.setMessageURL(    this.getMessageURL());
+        v_Clone.setOpenID(        this.getOpenID());
+        v_Clone.setGotoUrl(       this.getGotoUrl());
         v_Clone.setMessage(       this.getMessage());
-        v_Clone.setCellPhoneNo(   this.getCellPhoneNo());
         v_Clone.setUserID(        this.getUserID());
         v_Clone.setParam(         this.getParam());
         v_Clone.setHead(          this.getHead());
@@ -660,7 +675,7 @@ public class SMSConfig extends APIConfig
      * 建议：子类重写此方法
      *
      * @author      ZhengWei(HY)
-     * @createDate  2026-07-11
+     * @createDate  2026-07-19
      * @version     v1.0
      *
      * @return
@@ -672,12 +687,12 @@ public class SMSConfig extends APIConfig
     {
         if ( Help.isNull(this.xid) )
         {
-            throw new NullPointerException("Clone SMSConfig xid is null.");
+            throw new NullPointerException("Clone WeiXinConfig xid is null.");
         }
         
         Map<String ,ExecuteElement> v_XIDObjects = new HashMap<String ,ExecuteElement>();
         Return<String>              v_Version    = parserXIDVersion(this.xid);
-        SMSConfig                   v_Clone      = new SMSConfig();
+        WeiXinConfig                   v_Clone      = new WeiXinConfig();
         
         if ( v_Version.booleanValue() )
         {

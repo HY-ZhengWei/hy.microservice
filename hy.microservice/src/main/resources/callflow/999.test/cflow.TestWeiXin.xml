@@ -9,12 +9,13 @@
     <!-- CFlow编排引擎配置 -->
     <xconfig>
         
-        <xsms id="XSMS">
-            <comment>短信元素</comment>
-            <cellPhoneNo>:CellPhoneNo</cellPhoneNo>
+        <xweixin id="XWeiXin">
+            <comment>微信元素</comment>
+            <openID>:OpenID</openID>
+            <gotoUrl>:GotoUrl</gotoUrl>
             <message>:Message</message>
             <userID>:UserID</userID>
-        </xsms>
+        </xweixin>
         
     </xconfig>
     

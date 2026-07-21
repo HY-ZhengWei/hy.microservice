@@ -12,7 +12,7 @@ import org.hy.common.xml.annotation.Xjava;
 
 
 /**
- * 发消息
+ * 发短信
  *
  * @author      ZhengWei(HY)
  * @createDate  2026-07-11
@@ -25,8 +25,8 @@ public class DemoSMS
     public void send()
     {
         Map<String ,Object> v_Context = new HashMap<String ,Object>();
-        v_Context.put("Message"     ,"基座1.22.6版本：采用柔性编排发送的短信，能收到吗");
         v_Context.put("CellPhoneNo" ,"19909218550");
+        v_Context.put("Message"     ,"基座1.22.6版本：柔性编排.第33号元素发送的短信，能收到吗");
         v_Context.put("UserID"      ,"ZhengWei(HY)");
         
         ExecuteResult v_Result = CallFlow.execute("XSMS" ,v_Context);

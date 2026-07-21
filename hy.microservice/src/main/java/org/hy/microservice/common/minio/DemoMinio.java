@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.hy.common.Help;
 import org.hy.common.minio.MinioHelp;
-import org.hy.common.xml.annotation.Xjava;
+import org.hy.common.xml.XJava;
 
 
 
@@ -17,12 +17,10 @@ import org.hy.common.xml.annotation.Xjava;
  * @createDate  2026-07-14
  * @version     v1.0
  */
-@Xjava
 public class DemoMinio
 {
     
     /** Minio客户端对象 */
-    @Xjava(ref="MS_Common_MinioHelp")
     private MinioHelp minio;
     
     
@@ -33,6 +31,7 @@ public class DemoMinio
         String v_MinioFileName = "申公豹：人心中的成见是一座大山，任你怎么努力都休想搬运.mp4";
         String v_FileFullName  = "C:\\Users\\ZLX\\Downloads\\申公豹：人心中的成见是一座大山，任你怎么努力都休想搬运.mp4";
         
+        this.minio = (MinioHelp) XJava.getObject("MS_Common_MinioHelp");
         this.minio.getPathType(v_UserNo ,"Tools/");
         
         Help.print(this.minio.queryBucketNames());

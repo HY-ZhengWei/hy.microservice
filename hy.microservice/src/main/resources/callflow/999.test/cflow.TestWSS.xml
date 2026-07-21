@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="xcallFlow" class="org.hy.common.callflow.common.CallFlowImports" />
+    
+    
+    
+    <!-- CFlow编排引擎配置 -->
+    <xconfig>
+        
+        <xwspull id="XWSPull">
+            <comment>点拉元素</comment>
+            <wsURL>ws://10.8.3.23/msModbus/report/WaterContent/ZhengWei</wsURL>
+            <callFlowXID>:XNode_Show</callFlowXID>
+            <returnID>Message</returnID>
+            <!-- returnClass>com.lps.microservice.common.webSocket.WSData</returnClass -->
+        </xwspull>
+        
+        
+        
+        <xnode id="XNode_Show">
+            <comment>显示</comment>
+            <callXID>:WSDemo</callXID>
+            <callMethod>showMap</callMethod>
+            <callParam>
+                <value>:Message</value>
+            </callParam>
+        </xnode>
+        
+    </xconfig>
+    
+</config>

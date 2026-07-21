@@ -6,6 +6,7 @@
     <import name="startupConfig"   class="java.util.ArrayList" />
     <import name="item"            class="org.hy.common.app.Param" />
     <import name="xsms"            class="org.hy.microservice.common.message.SMSConfig" />
+    <import name="xweixin"         class="org.hy.microservice.common.message.WeiXinConfig" />
     
     
     
@@ -14,6 +15,7 @@
     
         <!-- 加载编排元素 -->
         <xsms></xsms>
+        <xweixin></xweixin>
         
         
         

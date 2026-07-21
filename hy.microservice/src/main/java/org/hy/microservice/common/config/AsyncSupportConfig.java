@@ -24,6 +24,7 @@ public class AsyncSupportConfig
     // @Bean
     public FilterRegistrationBean<LogFilter> logFilterRegistration()
     {
+        
         FilterRegistrationBean<LogFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new LogFilter());
         registration.addUrlPatterns("/*");
