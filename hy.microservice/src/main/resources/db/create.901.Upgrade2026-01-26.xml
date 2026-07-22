@@ -36,6 +36,17 @@
                 ]]>
             </content>
             
+            <content if="POSTGRESQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT INTO TUpgrade20260126 (id ,createTime) VALUES ('操作日志记录请求头' ,LOCALTIMESTAMP);/
+                
+                ALTER TABLE TOperationLog ADD urlRequestHead VARCHAR(1000);/
+                COMMENT ON COLUMN TOperationLog.urlRequestHead IS '操作日志记录请求头';/
+                
+                UPDATE TUpgrade20260126 SET updateTime = LOCALTIMESTAMP WHERE id = '操作日志记录请求头';/
+                ]]>
+            </content>
+            
             <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 INSERT INTO TUpgrade20260126 (id ,createTime) VALUES ('操作日志记录请求头' ,NOW());/
@@ -91,6 +102,24 @@
                  id                         VARCHAR2(64)   NOT NULL
                 ,createTime                 DATE           NOT NULL
                 ,updateTime                 DATE
+                );/
+                
+                ALTER TABLE TUpgrade20260126 ADD CONSTRAINT PK_TUpgrade20260126 PRIMARY KEY (id);/
+                
+                COMMENT ON TABLE  TUpgrade20260126                    IS '2026-01-26升级版本';/
+                COMMENT ON COLUMN TUpgrade20260126.id                 IS '主键';/
+                COMMENT ON COLUMN TUpgrade20260126.createTime         IS '创建时间';/
+                COMMENT ON COLUMN TUpgrade20260126.updateTime         IS '修改时间';/
+                ]]>
+            </content>
+            
+            <content if="POSTGRESQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TUpgrade20260126
+                (
+                 id                         VARCHAR(64)    NOT NULL
+                ,createTime                 TIMESTAMP      NOT NULL
+                ,updateTime                 TIMESTAMP
                 );/
                 
                 ALTER TABLE TUpgrade20260126 ADD CONSTRAINT PK_TUpgrade20260126 PRIMARY KEY (id);/

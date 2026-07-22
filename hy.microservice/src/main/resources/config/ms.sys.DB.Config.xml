@@ -26,6 +26,14 @@
             <password encrypt="org.hy.common.StringHelp"></password>
             -->
             
+            <!-- PostgreSQL的示例 -->
+            <!-- 
+            <driverClassName>org.postgresql.Driver</driverClassName>
+            <url><![CDATA[jdbc:postgresql://127.0.0.1:5432/common]]></url>
+            <username encrypt="org.hy.common.StringHelp"></username>
+            <password encrypt="org.hy.common.StringHelp"></password>
+            -->
+            
             <filters>stat,wall,log4j2</filters>
             <initialSize>5</initialSize>
             <minIdle>5</minIdle>

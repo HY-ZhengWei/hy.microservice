@@ -166,6 +166,42 @@
                 ]]>
             </content>
             
+            <content if="POSTGRESQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT   id
+                        ,systemCode
+                        ,moduleCode
+                        ,url
+                        ,urlRequest
+                        ,urlRequestHead
+                        ,urlRequestBody
+                        ,urlResponse
+                        ,resultCode
+                        ,userID
+                        ,userIP
+                        ,userDatas
+                        ,requestID
+                        ,requestTime
+                        ,responseTime
+                        ,timeLen
+                        ,createTime
+                        ,attackType
+                  FROM  TOperationLog:logName
+                 WHERE  createTime >= LOCALTIMESTAMP - make_interval(days => 360)
+                   AND  userID      = ':logUserID'          
+              <[   AND  userIP      = ':userIP'       ]>
+              <[   AND  systemCode  = ':systemCode'   ]>
+              <[   AND  moduleCode  = ':moduleCode'   ]>
+              <[   AND  url         = ':url'          ]>
+              <[   AND  resultCode  = ':resultCode'   ]>
+              <[   AND  createTime >= ':createTime'   ]>
+              <[   AND  timeLen    >= ':timeLen'      ]>
+              <[   AND  createTime >= ':startTime'    ]>
+              <[   AND  createTime <  ':endTime'      ]>
+                 ORDER  BY createTime DESC
+                ]]>
+            </content>
+            
             <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 SELECT   id

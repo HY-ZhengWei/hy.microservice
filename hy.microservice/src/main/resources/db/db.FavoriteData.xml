@@ -91,6 +91,42 @@
                 ]]>
             </content>
             
+            <content if="POSTGRESQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT  INTO TFavoriteData
+                       (
+                        id
+                       ,serviceType
+                       ,dataID
+                       ,favoriteName
+                       ,orderBy
+                       ,projectID
+                       ,comment
+                       ,isValid
+                       ,isDel
+                       ,createUserID
+                       ,updateUserID
+                       ,createTime
+                       ,updateTime
+                       )
+                VALUES (
+                        ':id'
+                       ,':serviceType'
+                       ,':dataID'
+                       ,':favoriteName'
+                       ,':orderBy'
+                       ,':projectID'
+                       ,':comment'
+                       ,':isValid'
+                       ,':isDel'
+                       ,':createUserID'
+                       ,':updateUserID'
+                       ,LOCALTIMESTAMP
+                       ,LOCALTIMESTAMP
+                       )
+                ]]>
+            </content>
+            
             <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 INSERT  INTO TFavoriteData
@@ -195,6 +231,21 @@
                     <[ ,orderBy      = ':orderBy'       ]>
                     <[ ,projectID    = ':projectID'     ]>
                     <[ ,"COMMENT"    = ':comment'       ]>
+                    <[ ,isValid      = ':isValid'       ]>
+                    <[ ,isDel        = ':isDel'         ]>
+                 WHERE  id           = ':id'
+                ]]>
+            </content>
+            
+            <content if="POSTGRESQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                UPDATE  TFavoriteData
+                   SET  updateTime   = LOCALTIMESTAMP
+                       ,updateUserID = ':updateUserID'
+                    <[ ,favoriteName = ':favoriteName'  ]>
+                    <[ ,orderBy      = ':orderBy'       ]>
+                    <[ ,projectID    = ':projectID'     ]>
+                    <[ ,comment      = ':comment'       ]>
                     <[ ,isValid      = ':isValid'       ]>
                     <[ ,isDel        = ':isDel'         ]>
                  WHERE  id           = ':id'

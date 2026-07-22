@@ -96,6 +96,47 @@
                 ]]>
             </content>
             
+            <content if="POSTGRESQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TFavoriteData
+                (
+                 id                         VARCHAR(64)    NOT NULL
+                ,serviceType                VARCHAR(200)   NOT NULL
+                ,dataID                     VARCHAR(64)    NOT NULL
+                ,favoriteName               VARCHAR(200)   NOT NULL
+                ,orderBy                    NUMERIC(10 ,0) NOT NULL
+                ,projectID                  VARCHAR(64)
+                ,comment                    TEXT
+                ,isDel                      NUMERIC(1 ,0)  NOT NULL
+                ,isValid                    NUMERIC(1 ,0)  NOT NULL
+                ,createUserID               VARCHAR(64)    NOT NULL
+                ,updateUserID               VARCHAR(64)    NOT NULL
+                ,createTime                 TIMESTAMP      NOT NULL
+                ,updateTime                 TIMESTAMP      NOT NULL
+                );/
+                
+                ALTER TABLE TFavoriteData ADD CONSTRAINT PK_FavoriteData PRIMARY KEY (id);/
+                
+                CREATE INDEX IDX_FavoriteData_dataID     ON TFavoriteData (updateUserID ,serviceType ,dataID);/
+                CREATE INDEX IDX_FavoriteData_updateTime ON TFavoriteData (updateTime);/
+                
+                COMMENT ON TABLE  TFavoriteData                                IS '收藏夹';/
+                COMMENT ON COLUMN TFavoriteData.id                             IS '主键';/
+                COMMENT ON COLUMN TFavoriteData.serviceType                    IS '收藏业务分类';/
+                COMMENT ON COLUMN TFavoriteData.dataID                         IS '收藏数据ID';/
+                COMMENT ON COLUMN TFavoriteData.favoriteName                   IS '收藏数据名称';/
+                COMMENT ON COLUMN TFavoriteData.orderBy                        IS '排列显示顺序';/
+                COMMENT ON COLUMN TFavoriteData.projectID                      IS '项目ID';/
+                COMMENT ON COLUMN TFavoriteData.comment                        IS '注释说明';/
+                COMMENT ON COLUMN TFavoriteData.isValid                        IS '收藏是否有效。1有效；-1无效';/
+                COMMENT ON COLUMN TFavoriteData.isDel                          IS '删除标记。1删除；0未删除';/
+                COMMENT ON COLUMN TFavoriteData.createUserID                   IS '数据创建人ID';/
+                COMMENT ON COLUMN TFavoriteData.updateUserID                   IS '数据修改人ID';/
+                COMMENT ON COLUMN TFavoriteData.createTime                     IS '创建时间';/
+                COMMENT ON COLUMN TFavoriteData.updateTime                     IS '修改时间';/
+                ]]>
+            </content>
+            
             <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 CREATE TABLE TFavoriteData

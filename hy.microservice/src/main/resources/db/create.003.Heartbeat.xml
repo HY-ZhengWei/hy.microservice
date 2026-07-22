@@ -90,6 +90,44 @@
                 ]]>
             </content>
             
+            <content if="POSTGRESQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE THeartbeat
+                (
+                 edgeIP                     VARCHAR(128)   NOT NULL
+                ,hostIP                     VARCHAR(128)   NOT NULL
+                ,osType                     VARCHAR(200)   NOT NULL
+                ,edgeStartTime              TIMESTAMP      NOT NULL
+                ,osTime                     TIMESTAMP      NOT NULL
+                ,claimCount                 NUMERIC(10)    NOT NULL
+                ,taskOKCount                NUMERIC(10)    NOT NULL
+                ,isValid                    NUMERIC(1)     NOT NULL
+                ,invalidTime                TIMESTAMP
+                ,projectID                  VARCHAR(64)
+                ,comment                    TEXT
+                ,createTime                 TIMESTAMP      NOT NULL
+                ,updateTime                 TIMESTAMP      NOT NULL
+                );/
+                
+                ALTER TABLE THeartbeat ADD CONSTRAINT PK_Heartbeat PRIMARY KEY (edgeIP);/
+                
+                COMMENT ON TABLE  THeartbeat                    IS '心跳信息';/
+                COMMENT ON COLUMN THeartbeat.edgeIP             IS '边缘服务IP地址';/
+                COMMENT ON COLUMN THeartbeat.hostIP             IS '宿主服务IP地址';/
+                COMMENT ON COLUMN THeartbeat.osType             IS '操作系统的类型';/
+                COMMENT ON COLUMN THeartbeat.edgeStartTime      IS '边缘计算服务的启动时间';/
+                COMMENT ON COLUMN THeartbeat.osTime             IS '操作系统的当前时间';/
+                COMMENT ON COLUMN THeartbeat.claimCount         IS '认领任务数量';/
+                COMMENT ON COLUMN THeartbeat.taskOKCount        IS '任务执行正常的数量';/
+                COMMENT ON COLUMN THeartbeat.isValid            IS '是否有效';/
+                COMMENT ON COLUMN THeartbeat.invalidTime        IS '失效时间';/
+                COMMENT ON COLUMN THeartbeat.projectID          IS '项目ID';/
+                COMMENT ON COLUMN THeartbeat.comment            IS '注释说明';/
+                COMMENT ON COLUMN THeartbeat.createTime         IS '创建时间';/
+                COMMENT ON COLUMN THeartbeat.updateTime         IS '修改时间';/
+                ]]>
+            </content>
+            
             <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 CREATE TABLE THeartbeat

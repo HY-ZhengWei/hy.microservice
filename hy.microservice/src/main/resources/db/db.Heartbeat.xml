@@ -87,6 +87,42 @@
                 ]]>
             </content>
             
+            <content if="POSTGRESQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT  INTO THeartbeat
+                       (
+                        edgeIP
+                       ,hostIP
+                       ,osType
+                       ,edgeStartTime
+                       ,osTime
+                       ,claimCount
+                       ,taskOKCount
+                       ,isValid
+                       ,invalidTime
+                       ,projectID
+                       ,comment
+                       ,createTime
+                       ,updateTime
+                       )
+                VALUES (
+                        ':edgeIP'
+                       ,':hostIP'
+                       ,':osType'
+                       ,':edgeStartTime'
+                       ,':osTime'
+                       ,':claimCount'
+                       ,':taskOKCount'
+                       ,':isValid'
+                       ,NULL
+                       ,':projectID'
+                       ,':comment'
+                       ,LOCALTIMESTAMP
+                       ,LOCALTIMESTAMP
+                       )
+                ]]>
+            </content>
+            
             <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 INSERT  INTO THeartbeat
@@ -195,6 +231,22 @@
                        ,isValid       = ':isValid'
                <[      ,invalidTime   = NVL(invalidTime ,':invalidTime')    ]>
                        ,updateTime    = SYSDATE
+                 WHERE  edgeIP        = ':edgeIP'
+                ]]>
+            </content>
+            
+            <content if="POSTGRESQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                UPDATE  THeartbeat
+                   SET  hostIP        = ':hostIP'
+                       ,osType        = ':osType'
+                       ,edgeStartTime = ':edgeStartTime'
+                       ,osTime        = ':osTime'
+                       ,claimCount    = ':claimCount'
+                       ,taskOKCount   = ':taskOKCount'
+                       ,isValid       = ':isValid'
+               <[      ,invalidTime   = COALESCE(invalidTime ,':invalidTime')    ]>
+                       ,updateTime    = LOCALTIMESTAMP
                  WHERE  edgeIP        = ':edgeIP'
                 ]]>
             </content>
@@ -322,6 +374,32 @@
              <[    AND  A.osTime     >= SYSDATE + :second / 24 / 60 / 60  ]>
              <[    AND  A.edgeIP      = ':edgeIP'                         ]>
              <[    AND  A.projectID   = ':projectID'                      ]>
+                 ORDER  BY A.edgeStartTime 
+                          ,A.edgeIP
+                ]]>
+            </content>
+            
+            <content if="POSTGRESQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT  A.edgeIP
+                       ,A.hostIP
+                       ,A.osType
+                       ,A.edgeStartTime
+                       ,A.osTime
+                       ,A.claimCount
+                       ,A.taskOKCount
+                       ,A.isValid
+                       ,A.invalidTime
+                       ,A.projectID
+                       ,A.comment
+                       ,A.createTime   
+                       ,A.updateTime   
+                  FROM  THeartbeat  A
+                 WHERE  A.isValid     = 1
+             <[    AND  A.updateTime >= LOCALTIMESTAMP + make_interval(secs => :second)   ]>
+             <[    AND  A.osTime     >= LOCALTIMESTAMP + make_interval(secs => :second)   ]>
+             <[    AND  A.edgeIP      = ':edgeIP'                                         ]>
+             <[    AND  A.projectID   = ':projectID'                                      ]>
                  ORDER  BY A.edgeStartTime 
                           ,A.edgeIP
                 ]]>
@@ -459,6 +537,46 @@
                              <[    AND  A.osTime     >= SYSDATE + :second / 24 / 60 / 60   ]>
                              <[    AND  A.edgeIP      = ':edgeIP'                          ]>
                              <[    AND  A.projectID   = ':projectID'                       ]>
+                                 ORDER  BY A.edgeStartTime 
+                                          ,A.edgeIP
+                                )  WA
+                          GROUP  BY WA.hostIP
+                       )  XA
+                       ,THeartbeat  XB
+                 WHERE  XA.hostIP        = XB.hostIP
+                   AND  XA.edgeStartTime = XB.edgeStartTime
+                 ORDER  BY XB.edgeStartTime 
+                          ,XB.edgeIP
+                ]]>
+            </content>
+            
+            <content if="POSTGRESQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT  XB.edgeIP
+                       ,XB.hostIP
+                       ,XB.osType
+                       ,XB.edgeStartTime
+                       ,XB.osTime
+                       ,XB.claimCount
+                       ,XB.taskOKCount
+                       ,XB.isValid
+                       ,XB.invalidTime
+                       ,XB.projectID
+                       ,XB.comment
+                       ,XB.createTime   
+                       ,XB.updateTime 
+                  FROM (
+                        SELECT  WA.hostIP
+                               ,MIN(WA.edgeStartTime) AS edgeStartTime
+                          FROM  (
+                                SELECT  A.hostIP
+                                       ,A.edgeStartTime 
+                                  FROM  THeartbeat  A
+                                 WHERE  A.isValid     = 1
+                             <[    AND  A.updateTime >= LOCALTIMESTAMP + make_interval(secs => :second)   ]>
+                             <[    AND  A.osTime     >= LOCALTIMESTAMP + make_interval(secs => :second)   ]>
+                             <[    AND  A.edgeIP      = ':edgeIP'                                         ]>
+                             <[    AND  A.projectID   = ':projectID'                                      ]>
                                  ORDER  BY A.edgeStartTime 
                                           ,A.edgeIP
                                 )  WA

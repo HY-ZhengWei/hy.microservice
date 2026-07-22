@@ -40,6 +40,19 @@
                 ]]>
             </content>
             
+            <content if="POSTGRESQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT INTO TUpgrade20250908 (id ,createTime) VALUES ('IP地址范围的最大值' ,LOCALTIMESTAMP);/
+                
+                ALTER TABLE TIPSafeConfig ADD ipMax VARCHAR(128);/
+                COMMENT ON COLUMN TIPSafeConfig.ipMax IS 'IP地址范围的最大值';/
+                
+                CREATE INDEX IDX_TIPSafeConfig_IP ON TIPSafeConfig (ip ,ipType);/
+                
+                UPDATE TUpgrade20250908 SET updateTime = LOCALTIMESTAMP WHERE id = 'IP地址范围的最大值';/
+                ]]>
+            </content>
+            
             <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 INSERT INTO TUpgrade20250908 (id ,createTime) VALUES ('IP地址范围的最大值' ,NOW());/
@@ -97,6 +110,24 @@
                  id                         VARCHAR2(64)   NOT NULL
                 ,createTime                 DATE           NOT NULL
                 ,updateTime                 DATE
+                );/
+                
+                ALTER TABLE TUpgrade20250908 ADD CONSTRAINT PK_TUpgrade20250908 PRIMARY KEY (id);/
+                
+                COMMENT ON TABLE  TUpgrade20250908                    IS '2025-09-08升级版本';/
+                COMMENT ON COLUMN TUpgrade20250908.id                 IS '主键';/
+                COMMENT ON COLUMN TUpgrade20250908.createTime         IS '创建时间';/
+                COMMENT ON COLUMN TUpgrade20250908.updateTime         IS '修改时间';/
+                ]]>
+            </content>
+            
+            <content if="POSTGRESQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TUpgrade20250908
+                (
+                 id                         VARCHAR(64)    NOT NULL
+                ,createTime                 TIMESTAMP      NOT NULL
+                ,updateTime                 TIMESTAMP
                 );/
                 
                 ALTER TABLE TUpgrade20250908 ADD CONSTRAINT PK_TUpgrade20250908 PRIMARY KEY (id);/

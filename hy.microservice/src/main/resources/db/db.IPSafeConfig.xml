@@ -79,6 +79,38 @@
                 ]]>
             </content>
             
+            <content if="POSTGRESQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT  INTO TIPSafeConfig
+                       (
+                         id          
+                        ,ipType      
+                        ,ip
+                        ,ipMax
+                        ,moduleCode
+                        ,url
+                        ,comment     
+                        ,isDel       
+                        ,createUserID
+                        ,createTime  
+                        ,updateTime  
+                       )
+                VALUES (
+                         ':id'
+                        ,':ipType'
+                        ,':ip'
+                        ,':ipMax'
+                        ,':moduleCode'
+                        ,':url'
+                        ,':comment'
+                        ,':isDel'
+                        ,':createUserID'
+                        ,LOCALTIMESTAMP
+                        ,LOCALTIMESTAMP
+                       )
+                ]]>
+            </content>
+            
             <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
                 INSERT  INTO TIPSafeConfig
@@ -176,6 +208,21 @@
               <[       ,moduleCode = ':moduleCode'  ]>
               <[       ,url        = ':url'         ]>
               <[       ,"COMMENT"  = ':comment'     ]>
+              <[       ,isDel      = ':isDel'       ]>
+                 WHERE  id         = ':id'
+                ]]>
+            </content>
+            
+            <content if="POSTGRESQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                UPDATE  TIPSafeConfig
+                   SET  updateTime = LOCALTIMESTAMP
+              <[       ,ipType     = ':ipType'      ]>
+              <[       ,ip         = ':ip'          ]>
+              <[       ,ipMax      = ':ipMax'       ]>
+              <[       ,moduleCode = ':moduleCode'  ]>
+              <[       ,url        = ':url'         ]>
+              <[       ,comment    = ':comment'     ]>
               <[       ,isDel      = ':isDel'       ]>
                  WHERE  id         = ':id'
                 ]]>

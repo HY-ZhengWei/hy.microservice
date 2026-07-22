@@ -340,6 +340,12 @@
             <artifactId>ojdbc17</artifactId>
         </dependency>
         
+        <!-- 数据库驱动：PostgreSQL -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+        
         <!-- 数据库驱动：达梦DM8 -->
         <dependency>
             <groupId>com.dameng</groupId>
@@ -431,7 +437,7 @@
         <dependency>
             <groupId>cn.openapis</groupId>
             <artifactId>hy.common</artifactId>
-            <version>4.8.5</version>
+            <version>4.8.7</version>
             <type>pom</type>
             <exclusions>
                 <exclusion>
