@@ -52,6 +52,7 @@ import org.hy.microservice.common.operationLog.OperationLogModule;
  *                                     可支持不同业务的日志保存在不同的表中。合作解决人：李浩 
  *              v4.0  2026-04-01  修正：对类级RequestMapping(value="/xx/yy/zz")路径的支持。合作解决人：李浩 
  *              v5.0  2026-04-18  升级：按运行时动态支持SpringBoot 3.5.11 和 4.0.5
+ *              v6.0  2026-09-01  修正：请求路径不以 / 结尾。合作解决人：王力
  */
 public class ProjectStartBase
 {
@@ -125,6 +126,11 @@ public class ProjectStartBase
             {
                 // 前缀不以/开头
                 v_OModule.setModuleCode(v_OModule.getModuleCode().substring(1));
+            }
+            if ( v_OModule.getModuleCode().endsWith($UrlSplit) )
+            {
+                // 后缀不以/结尾
+                v_OModule.setModuleCode(v_OModule.getModuleCode().substring(0 ,v_OModule.getModuleCode().length() - 1));
             }
             
             int v_LastIndex = v_OModule.getModuleName().lastIndexOf($NameLogSplit);
