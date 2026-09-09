@@ -110,9 +110,17 @@
             </item>
             
             
+            <item id="MS_Common_IsMilvus">
+                <name>MS_Common_IsMilvus</name>
+                <value>停用</value>
+                <comment>是否启用Milvus向量库，启用|停用</comment>
+                <onlyRead>false</onlyRead>
+            </item>
+            
+            
             <item id="MS_Common_Version">
                 <name>MS_Common_Version</name>
-                <value>1.22.7</value>
+                <value>1.22.8</value>
                 <comment>边缘计算服务的版本号</comment>
                 <onlyRead>false</onlyRead>
             </item>

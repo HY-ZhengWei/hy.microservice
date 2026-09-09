@@ -27,7 +27,7 @@
         
         <minioHelp id="MS_Common_MinioHelp">
             <constructor>
-                <minio ref="XMinioClient" />               <!-- Minio客户端对象 -->
+                <minio ref="MS_Common_Minio" />            <!-- Minio客户端对象 -->
                 <String>ms</String>                        <!-- 桶名称的前缀 -->
             </constructor>
         </minioHelp>

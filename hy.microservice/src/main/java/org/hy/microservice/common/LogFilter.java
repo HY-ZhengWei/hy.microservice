@@ -629,11 +629,6 @@ public class LogFilter extends XSQLFilter implements XRequestListener
                     // 非Json格式的响应报文，默认为成功
                     v_OLog.setResultCode(BaseResponse.$Succeed);
                 }
-                
-                if ( v_OLog.getUrlResponse().length() >= 4000 )
-                {
-                    v_OLog.setUrlResponse(v_OLog.getUrlResponse().substring(0 ,3999));
-                }
             }
             
             this.operationLogService.update(v_OLog);
@@ -683,7 +678,7 @@ public class LogFilter extends XSQLFilter implements XRequestListener
         String         v_UserID = Help.NVL(i_Request.getParameter("userID") ,i_Request.getParameter("createUserID"));
         
         v_OLog.setCreateTime(new Date());
-        v_OLog.setId(StringHelp.getUUID());
+        v_OLog.setId(StringHelp.getUUID9n());
         v_OLog.setUrl("/app/" + io_RequestData.getSid());
         v_OLog.setUrlRequest(i_Request.getQueryString());
         v_OLog.setUrlRequestHead(this.getUrlRequestHead(i_Request));

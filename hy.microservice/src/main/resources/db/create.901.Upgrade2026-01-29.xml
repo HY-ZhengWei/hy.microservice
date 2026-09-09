@@ -12,7 +12,7 @@
     
         <sql id="XSQL_Upgrade_20260129_Step001">
         
-            <dataSourceGroup ref="DSG_MS_Common" />
+            <dataSourceGroup ref="DSG_MS_Common_IoT" />
             
             <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
@@ -75,6 +75,17 @@
                 ]]>
             </content>
             
+            <content if="IOTDB == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT INTO TUpgrade20260129 (time ,id ,createTime) VALUES (NOW() ,'操作日志记录幂等请求ID与用户可定制化的数据' ,NOW());/
+                
+                ALTER TABLE TOperationLog ADD COLUMN requestID STRING FIELD COMMENT '幂等请求ID';/
+                ALTER TABLE TOperationLog ADD COLUMN userDatas TEXT   FIELD COMMENT '用户可定制化的数据';/
+                
+                INSERT INTO TUpgrade20260129 (time ,id ,createTime ,updateTime) VALUES (NOW() ,'操作日志记录幂等请求ID与用户可定制化的数据' ,NOW() ,NOW());/
+                ]]>
+            </content>
+            
             <comment>操作日志记录幂等请求ID与用户可定制化的数据</comment>
             
         </sql>
@@ -83,7 +94,7 @@
         
         <sql id="XSQL_Create_Upgrade_20260129">
         
-            <dataSourceGroup ref="DSG_MS_Common" />
+            <dataSourceGroup ref="DSG_MS_Common_IoT" />
             
             <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
@@ -164,6 +175,18 @@
                 );/
                 
                 CREATE UNIQUE INDEX PK_TUpgrade20260129 ON TUpgrade20260129 (id);/
+                ]]>
+            </content>
+            
+            <content if="IOTDB == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TUpgrade20260129
+                (
+                 time                       TIMESTAMP     TIME      COMMENT '时间戳'
+                ,id                         STRING        TAG       COMMENT '主键'
+                ,createTime                 TIMESTAMP     FIELD     COMMENT '创建时间'
+                ,updateTime                 TIMESTAMP     FIELD     COMMENT '修改时间'
+                )
                 ]]>
             </content>
             

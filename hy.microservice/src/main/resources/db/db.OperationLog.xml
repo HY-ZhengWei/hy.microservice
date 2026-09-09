@@ -13,7 +13,7 @@
     
         <sql id="XSQL_Common_OperationLog_Insert"> 
         
-            <dataSourceGroup ref="DSG_MS_Common" />
+            <dataSourceGroup ref="DSG_MS_Common_IoT" />
             
             <content>
                 <![CDATA[
@@ -61,13 +61,59 @@
                 ]]>
             </content>
             
+            <content if="IOTDB == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT  INTO TOperationLog:logName
+                       (
+                         time
+                        ,id
+                        ,systemCode
+                        ,moduleCode
+                        ,url
+                        ,urlRequest
+                        ,urlRequestHead
+                        ,urlRequestBody
+                        ,urlResponse
+                        ,resultCode
+                        ,userID
+                        ,userIP
+                        ,userDatas
+                        ,requestID
+                        ,requestTime
+                        ,responseTime
+                        ,timeLen
+                        ,attackType
+                       )
+                VALUES (
+                         ':createTime.fullMilli'
+                        ,':id'
+                        ,':systemCode'
+                        ,':moduleCode'
+                        ,':url'
+                        ,':urlRequest'
+                        ,':urlRequestHead'
+                        ,':urlRequestBody'
+                        ,':urlResponse'
+                        ,':resultCode'
+                        ,':userID'
+                        ,':userIP'
+                        ,':userDatas'
+                        ,':requestID'
+                        ,':requestTime'
+                        , :responseTime
+                        ,':timeLen'
+                        ,':attackType'
+                       )
+                ]]>
+            </content>
+            
         </sql>
         
         
         
         <sql id="XSQL_Common_OperationLog_Update"> 
         
-            <dataSourceGroup ref="DSG_MS_Common" />
+            <dataSourceGroup ref="DSG_MS_Common_IoT" />
             
             <contentDB>
                 <safeCheck>false</safeCheck>
@@ -76,13 +122,42 @@
             <content>
                 <![CDATA[
                 UPDATE  TOperationLog:logName
-                   SET  urlResponse    = ':urlResponse'
-                       ,resultCode     = ':resultCode'
-                       ,responseTime   = ':responseTime'
-                       ,timeLen        = ':timeLen'
-                       ,userDatas      = ':userDatas'
-                       ,requestID      = ':requestID'
-                 WHERE  id             = ':id'
+                   SET  urlResponse  = ':urlResponse'
+                       ,resultCode   = ':resultCode'
+                       ,responseTime = ':responseTime'
+                       ,timeLen      = ':timeLen'
+                       ,userDatas    = ':userDatas'
+                       ,requestID    = ':requestID'
+                       ,userID       = ':userID'
+                 WHERE  id           = ':id'
+                ]]>
+            </content>
+            
+            <content if="IOTDB == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                 INSERT  INTO TOperationLog:logName
+                       (
+                         time
+                        ,id
+                        ,urlResponse
+                        ,resultCode
+                        ,responseTime
+                        ,timeLen
+                        ,userDatas
+                        ,requestID
+                        ,userID
+                       )
+                VALUES (
+                         ':createTime.fullMilli'
+                        ,':id'
+                        ,':urlResponse'
+                        ,':resultCode'
+                        , :responseTime
+                        ,':timeLen'
+                        ,':userDatas'
+                        ,':requestID'
+                        ,':userID'
+                       )
                 ]]>
             </content>
             
@@ -92,7 +167,7 @@
         
         <sql id="XSQL_Common_OperationLog_Query"> 
             
-            <dataSourceGroup ref="DSG_MS_Common" />
+            <dataSourceGroup ref="DSG_MS_Common_IoT" />
             
             <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
@@ -274,6 +349,43 @@
                 ]]>
             </content>
             
+            <content if="IOTDB == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT   time
+                        ,id
+                        ,systemCode
+                        ,moduleCode
+                        ,url
+                        ,urlRequest
+                        ,urlRequestHead
+                        ,urlRequestBody
+                        ,urlResponse
+                        ,resultCode
+                        ,userID
+                        ,userIP
+                        ,userDatas
+                        ,requestID
+                        ,requestTime
+                        ,responseTime
+                        ,timeLen
+                        ,time            AS createTime
+                        ,attackType
+                  FROM  TOperationLog:logName
+                 WHERE  time       >= now() - (360.0 * 24.0 * 60.0 * 60.0 * 1000.0)
+                   AND  userID      = ':logUserID'          
+              <[   AND  userIP      = ':userIP'       ]>
+              <[   AND  systemCode  = ':systemCode'   ]>
+              <[   AND  moduleCode  = ':moduleCode'   ]>
+              <[   AND  url         = ':url'          ]>
+              <[   AND  resultCode  = ':resultCode'   ]>
+              <[   AND  time       >=  :createTime    ]>
+              <[   AND  timeLen    >=  :timeLen       ]>
+              <[   AND  time       >=  :startTime     ]>
+              <[   AND  time       <   :endTime       ]>
+                 ORDER  BY time DESC
+                ]]>
+            </content>
+            
             <result>
                 <row>org.hy.microservice.common.operationLog.OperationLog</row>
                 <cfill>setter(colValue)</cfill>
@@ -285,7 +397,7 @@
         
         <sql id="XSQL_Common_OperationLog_Query_ByPage"> 
             
-            <dataSourceGroup ref="DSG_MS_Common" />
+            <dataSourceGroup ref="DSG_MS_Common_IoT" />
             
             <content ref="XSQL_Common_OperationLog_Query.getContent" />
             <result  ref="XSQL_Common_OperationLog_Query.getResult"/>
@@ -297,7 +409,7 @@
         
         <sql id="XSQL_Common_OperationLog_Query_Count"> 
             
-            <dataSourceGroup ref="DSG_MS_Common" />
+            <dataSourceGroup ref="DSG_MS_Common_IoT" />
             
             <content>
                 <![CDATA[
@@ -313,6 +425,23 @@
               <[   AND  timeLen    >= ':timeLen'      ]>
               <[   AND  createTime >= ':startTime'    ]>
               <[   AND  createTime <  ':endTime'      ]>
+                ]]>
+            </content>
+            
+            <content if="IOTDB == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT  COUNT(1) AS totalCount
+                  FROM  TOperationLog:logName
+                 WHERE  userID      = ':logUserID'          
+              <[   AND  userIP      = ':userIP'       ]>
+              <[   AND  systemCode  = ':systemCode'   ]>
+              <[   AND  moduleCode  = ':moduleCode'   ]>
+              <[   AND  url         = ':url'          ]>
+              <[   AND  resultCode  = ':resultCode'   ]>
+              <[   AND  time       >=  :createTime    ]>
+              <[   AND  timeLen    >=  :timeLen       ]>
+              <[   AND  time       >=  :startTime     ]>
+              <[   AND  time       <   :endTime       ]>
                 ]]>
             </content>
             

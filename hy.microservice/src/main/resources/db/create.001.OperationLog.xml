@@ -4,15 +4,34 @@
 
     <import name="sqls"            class="java.util.ArrayList" />
     <import name="sql"             class="org.hy.common.xml.XSQL" />
+    <import name="xparam"          class="java.util.Hashtable" />
+    <import name="item"            class="org.hy.common.app.Param" />
 
 
 
     <!-- 系统操作日志的相关SQL -->
     <sqls>
     
+        <xparam id="SYSParam_MS_Common" key="name" this="SYSParam_MS_Common">
+            
+            <item id="MS_Common_OperationLog_MaxLength">
+                <name>MS_Common_OperationLog_MaxLength</name>
+                <valueInt>100000</valueInt>
+                <comment>每次写入操作日志的最大长度</comment>
+                <onlyRead>false</onlyRead>
+            </item>
+            
+            <item id="MS_Common_OperationLog_MaxLength" this="MS_Common_OperationLog_MaxLength" if="ORACLE == DSG_MS_Common_IoTgetDataSourceGroup.getDbProductType">
+                <valueInt>4000</valueInt>
+            </item>
+            
+        </xparam>
+        
+        
+    
         <sql id="XSQL_Common_Create_OperationLog">
         
-            <dataSourceGroup ref="DSG_MS_Common" />
+            <dataSourceGroup ref="DSG_MS_Common_IoT" />
             
             <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
@@ -337,6 +356,58 @@
                 ]]>
             </content>
             
+            <content if="IOTDB == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TOperationLog
+                (
+                 time                       TIMESTAMP     TIME      COMMENT '时间戳'
+                ,id                         STRING        TAG       COMMENT '主键'
+                ,systemCode                 STRING        ATTRIBUTE COMMENT '系统编号'
+                ,moduleCode                 STRING        ATTRIBUTE COMMENT '模块编号'
+                ,url                        STRING        ATTRIBUTE COMMENT '操作的URL地址'
+                ,urlRequest                 TEXT          FIELD     COMMENT '操作的请求参数'
+                ,urlRequestHead             STRING        FIELD     COMMENT '操作的请求头数据'
+                ,urlRequestBody             TEXT          FIELD     COMMENT '操作的请求体数据'
+                ,urlResponse                TEXT          FIELD     COMMENT '操作的响应信息'
+                ,resultCode                 STRING        FIELD     COMMENT '操作的响应结果编号'
+                ,userID                     STRING        FIELD     COMMENT '操作人ID'
+                ,userIP                     STRING        FIELD     COMMENT '操作人IP地址'
+                ,userDatas                  TEXT          FIELD     COMMENT '用户可定制化的数据'
+                ,requestID                  STRING        FIELD     COMMENT '幂等请求ID'
+                ,requestTime                TIMESTAMP     FIELD     COMMENT '请求时间'
+                ,responseTime               TIMESTAMP     FIELD     COMMENT '响应时间'
+                ,timeLen                    INT64         FIELD     COMMENT '操作时长（单位：毫秒）'
+                ,attackType                 STRING        FIELD     COMMENT '攻击类型'
+                );/
+                
+                COMMENT ON TABLE TOperationLog IS '系统操作日志';/
+                
+                CREATE TABLE TUpgrade20230526
+                (
+                 time                       TIMESTAMP     TIME      COMMENT '时间戳'
+                ,id                         STRING        TAG       COMMENT '主键'
+                ,createTime                 TIMESTAMP     FIELD     COMMENT '创建时间'
+                ,updateTime                 TIMESTAMP     FIELD     COMMENT '修改时间'
+                );/
+                
+                CREATE TABLE TUpgrade20260126
+                (
+                 time                       TIMESTAMP     TIME      COMMENT '时间戳'
+                ,id                         STRING        TAG       COMMENT '主键'
+                ,createTime                 TIMESTAMP     FIELD     COMMENT '创建时间'
+                ,updateTime                 TIMESTAMP     FIELD     COMMENT '修改时间'
+                );/
+                
+                CREATE TABLE TUpgrade20260129
+                (
+                 time                       TIMESTAMP     TIME      COMMENT '时间戳'
+                ,id                         STRING        TAG       COMMENT '主键'
+                ,createTime                 TIMESTAMP     FIELD     COMMENT '创建时间'
+                ,updateTime                 TIMESTAMP     FIELD     COMMENT '修改时间'
+                );/
+                ]]>
+            </content>
+            
             <comment>系统操作日志</comment>
             <create if="启用 == IsCreateDB_MS_Common.getValue">TOperationLog</create>
             
@@ -346,7 +417,7 @@
         
         <sql id="XSQL_Common_Create_OperationLog_Template">
         
-            <dataSourceGroup ref="DSG_MS_Common" />
+            <dataSourceGroup ref="DSG_MS_Common_IoT" />
             
             <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
@@ -512,6 +583,34 @@
                 CREATE INDEX IDX_TOperationLogTemplate_Url        ON TOperationLogTemplate (systemCode ,moduleCode ,url);/
                 CREATE INDEX IDX_TOperationLogTemplate_ResultCode ON TOperationLogTemplate (resultCode);/
                 CREATE INDEX IDX_TOperationLogTemplate_CreateTime ON TOperationLogTemplate (createTime);/
+                ]]>
+            </content>
+            
+            <content if="IOTDB == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TOperationLogTemplate
+                (
+                 time                       TIMESTAMP     TIME      COMMENT '时间戳'
+                ,id                         STRING        TAG       COMMENT '主键'
+                ,systemCode                 STRING        ATTRIBUTE COMMENT '系统编号'
+                ,moduleCode                 STRING        ATTRIBUTE COMMENT '模块编号'
+                ,url                        STRING        ATTRIBUTE COMMENT '操作的URL地址'
+                ,urlRequest                 TEXT          FIELD     COMMENT '操作的请求参数'
+                ,urlRequestHead             STRING        FIELD     COMMENT '操作的请求头数据'
+                ,urlRequestBody             TEXT          FIELD     COMMENT '操作的请求体数据'
+                ,urlResponse                TEXT          FIELD     COMMENT '操作的响应信息'
+                ,resultCode                 STRING        FIELD     COMMENT '操作的响应结果编号'
+                ,userID                     STRING        FIELD     COMMENT '操作人ID'
+                ,userIP                     STRING        FIELD     COMMENT '操作人IP地址'
+                ,userDatas                  TEXT          FIELD     COMMENT '用户可定制化的数据'
+                ,requestID                  STRING        FIELD     COMMENT '幂等请求ID'
+                ,requestTime                TIMESTAMP     FIELD     COMMENT '请求时间'
+                ,responseTime               TIMESTAMP     FIELD     COMMENT '响应时间'
+                ,timeLen                    INT64         FIELD     COMMENT '操作时长（单位：毫秒）'
+                ,attackType                 STRING        FIELD     COMMENT '攻击类型'
+                );/
+                
+                COMMENT ON TABLE TOperationLogTemplate IS '系统操作日志';/
                 ]]>
             </content>
             

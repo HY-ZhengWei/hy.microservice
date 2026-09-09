@@ -53,6 +53,10 @@
                 <value>config/ms.sys.Minio.xml</value>
             </item>
             
+            <item if="MS_Common_IsMilvus.getValue == 启用">
+                <value>config/ms.sys.Milvus.xml</value>
+            </item>
+            
             <!-- 加载AI所有配置文件 -->
             <item>
                 <value>config/ai/</value>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="xconfig"           class="java.util.ArrayList" />
+    <import name="milvusConfig"      class="io.milvus.v2.client.ConnectConfig" />
+    <import name="milvusClient"      class="io.milvus.v2.client.MilvusClientV2" />
+    <import name="loadCollection"    class="io.milvus.v2.service.collection.request.LoadCollectionReq" />
+    <import name="releaseCollection" class="io.milvus.v2.service.collection.request.ReleaseCollectionReq" />
+    <import name="insertReq"         class="io.milvus.v2.service.vector.request.InsertReq" />
+    
+    
+    
+    <!-- Milvus向量库配置参数信息 -->
+    <xconfig>
+    
+        <milvusConfig id="MS_Common_MilvusConfig">
+            <builder>
+                <uri>http://127.0.0.1:19530</uri>
+                <username encrypt="org.hy.common.StringHelp">root</username>
+                <password encrypt="org.hy.common.StringHelp">123456</password>
+                <dbName>Common</dbName>
+                <rpcDeadlineMs>15000</rpcDeadlineMs>
+            </builder>
+        </milvusConfig>
+        
+        
+        <milvusClient id="MS_Common_MilvusClient">
+            <constructor>
+                <milvusConfig ref="MS_Common_MilvusConfig" />
+            </constructor>
+        </milvusClient>
+        
+        
+        
+        <!-- 释放集合数据（可选） -->
+        <releaseCollection id="MS_Common_Milvus_ReleaseCollection">
+            <builder>
+                <collectionName>Demo</collectionName>
+            </builder>
+        </releaseCollection>
+        
+        <milvusClient this="MS_Common_MilvusClient">
+            <call name="releaseCollection">
+                <loadCollection ref="MS_Common_Milvus_ReleaseCollection" />
+            </call>
+        </milvusClient>
+        
+        
+        <!-- 加载集合数据（可选） -->
+        <loadCollection id="MS_Common_Milvus_LoadCollection">
+            <builder>
+                <collectionName>Demo</collectionName>
+            </builder>
+        </loadCollection>
+        
+        <milvusClient this="MS_Common_MilvusClient">
+            <call name="loadCollection">
+                <loadCollection ref="MS_Common_Milvus_LoadCollection" />
+            </call>
+        </milvusClient>
+        
+        
+        
+        
+    </xconfig>
+    
+</config>

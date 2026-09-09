@@ -18,20 +18,36 @@
             <username encrypt="org.hy.common.StringHelp">root</username>
             <password encrypt="org.hy.common.StringHelp"></password>
             
+            <!-- MySQL的示例 -->
+            <!-- 
+            <driverClassName>com.mysql.cj.jdbc.Driver</driverClassName>
+            <url><![CDATA[jdbc:mysql://127.0.0.1:3306/common?keepAlive=true&autoReconnect=true&autoReconnectForPools=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8]]></url>
+            <username encrypt="org.hy.common.StringHelp">root</username>
+            <password encrypt="org.hy.common.StringHelp">密码</password>
+            -->
+            
             <!-- 达梦数据库DM8的示例 -->
             <!-- 
             <driverClassName>dm.jdbc.driver.DmDriver</driverClassName>
-            <url><![CDATA[jdbc:dm://127.0.0.1:5236?schema=common&compatible_mode=4&keywords=keywords&case_sensitive=0&ignore_case=true]]></url>
+            <url><![CDATA[jdbc:dm://127.0.0.1:5236?schema=APS&compatible_mode=4&keywords=keywords&case_sensitive=0&ignore_case=true]]></url>
             <username encrypt="org.hy.common.StringHelp">SYSDBA</username>
-            <password encrypt="org.hy.common.StringHelp"></password>
+            <password encrypt="org.hy.common.StringHelp">密码</password>
             -->
             
             <!-- PostgreSQL的示例 -->
             <!-- 
             <driverClassName>org.postgresql.Driver</driverClassName>
             <url><![CDATA[jdbc:postgresql://127.0.0.1:5432/common]]></url>
-            <username encrypt="org.hy.common.StringHelp"></username>
-            <password encrypt="org.hy.common.StringHelp"></password>
+            <username encrypt="org.hy.common.StringHelp">postgres</username>
+            <password encrypt="org.hy.common.StringHelp">密码</password>
+            -->
+            
+            <!-- 时序数据库IoTDB的示例 -->
+            <!-- 
+            <driverClassName>org.apache.iotdb.jdbc.IoTDBDriver</driverClassName>
+            <url><![CDATA[jdbc:iotdb://127.0.0.1:6667?sql_dialect=table]]></url>
+            <username encrypt="org.hy.common.StringHelp">root</username>
+            <password encrypt="org.hy.common.StringHelp">密码</password>
             -->
             
             <filters>stat,wall,log4j2</filters>
@@ -46,6 +62,35 @@
             <validationQuery>SELECT 1</validationQuery>
             <validationQuery if="oracle.jdbc.OracleDriver == this.getDriverClassName">SELECT 1 FROM DUAL</validationQuery>
             <validationQuery if="dm.jdbc.driver.DmDriver == this.getDriverClassName">SELECT 1 FROM DUAL</validationQuery>
+            <validationQuery if="org.apache.iotdb.jdbc.IoTDBDriver == this.getDriverClassName">SELECT 1 FROM information_schema.tables LIMIT 1 OFFSET 1</validationQuery>
+            <testWhileIdle>true</testWhileIdle>
+            <testOnBorrow>false</testOnBorrow>
+            <testOnReturn>false</testOnReturn>
+            
+            <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+            <!-- 如果用0racle，则把poolPreparedStatements配置为true，mysql可以配置为false。分库分表较多的数据库，建议配置为false -->
+            <poolPreparedStatements>false</poolPreparedStatements>
+            <maxPoolPreparedStatementPerConnectionSize>20</maxPoolPreparedStatementPerConnectionSize>
+            <call name="clearFilters" />
+        </dataSource>
+        
+        
+        <!-- 时序数据库IoTDB的示例 -->
+        <dataSource id="DS_MS_Common_IoT">
+            <driverClassName>org.apache.iotdb.jdbc.IoTDBDriver</driverClassName>
+            <url><![CDATA[jdbc:iotdb://127.0.0.1:6667?sql_dialect=table]]></url>
+            <username encrypt="org.hy.common.StringHelp">root</username>
+            <password encrypt="org.hy.common.StringHelp">密码</password>
+            <filters>stat,wall,log4j2</filters>
+            <initialSize>5</initialSize>
+            <minIdle>5</minIdle>
+            <maxActive>300</maxActive>
+            <maxWait>60000</maxWait>
+            <connectTimeout>30000</connectTimeout>
+            <socketTimeout>900000</socketTimeout>
+            <timeBetweenEvictionRunsMillis>60000</timeBetweenEvictionRunsMillis>
+            <minEvictableIdleTimeMillis>300000</minEvictableIdleTimeMillis>
+            <validationQuery if="org.apache.iotdb.jdbc.IoTDBDriver == this.getDriverClassName">SELECT 1 FROM information_schema.tables LIMIT 1 OFFSET 1</validationQuery>
             <testWhileIdle>true</testWhileIdle>
             <testOnBorrow>false</testOnBorrow>
             <testOnReturn>false</testOnReturn>
@@ -64,6 +109,15 @@
             <call name="add">
                 <dataSource ref="DS_MS_Common" />
             </call>
+        </dataSourceGroup>
+        
+        
+        <!-- 数据库连接池组（日志表-时序库） -->
+        <dataSourceGroup id="DSG_MS_Common_IoT">
+            <call name="add">
+                <dataSource ref="DS_MS_Common_IoT" />
+            </call>
+            <initSession><![CDATA[USE msdb]]></initSession>
         </dataSourceGroup>
 
     </sqls>

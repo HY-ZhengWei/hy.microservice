@@ -24,6 +24,7 @@ import org.hy.microservice.common.ProjectStartBase;
  *              v2.0  2025-08-07  添加：从名称name中解析出日志表名称的后缀。
  *                                     可支持不同业务的日志保存在不同的表中。
  *              v3.0  2025-09-02  添加：分页查询
+ *              v4.0  2026-09-07  添加：每次写入操作日志的最大长度
  */
 @Xjava
 public class OperationLogService implements IOperationLogService ,Serializable
@@ -39,7 +40,11 @@ public class OperationLogService implements IOperationLogService ,Serializable
     private IOperationLogDAO  operationLogDAO;
     
     @Xjava(ref="MS_Common_PagePerCount")
-    private Param           pagePerCount;
+    private Param             pagePerCount;
+    
+    /** 每次写入操作日志的最大长度 */
+    @Xjava(ref="MS_Common_OperationLog_MaxLength")
+    private Param             logMaxLength;
     
     
     
@@ -84,6 +89,7 @@ public class OperationLogService implements IOperationLogService ,Serializable
      * @author      ZhengWei(HY)
      * @createDate  2023-04-10
      * @version     v1.0
+     *              v2.0  2026-09-07  添加：每次写入操作日志的最大长度
      *
      * @param i_OperationLog  操作日志数据
      * @return
@@ -91,6 +97,15 @@ public class OperationLogService implements IOperationLogService ,Serializable
     @Override
     public boolean insert(OperationLog i_OperationLog)
     {
+        if ( !Help.isNull(i_OperationLog.getUrlRequest())     && i_OperationLog.getUrlRequest().length()     >= this.logMaxLength.getValueInt() )
+        {
+            i_OperationLog.setUrlRequest(i_OperationLog.getUrlRequest().substring(0 ,this.logMaxLength.getValueInt() - 1));
+        }
+        if ( !Help.isNull(i_OperationLog.getUrlRequestBody()) && i_OperationLog.getUrlRequestBody().length() >= this.logMaxLength.getValueInt() )
+        {
+            i_OperationLog.setUrlRequestBody(i_OperationLog.getUrlRequestBody().substring(0 ,this.logMaxLength.getValueInt() - 1));
+        }
+        
         i_OperationLog.setId(Help.NVL(i_OperationLog.getId() ,StringHelp.getUUID()));
         i_OperationLog.appendCacheToDBFlag(OperationLogCache.$C2DB_Append_Insert);
         this.operationLogCache.putLog(i_OperationLog);
@@ -105,6 +120,7 @@ public class OperationLogService implements IOperationLogService ,Serializable
      * @author      ZhengWei(HY)
      * @createDate  2023-04-11
      * @version     v1.0
+     *              v2.0  2026-09-07  添加：每次写入操作日志的最大长度
      *
      * @param i_OperationLog  操作日志数据
      * @return
@@ -112,6 +128,15 @@ public class OperationLogService implements IOperationLogService ,Serializable
     @Override
     public boolean update(OperationLog i_OperationLog)
     {
+        if ( !Help.isNull(i_OperationLog.getUrlResponse()) && i_OperationLog.getUrlResponse().length() >= this.logMaxLength.getValueInt() )
+        {
+            i_OperationLog.setUrlResponse(i_OperationLog.getUrlResponse().substring(0 ,this.logMaxLength.getValueInt() - 1));
+        }
+        if ( !Help.isNull(i_OperationLog.getUserDatas())   && i_OperationLog.getUserDatas().length()   >= this.logMaxLength.getValueInt() )
+        {
+            i_OperationLog.setUserDatas(i_OperationLog.getUserDatas().substring(0 ,this.logMaxLength.getValueInt() - 1));
+        }
+        
         i_OperationLog.appendCacheToDBFlag(OperationLogCache.$C2DB_Append_Update);
         this.operationLogCache.putLog(i_OperationLog);
         return true;
