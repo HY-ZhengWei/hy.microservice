@@ -72,7 +72,7 @@ public class ProjectStartBase
     public static final String                                     $UrlSplit              = "/";
     
     /** 名称name中分割日志名称的分割符 */
-    public static final String                                     $NameLogSplit          = "/";
+    public static       String                                     $NameLogSplit          = "/";
     
     
     
@@ -149,7 +149,8 @@ public class ProjectStartBase
         }
         
         // 获取Spring所有RequestMapping方法
-        AbstractHandlerMethodMapping<RequestMappingInfo> v_Methods    = v_WebAppContext.getBean(RequestMappingHandlerMapping.class);
+        // 2026-09-13 Add requestMappingHandlerMapping：原因是业务上下文与管理上下文（actuator 端点，即Prometheus）是两套Web上下文
+        AbstractHandlerMethodMapping<RequestMappingInfo> v_Methods    = v_WebAppContext.getBean("requestMappingHandlerMapping" ,RequestMappingHandlerMapping.class);
         Map<RequestMappingInfo ,HandlerMethod>           v_MethodMap  = v_Methods.getHandlerMethods();
         IOperationLogService                             v_LogService = (IOperationLogService) XJava.getObject("OperationLogService");
         v_MethodMap.forEach((k ,v) ->

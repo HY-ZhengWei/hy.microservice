@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="cqls"     class="java.util.ArrayList" />
+    <import name="registry" class="org.hy.microservice.common.prometheus.PrometheusRegistry" />
+
+
+
+    <cqls>
+    
+        <registry id="MS_Common_Registry">
+            <comment>微服务自身与业务相关的监控</comment>
+        </registry>
+        
+        
+        <registry id="MS_Common_Registry_XSQL">
+            <comment>XSQL相关的监控</comment>
+        </registry>
+        
+    </cqls>
+    
+</config>

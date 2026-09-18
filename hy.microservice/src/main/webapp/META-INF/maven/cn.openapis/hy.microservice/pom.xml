@@ -5,7 +5,7 @@
     
     <groupId>org</groupId>
     <artifactId>hy.microservice</artifactId>
-    <version>1.22.8</version>
+    <version>1.22.9</version>
     <packaging>war</packaging>
     
     <name>org.hy.microservice</name>
@@ -146,6 +146,24 @@
             <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
         
+        <!-- Prometheus：actuator 暴露监控端点 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        
+        <!-- Prometheus：micrometer 注册表 -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
+        
+        <!-- Prometheus：tomcat线程池指标 -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-core</artifactId>
+        </dependency>
+        
         <!-- AI -->
         <dependency>
             <groupId>org.springframework.ai</groupId>
@@ -263,6 +281,13 @@
             <version>${spring.ai.version}</version>
         </dependency>
         -->
+        
+        <!-- 向量数据库 -->
+        <dependency>
+            <groupId>io.milvus</groupId>
+            <artifactId>milvus-sdk-java</artifactId>
+            <version>3.0.5</version>
+        </dependency>
         
         <!-- AI：向量数据库 -->
         <!--
@@ -419,7 +444,7 @@
         <dependency>
             <groupId>cn.openapis</groupId>
             <artifactId>hy.common</artifactId>
-            <version>4.9.6</version>
+            <version>4.9.9</version>
             <type>pom</type>
             <exclusions>
                 <exclusion>

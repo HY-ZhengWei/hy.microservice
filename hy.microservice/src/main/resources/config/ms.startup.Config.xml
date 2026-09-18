@@ -25,6 +25,10 @@
                 <value>config/ms.sys.DB.Config.xml</value>
             </item>
             
+            <item if="IsInitGraphDB_MS_Common.getValue == 启用">
+                <value>config/ms.sys.GraphDB.Config.xml</value>
+            </item>
+            
             <item>
                 <value>config/ms.sys.AppKey.Config.xml</value>
             </item>
@@ -39,6 +43,10 @@
             
             <item>
                 <value>config/ms.sys.log.HttpHead.xml</value>
+            </item>
+            
+            <item>
+                <value>config/ms.sys.Prometheus.Config.xml</value>
             </item>
             
             <item if="MS_Common_IsHeartbeat.getValue == 启用">
