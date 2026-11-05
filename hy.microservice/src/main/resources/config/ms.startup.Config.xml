@@ -49,7 +49,7 @@
                 <value>config/ms.sys.Prometheus.Config.xml</value>
             </item>
             
-            <item if="MS_Common_IsHeartbeat.getValue == 启用">
+            <item if="MS_Common_IsRedis.getValue == 启用">
                 <value>config/ms.sys.Redis.xml</value>
             </item>
 

@@ -37,6 +37,13 @@ public class PrometheusRegistry implements XJavaID
     
     
     
+    public PrometheusRegistry(PrometheusMeterRegistry i_PrometheusMeterRegistry)
+    {
+        this.registry = i_PrometheusMeterRegistry;
+    }
+    
+    
+    
     /**
      * 获取指标注册器
      * 

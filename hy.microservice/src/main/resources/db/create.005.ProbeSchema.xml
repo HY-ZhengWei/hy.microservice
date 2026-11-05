@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="sqls"            class="java.util.ArrayList" />
+    <import name="sql"             class="org.hy.common.xml.XSQL" />
+
+
+
+    <!-- 数据探针的结构的相关SQL -->
+    <sqls>
+    
+        <sql id="XSQL_Common_Create_ProbeSchema">
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TProbeSchema
+                (
+                 id                         VARCHAR2(64)   NOT NULL
+                ,type                       VARCHAR2(128)  NOT NULL
+                ,nameID                     VARCHAR2(64)   NOT NULL
+                ,projectID                  VARCHAR2(64)
+                ,"COMMENT"                  VARCHAR2(4000)
+                ,isDel                      NUMBER(1 ,0)   NOT NULL
+                ,createUserID               VARCHAR2(64)   NOT NULL
+                ,updateUserID               VARCHAR2(64)   NOT NULL
+                ,createTime                 DATETIME       NOT NULL
+                ,updateTime                 DATETIME       NOT NULL
+                );/
+                
+                ALTER TABLE TProbeSchema ADD CONSTRAINT PK_ProbeSchema PRIMARY KEY (id);/
+                
+                CREATE INDEX IDX_ProbeSchema_updateTime ON TProbeSchema (updateTime);/
+                
+                COMMENT ON TABLE  TProbeSchema                                IS '数据探针的结构';/
+                COMMENT ON COLUMN TProbeSchema.id                             IS '主键';/
+                COMMENT ON COLUMN TProbeSchema.type                           IS '归类';/
+                COMMENT ON COLUMN TProbeSchema.nameID                         IS '默认的逻辑名称ID';/
+                COMMENT ON COLUMN TProbeSchema.projectID                      IS '项目ID';/
+                COMMENT ON COLUMN TProbeSchema."COMMENT"                      IS '注释说明';/
+                COMMENT ON COLUMN TProbeSchema.isDel                          IS '删除标记。1删除；0未删除';/
+                COMMENT ON COLUMN TProbeSchema.createUserID                   IS '数据创建人ID';/
+                COMMENT ON COLUMN TProbeSchema.updateUserID                   IS '数据修改人ID';/
+                COMMENT ON COLUMN TProbeSchema.createTime                     IS '创建时间';/
+                COMMENT ON COLUMN TProbeSchema.updateTime                     IS '修改时间';/
+                ]]>
+            </content>
+            
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TProbeSchema
+                (
+                 id                         VARCHAR2(64)   NOT NULL
+                ,type                       VARCHAR2(128)  NOT NULL
+                ,nameID                     VARCHAR2(64)   NOT NULL
+                ,projectID                  VARCHAR2(64)
+                ,"COMMENT"                  VARCHAR2(4000)
+                ,isDel                      NUMBER(1 ,0)   NOT NULL
+                ,createUserID               VARCHAR2(64)   NOT NULL
+                ,updateUserID               VARCHAR2(64)   NOT NULL
+                ,createTime                 DATE           NOT NULL
+                ,updateTime                 DATE           NOT NULL
+                );/
+                
+                ALTER TABLE TProbeSchema ADD CONSTRAINT PK_ProbeSchema PRIMARY KEY (id);/
+                
+                CREATE INDEX IDX_ProbeSchema_updateTime ON TProbeSchema (updateTime);/
+                
+                COMMENT ON TABLE  TProbeSchema                                IS '数据探针的结构';/
+                COMMENT ON COLUMN TProbeSchema.id                             IS '主键';/
+                COMMENT ON COLUMN TProbeSchema.type                           IS '归类';/
+                COMMENT ON COLUMN TProbeSchema.nameID                         IS '默认的逻辑名称ID';/
+                COMMENT ON COLUMN TProbeSchema.projectID                      IS '项目ID';/
+                COMMENT ON COLUMN TProbeSchema."COMMENT"                      IS '注释说明';/
+                COMMENT ON COLUMN TProbeSchema.isDel                          IS '删除标记。1删除；0未删除';/
+                COMMENT ON COLUMN TProbeSchema.createUserID                   IS '数据创建人ID';/
+                COMMENT ON COLUMN TProbeSchema.updateUserID                   IS '数据修改人ID';/
+                COMMENT ON COLUMN TProbeSchema.createTime                     IS '创建时间';/
+                COMMENT ON COLUMN TProbeSchema.updateTime                     IS '修改时间';/
+                ]]>
+            </content>
+            
+            <content if="POSTGRESQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TProbeSchema
+                (
+                 id                         VARCHAR(64)    NOT NULL
+                ,type                       VARCHAR(128)   NOT NULL
+                ,nameID                     VARCHAR(64)    NOT NULL
+                ,projectID                  VARCHAR(64)
+                ,comment                    TEXT
+                ,isDel                      NUMERIC(1 ,0)  NOT NULL
+                ,createUserID               VARCHAR(64)    NOT NULL
+                ,updateUserID               VARCHAR(64)    NOT NULL
+                ,createTime                 TIMESTAMP      NOT NULL
+                ,updateTime                 TIMESTAMP      NOT NULL
+                );/
+                
+                ALTER TABLE TProbeSchema ADD CONSTRAINT PK_ProbeSchema PRIMARY KEY (id);/
+                
+                CREATE INDEX IDX_ProbeSchema_updateTime ON TProbeSchema (updateTime);/
+                
+                COMMENT ON TABLE  TProbeSchema                                IS '数据探针的结构';/
+                COMMENT ON COLUMN TProbeSchema.id                             IS '主键';/
+                COMMENT ON COLUMN TProbeSchema.type                           IS '归类';/
+                COMMENT ON COLUMN TProbeSchema.nameID                         IS '默认的逻辑名称ID';/
+                COMMENT ON COLUMN TProbeSchema.projectID                      IS '项目ID';/
+                COMMENT ON COLUMN TProbeSchema.comment                        IS '注释说明';/
+                COMMENT ON COLUMN TProbeSchema.isDel                          IS '删除标记。1删除；0未删除';/
+                COMMENT ON COLUMN TProbeSchema.createUserID                   IS '数据创建人ID';/
+                COMMENT ON COLUMN TProbeSchema.updateUserID                   IS '数据修改人ID';/
+                COMMENT ON COLUMN TProbeSchema.createTime                     IS '创建时间';/
+                COMMENT ON COLUMN TProbeSchema.updateTime                     IS '修改时间';/
+                ]]>
+            </content>
+            
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TProbeSchema
+                (
+                 id                         VARCHAR(64)   NOT NULL        COMMENT '主键'
+                ,type                       VARCHAR(128)  NOT NULL        COMMENT '归类'
+                ,nameID                     VARCHAR(64)   NOT NULL        COMMENT '默认的逻辑名称ID'
+                ,projectID                  VARCHAR(64)                   COMMENT '项目ID'
+                ,comment                    VARCHAR(4000)                 COMMENT '注释说明'
+                ,isDel                      INT           NOT NULL        COMMENT '删除标记。1删除；0未删除'
+                ,createUserID               VARCHAR(64)   NOT NULL        COMMENT '数据创建人ID'
+                ,updateUserID               VARCHAR(64)   NOT NULL        COMMENT '数据修改人ID'
+                ,createTime                 DATETIME      NOT NULL        COMMENT '创建时间'
+                ,updateTime                 DATETIME      NOT NULL        COMMENT '修改时间'
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;/
+                
+                ALTER TABLE TProbeSchema COMMENT                      = '数据探针的结构';/
+
+                ALTER TABLE TProbeSchema ADD CONSTRAINT PK_ProbeSchema PRIMARY KEY (id);/
+                                
+                CREATE INDEX IDX_ProbeSchema_updateTime ON TProbeSchema (updateTime);/
+                ]]>
+            </content>
+            
+            <comment>数据探针的结构</comment>
+            <create if="启用 == IsCreateDB_MS_Common.getValue">TProbeSchema</create>
+            
+        </sql>
+        
+    </sqls>
+    
+</config>

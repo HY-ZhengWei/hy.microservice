@@ -21,7 +21,11 @@
                 <onlyRead>false</onlyRead>
             </item>
             
-            <item id="MS_Common_OperationLog_MaxLength" this="MS_Common_OperationLog_MaxLength" if="ORACLE == DSG_MS_Common_IoTgetDataSourceGroup.getDbProductType">
+            <item id="MS_Common_OperationLog_MaxLength" this="MS_Common_OperationLog_MaxLength" if="ORACLE == DSG_MS_Common_IoT.getDbProductType">
+                <valueInt>4000</valueInt>
+            </item>
+            
+            <item id="MS_Common_OperationLog_MaxLength" this="MS_Common_OperationLog_MaxLength" if="MYSQL == DSG_MS_Common_IoT.getDbProductType">
                 <valueInt>4000</valueInt>
             </item>
             

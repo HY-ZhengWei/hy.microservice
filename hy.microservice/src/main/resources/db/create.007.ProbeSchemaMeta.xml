@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="sqls"            class="java.util.ArrayList" />
+    <import name="sql"             class="org.hy.common.xml.XSQL" />
+
+
+
+    <!-- 数据探针的结构中本体的相关SQL -->
+    <sqls>
+    
+        <sql id="XSQL_Common_Create_ProbeSchemaMeta">
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TProbeSchemaMeta
+                (
+                 id                         VARCHAR2(64)   NOT NULL
+                ,schemaID                   VARCHAR2(64)   NOT NULL
+                ,nameID                     VARCHAR2(64)   NOT NULL
+                ,mname                      VARCHAR2(128)  NOT NULL
+                ,mformat                    VARCHAR2(10)   NOT NULL
+                ,mlength                    NUMBER(10 ,0)  NOT NULL
+                ,mdecimal                   NUMBER(3 ,0)   NOT NULL
+                ,pk                         NUMBER(1 ,0)   NOT NULL
+                ,orderBy                    NUMBER(10 ,0)  NOT NULL
+                ,projectID                  VARCHAR2(64)
+                ,"COMMENT"                  VARCHAR2(4000)
+                ,isDel                      NUMBER(1 ,0)   NOT NULL
+                ,createUserID               VARCHAR2(64)   NOT NULL
+                ,updateUserID               VARCHAR2(64)   NOT NULL
+                ,createTime                 DATETIME       NOT NULL
+                ,updateTime                 DATETIME       NOT NULL
+                );/
+                
+                ALTER TABLE TProbeSchemaMeta ADD CONSTRAINT PK_ProbeSchemaMeta   PRIMARY KEY (id);/
+                ALTER TABLE TProbeSchemaMeta ADD CONSTRAINT FK_ProbeSchemaMeta   FOREIGN KEY (schemaID) REFERENCES TProbeSchema     (id);/
+                ALTER TABLE TProbeSchemaMeta ADD CONSTRAINT FK_ProbeSchemaNameID FOREIGN KEY (nameID)   REFERENCES TProbeSchemaName (id);/
+                
+                CREATE INDEX IDX_ProbeSchemaMeta_updateTime ON TProbeSchemaMeta (updateTime);/
+                
+                COMMENT ON TABLE  TProbeSchemaMeta                                IS '数据探针的结构中本体';/
+                COMMENT ON COLUMN TProbeSchemaMeta.id                             IS '主键';/
+                COMMENT ON COLUMN TProbeSchemaMeta.schemaID                       IS '归类ID';/
+                COMMENT ON COLUMN TProbeSchemaMeta.nameID                         IS '逻辑名称ID';/
+                COMMENT ON COLUMN TProbeSchemaMeta.mname                          IS '名称';/
+                COMMENT ON COLUMN TProbeSchemaMeta.mformat                        IS '格式类型';/
+                COMMENT ON COLUMN TProbeSchemaMeta.mlength                        IS '总长度';/
+                COMMENT ON COLUMN TProbeSchemaMeta.mdecimal                       IS '小数位数';/
+                COMMENT ON COLUMN TProbeSchemaMeta.pk                             IS '是否为主键';/
+                COMMENT ON COLUMN TProbeSchemaMeta.orderBy                        IS '排列显示顺序';/
+                COMMENT ON COLUMN TProbeSchemaMeta.projectID                      IS '项目ID';/
+                COMMENT ON COLUMN TProbeSchemaMeta."COMMENT"                      IS '注释说明';/
+                COMMENT ON COLUMN TProbeSchemaMeta.isDel                          IS '删除标记。1删除；0未删除';/
+                COMMENT ON COLUMN TProbeSchemaMeta.createUserID                   IS '数据创建人ID';/
+                COMMENT ON COLUMN TProbeSchemaMeta.updateUserID                   IS '数据修改人ID';/
+                COMMENT ON COLUMN TProbeSchemaMeta.createTime                     IS '创建时间';/
+                COMMENT ON COLUMN TProbeSchemaMeta.updateTime                     IS '修改时间';/
+                ]]>
+            </content>
+            
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TProbeSchemaMeta
+                (
+                 id                         VARCHAR2(64)   NOT NULL
+                ,schemaID                   VARCHAR2(64)   NOT NULL
+                ,nameID                     VARCHAR2(64)   NOT NULL
+                ,mname                      VARCHAR2(128)  NOT NULL
+                ,mformat                    VARCHAR2(10)   NOT NULL
+                ,mlength                    NUMBER(10 ,0)  NOT NULL
+                ,mdecimal                   NUMBER(3 ,0)   NOT NULL
+                ,pk                         NUMBER(1 ,0)   NOT NULL
+                ,orderBy                    NUMBER(10 ,0)  NOT NULL
+                ,projectID                  VARCHAR2(64)
+                ,"COMMENT"                  VARCHAR2(4000)
+                ,isDel                      NUMBER(1 ,0)   NOT NULL
+                ,createUserID               VARCHAR2(64)   NOT NULL
+                ,updateUserID               VARCHAR2(64)   NOT NULL
+                ,createTime                 DATE           NOT NULL
+                ,updateTime                 DATE           NOT NULL
+                );/
+                
+                ALTER TABLE TProbeSchemaMeta ADD CONSTRAINT PK_ProbeSchemaMeta   PRIMARY KEY (id);/
+                ALTER TABLE TProbeSchemaMeta ADD CONSTRAINT FK_ProbeSchemaMeta   FOREIGN KEY (schemaID) REFERENCES TProbeSchema     (id);/
+                ALTER TABLE TProbeSchemaMeta ADD CONSTRAINT FK_ProbeSchemaNameID FOREIGN KEY (nameID)   REFERENCES TProbeSchemaName (id);/
+                
+                CREATE INDEX IDX_ProbeSchemaMeta_updateTime ON TProbeSchemaMeta (updateTime);/
+                
+                COMMENT ON TABLE  TProbeSchemaMeta                                IS '数据探针的结构中本体';/
+                COMMENT ON COLUMN TProbeSchemaMeta.id                             IS '主键';/
+                COMMENT ON COLUMN TProbeSchemaMeta.schemaID                       IS '归类ID';/
+                COMMENT ON COLUMN TProbeSchemaMeta.nameID                         IS '逻辑名称ID';/
+                COMMENT ON COLUMN TProbeSchemaMeta.mname                          IS '名称';/
+                COMMENT ON COLUMN TProbeSchemaMeta.mformat                        IS '格式类型';/
+                COMMENT ON COLUMN TProbeSchemaMeta.mlength                        IS '总长度';/
+                COMMENT ON COLUMN TProbeSchemaMeta.mdecimal                       IS '小数位数';/
+                COMMENT ON COLUMN TProbeSchemaMeta.pk                             IS '是否为主键';/
+                COMMENT ON COLUMN TProbeSchemaMeta.orderBy                        IS '排列显示顺序';/
+                COMMENT ON COLUMN TProbeSchemaMeta.projectID                      IS '项目ID';/
+                COMMENT ON COLUMN TProbeSchemaMeta."COMMENT"                      IS '注释说明';/
+                COMMENT ON COLUMN TProbeSchemaMeta.isDel                          IS '删除标记。1删除；0未删除';/
+                COMMENT ON COLUMN TProbeSchemaMeta.createUserID                   IS '数据创建人ID';/
+                COMMENT ON COLUMN TProbeSchemaMeta.updateUserID                   IS '数据修改人ID';/
+                COMMENT ON COLUMN TProbeSchemaMeta.createTime                     IS '创建时间';/
+                COMMENT ON COLUMN TProbeSchemaMeta.updateTime                     IS '修改时间';/
+                ]]>
+            </content>
+            
+            <content if="POSTGRESQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TProbeSchemaMeta
+                (
+                 id                         VARCHAR(64)    NOT NULL
+                ,schemaID                   VARCHAR(64)    NOT NULL
+                ,nameID                     VARCHAR(64)    NOT NULL
+                ,mname                      VARCHAR(128)   NOT NULL
+                ,mformat                    VARCHAR(10)    NOT NULL
+                ,mlength                    NUMERIC(10 ,0) NOT NULL
+                ,mdecimal                   NUMERIC(3 ,0)  NOT NULL
+                ,pk                         NUMERIC(1 ,0)  NOT NULL
+                ,orderBy                    NUMERIC(10 ,0) NOT NULL
+                ,projectID                  VARCHAR(64)
+                ,comment                    TEXT
+                ,isDel                      NUMERIC(1 ,0)  NOT NULL
+                ,createUserID               VARCHAR(64)    NOT NULL
+                ,updateUserID               VARCHAR(64)    NOT NULL
+                ,createTime                 TIMESTAMP      NOT NULL
+                ,updateTime                 TIMESTAMP      NOT NULL
+                );/
+                
+                ALTER TABLE TProbeSchemaMeta ADD CONSTRAINT PK_ProbeSchemaMeta   PRIMARY KEY (id);/
+                ALTER TABLE TProbeSchemaMeta ADD CONSTRAINT FK_ProbeSchemaMeta   FOREIGN KEY (schemaID) REFERENCES TProbeSchema     (id);/
+                ALTER TABLE TProbeSchemaMeta ADD CONSTRAINT FK_ProbeSchemaNameID FOREIGN KEY (nameID)   REFERENCES TProbeSchemaName (id);/
+                
+                CREATE INDEX IDX_ProbeSchemaMeta_updateTime ON TProbeSchemaMeta (updateTime);/
+                
+                COMMENT ON TABLE  TProbeSchemaMeta                                IS '数据探针的结构中本体';/
+                COMMENT ON COLUMN TProbeSchemaMeta.id                             IS '主键';/
+                COMMENT ON COLUMN TProbeSchemaMeta.schemaID                       IS '归类ID';/
+                COMMENT ON COLUMN TProbeSchemaMeta.nameID                         IS '逻辑名称ID';/
+                COMMENT ON COLUMN TProbeSchemaMeta.mname                          IS '名称';/
+                COMMENT ON COLUMN TProbeSchemaMeta.mformat                        IS '格式类型';/
+                COMMENT ON COLUMN TProbeSchemaMeta.mlength                        IS '总长度';/
+                COMMENT ON COLUMN TProbeSchemaMeta.mdecimal                       IS '小数位数';/
+                COMMENT ON COLUMN TProbeSchemaMeta.pk                             IS '是否为主键';/
+                COMMENT ON COLUMN TProbeSchemaMeta.orderBy                        IS '排列显示顺序';/
+                COMMENT ON COLUMN TProbeSchemaMeta.projectID                      IS '项目ID';/
+                COMMENT ON COLUMN TProbeSchemaMeta.comment                        IS '注释说明';/
+                COMMENT ON COLUMN TProbeSchemaMeta.isDel                          IS '删除标记。1删除；0未删除';/
+                COMMENT ON COLUMN TProbeSchemaMeta.createUserID                   IS '数据创建人ID';/
+                COMMENT ON COLUMN TProbeSchemaMeta.updateUserID                   IS '数据修改人ID';/
+                COMMENT ON COLUMN TProbeSchemaMeta.createTime                     IS '创建时间';/
+                COMMENT ON COLUMN TProbeSchemaMeta.updateTime                     IS '修改时间';/
+                ]]>
+            </content>
+            
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TProbeSchemaMeta
+                (
+                 id                         VARCHAR(64)    NOT NULL       COMMENT '主键'
+                ,schemaID                   VARCHAR(64)    NOT NULL       COMMENT '归类ID'
+                ,nameID                     VARCHAR(64)    NOT NULL       COMMENT '逻辑名称ID'
+                ,mname                      VARCHAR(128)   NOT NULL       COMMENT '名称'
+                ,mformat                    VARCHAR(10)    NOT NULL       COMMENT '格式类型'
+                ,mlength                    DECIMAL(10 ,0) NOT NULL       COMMENT '总长度'
+                ,mdecimal                   DECIMAL(3 ,0)  NOT NULL       COMMENT '小数位数'
+                ,pk                         DECIMAL(1 ,0)  NOT NULL       COMMENT '是否为主键'
+                ,orderBy                    DECIMAL(10 ,0) NOT NULL       COMMENT '排列显示顺序'
+                ,projectID                  VARCHAR(64)                   COMMENT '项目ID'
+                ,comment                    VARCHAR(4000)                 COMMENT '注释说明'
+                ,isDel                      DECIMAL(1 ,0)  NOT NULL       COMMENT '删除标记。1删除；0未删除'
+                ,createUserID               VARCHAR(64)    NOT NULL       COMMENT '数据创建人ID'
+                ,updateUserID               VARCHAR(64)    NOT NULL       COMMENT '数据修改人ID'
+                ,createTime                 DATETIME       NOT NULL       COMMENT '创建时间'
+                ,updateTime                 DATETIME       NOT NULL       COMMENT '修改时间'
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;/
+                
+                ALTER TABLE TProbeSchemaMeta COMMENT                      = '数据探针的结构中本体';/
+
+                ALTER TABLE TProbeSchemaMeta ADD CONSTRAINT PK_ProbeSchemaMeta   PRIMARY KEY (id);/
+                ALTER TABLE TProbeSchemaMeta ADD CONSTRAINT FK_ProbeSchemaMeta   FOREIGN KEY (schemaID) REFERENCES TProbeSchema     (id);/
+                ALTER TABLE TProbeSchemaMeta ADD CONSTRAINT FK_ProbeSchemaNameID FOREIGN KEY (nameID)   REFERENCES TProbeSchemaName (id);/
+                                
+                CREATE INDEX IDX_ProbeSchemaMeta_updateTime ON TProbeSchemaMeta (updateTime);/
+                ]]>
+            </content>
+            
+            <comment>数据探针的结构中本体</comment>
+            <create if="启用 == IsCreateDB_MS_Common.getValue">TProbeSchemaMeta</create>
+            
+        </sql>
+        
+    </sqls>
+    
+</config>

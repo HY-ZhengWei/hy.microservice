@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="sqls"            class="java.util.ArrayList" />
+    <import name="sqlGroup"        class="org.hy.common.xml.plugins.XSQLGroup" />
+    <import name="sql"             class="org.hy.common.xml.XSQL" />
+
+
+
+    <!-- 数据探针的结构的相关SQL组 -->
+    <sqls>
+        
+        <sqlGroup id="GXSQL_Common_ProbeSchema_Save">
+            <comment>数据探针的结构</comment>
+            
+            <sqlNode>
+                <sql  ref="XSQL_Common_ProbeSchema_IsExists" />
+                <type ref="this.$Type_Query" />
+                <oneConnection>true</oneConnection>
+            </sqlNode>
+            
+            <sqlNode>
+                <sql  ref="XSQL_Common_ProbeSchema_Insert" />
+                <type ref="this.$Type_ExecuteUpdate" />
+                <condition><![CDATA[:ProbeSchema_IsExists <= 0]]></condition>
+            </sqlNode>
+            
+            <sqlNode>
+                <sql  ref="XSQL_Common_ProbeSchema_Update" />
+                <type ref="this.$Type_ExecuteUpdate" />
+                <condition><![CDATA[:ProbeSchema_IsExists >= 1]]></condition>
+            </sqlNode>
+            
+            <!-- 数据探针的结构中本体逻辑名称的关系 -->
+            <sqlNode>
+                <sql  ref="XSQL_Common_ProbeSchemaName_IsExists" />
+                <type ref="this.$Type_Query" />
+                <oneConnection>true</oneConnection>
+            </sqlNode>
+            
+            <sqlNode>
+                <sql  ref="XSQL_Common_ProbeSchemaName_Insert" />
+                <type ref="this.$Type_ExecuteUpdate" />
+                <condition><![CDATA[:ProbeSchemaName_IsExists <= 0]]></condition>
+            </sqlNode>
+            
+            <sqlNode>
+                <sql  ref="XSQL_Common_ProbeSchemaName_Update" />
+                <type ref="this.$Type_ExecuteUpdate" />
+                <condition><![CDATA[:ProbeSchemaName_IsExists >= 1]]></condition>
+            </sqlNode>
+            
+            <!-- 数据探针的结构的本体字段的关系 -->
+            <sqlNode>
+                <sql  ref="XSQL_Common_ProbeSchemaMeta_Delete" />
+                <type ref="this.$Type_ExecuteUpdate" />
+                <condition><![CDATA[:Schema.createMetas == 1]]></condition>
+            </sqlNode>
+            
+            <sqlNode>
+                <sql  ref="XSQL_Common_ProbeSchemaMeta_Insert" />
+                <type ref="this.$Type_CollectionToExecuteUpdate" />
+                <collectionID>SchemaMetas</collectionID>
+                <condition><![CDATA[:Schema.createMetas == 1 && :Schema.isDel == 0]]></condition>
+            </sqlNode>
+        </sqlGroup>
+        
+    </sqls>
+    
+</config>

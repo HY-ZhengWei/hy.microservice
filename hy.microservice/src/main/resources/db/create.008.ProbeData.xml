@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="sqls"            class="java.util.ArrayList" />
+    <import name="sql"             class="org.hy.common.xml.XSQL" />
+
+
+
+    <!-- 数据探针的原数据的相关SQL -->
+    <sqls>
+    
+        <sql id="XSQL_Common_Create_ProbeData">
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TProbeData
+                (
+                 assetID                    VARCHAR2(200)  NOT NULL
+                ,isDel                      NUMBER(1 ,0)   NOT NULL
+                ,createUserID               VARCHAR2(64)   NOT NULL
+                ,updateUserID               VARCHAR2(64)   NOT NULL
+                ,createTime                 DATETIME       NOT NULL
+                ,updateTime                 DATETIME       NOT NULL
+                :STRING                     VARCHAR2(1L)
+                :NUMBER                     NUMBER(1L ,0D)
+                :BOOLEAN                    NUMBER(1 ,0)
+                );/
+                
+                ALTER TABLE TProbeData ADD CONSTRAINT PK_TProbeData PRIMARY KEY (assetID);/
+                
+                CREATE INDEX IDX_TProbeData_updateTime ON TProbeData (updateTime);/
+                
+                COMMENT ON TABLE  TProbeData                                IS '数据探针的原数据';/
+                COMMENT ON COLUMN TProbeData.assetID                        IS '数据资产编号';/
+                COMMENT ON COLUMN TProbeData.isDel                          IS '删除标记。1删除；0未删除';/
+                COMMENT ON COLUMN TProbeData.createUserID                   IS '数据创建人ID';/
+                COMMENT ON COLUMN TProbeData.updateUserID                   IS '数据修改人ID';/
+                COMMENT ON COLUMN TProbeData.createTime                     IS '创建时间';/
+                COMMENT ON COLUMN TProbeData.updateTime                     IS '修改时间';/
+                ]]>
+            </content>
+            
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TProbeData
+                (
+                 assetID                    VARCHAR2(200)  NOT NULL
+                ,isDel                      NUMBER(1 ,0)   NOT NULL
+                ,createUserID               VARCHAR2(64)   NOT NULL
+                ,updateUserID               VARCHAR2(64)   NOT NULL
+                ,createTime                 DATE           NOT NULL
+                ,updateTime                 DATE           NOT NULL
+                :STRING                     VARCHAR2(1L)
+                :NUMBER                     NUMBER(1L ,0D)
+                :BOOLEAN                    NUMBER(1 ,0)
+                );/
+                
+                ALTER TABLE TProbeData ADD CONSTRAINT PK_TProbeData PRIMARY KEY (assetID);/
+                
+                CREATE INDEX IDX_TProbeData_updateTime ON TProbeData (updateTime);/
+                
+                COMMENT ON TABLE  TProbeData                                IS '数据探针的原数据';/
+                COMMENT ON COLUMN TProbeData.assetID                        IS '数据资产编号';/
+                COMMENT ON COLUMN TProbeData.isDel                          IS '删除标记。1删除；0未删除';/
+                COMMENT ON COLUMN TProbeData.createUserID                   IS '数据创建人ID';/
+                COMMENT ON COLUMN TProbeData.updateUserID                   IS '数据修改人ID';/
+                COMMENT ON COLUMN TProbeData.createTime                     IS '创建时间';/
+                COMMENT ON COLUMN TProbeData.updateTime                     IS '修改时间';/
+                ]]>
+            </content>
+            
+            <content if="POSTGRESQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TProbeData
+                (
+                 assetID                    VARCHAR(200)   NOT NULL
+                ,isDel                      NUMERIC(1 ,0)  NOT NULL
+                ,createUserID               VARCHAR(64)    NOT NULL
+                ,updateUserID               VARCHAR(64)    NOT NULL
+                ,createTime                 TIMESTAMP      NOT NULL
+                ,updateTime                 TIMESTAMP      NOT NULL
+                :STRING                     VARCHAR(1L)
+                :NUMBER                     NUMERIC(1L ,0D)
+                :BOOLEAN                    NUMERIC(1 ,0)
+                );/
+                
+                ALTER TABLE TProbeData ADD CONSTRAINT PK_TProbeData PRIMARY KEY (assetID);/
+                
+                CREATE INDEX IDX_TProbeData_updateTime ON TProbeData (updateTime);/
+                
+                COMMENT ON TABLE  TProbeData                                IS '数据探针的原数据';/
+                COMMENT ON COLUMN TProbeData.assetID                        IS '数据资产编号';/
+                COMMENT ON COLUMN TProbeData.isDel                          IS '删除标记。1删除；0未删除';/
+                COMMENT ON COLUMN TProbeData.createUserID                   IS '数据创建人ID';/
+                COMMENT ON COLUMN TProbeData.updateUserID                   IS '数据修改人ID';/
+                COMMENT ON COLUMN TProbeData.createTime                     IS '创建时间';/
+                COMMENT ON COLUMN TProbeData.updateTime                     IS '修改时间';/
+                ]]>
+            </content>
+            
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                CREATE TABLE TProbeData
+                (
+                 assetID                    VARCHAR(200)  NOT NULL        COMMENT '数据资产编号'
+                ,isDel                      INT           NOT NULL        COMMENT '删除标记。1删除；0未删除'
+                ,createUserID               VARCHAR(64)   NOT NULL        COMMENT '数据创建人ID'
+                ,updateUserID               VARCHAR(64)   NOT NULL        COMMENT '数据修改人ID'
+                ,createTime                 DATETIME      NOT NULL        COMMENT '创建时间'
+                ,updateTime                 DATETIME      NOT NULL        COMMENT '修改时间'
+                :STRING                     VARCHAR(1L)
+                :NUMBER                     DECIMAL(1L ,0D)
+                :BOOLEAN                    DECIMAL(1 ,0)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;/
+                
+                ALTER TABLE TProbeData COMMENT                      = '数据探针的原数据';/
+
+                ALTER TABLE TProbeData ADD CONSTRAINT PK_TProbeData PRIMARY KEY (assetID);/
+                                
+                CREATE INDEX IDX_TProbeData_updateTime ON TProbeData (updateTime);/
+                ]]>
+            </content>
+            
+            <comment>数据探针的原数据</comment>
+            
+        </sql>
+        
+    </sqls>
+    
+</config>

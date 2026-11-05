@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="sqls"            class="java.util.ArrayList" />
+    <import name="sqlGroup"        class="org.hy.common.xml.plugins.XSQLGroup" />
+    <import name="sql"             class="org.hy.common.xml.XSQL" />
+
+
+
+    <!-- 数据探针的结构中本体的相关SQL -->
+    <sqls>
+    
+        <sql id="XSQL_Common_ProbeSchemaMeta_Insert"> 
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <contentDB>
+                <defaultNull>true</defaultNull>
+            </contentDB>
+            
+            <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT  INTO TProbeSchemaMeta
+                       (
+                        id
+                       ,schemaID
+                       ,nameID
+                       ,mname
+                       ,mformat
+                       ,mlength
+                       ,mdecimal
+                       ,pk
+                       ,orderBy
+                       ,projectID 
+                       ,"COMMENT" 
+                       ,isDel
+                       ,createUserID
+                       ,updateUserID
+                       ,createTime
+                       ,updateTime
+                       )
+                VALUES (
+                        ':id'
+                       ,':schemaID'
+                       ,':nameID'
+                       ,':mname'
+                       ,':mformat'
+                       ,':mlength'
+                       ,':mdecimal'
+                       ,':pk'
+                       ,':orderBy'
+                       ,':projectID'
+                       ,':comment'
+                       ,':isDel'
+                       ,':createUserID'
+                       ,':updateUserID'
+                       ,SYSDATE
+                       ,SYSDATE
+                       )
+                ]]>
+            </content>
+            
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT  INTO TProbeSchemaMeta
+                       (
+                        id
+                       ,schemaID
+                       ,nameID
+                       ,mname
+                       ,mformat
+                       ,mlength
+                       ,mdecimal
+                       ,pk
+                       ,orderBy
+                       ,projectID 
+                       ,"COMMENT" 
+                       ,isDel
+                       ,createUserID
+                       ,updateUserID
+                       ,createTime
+                       ,updateTime
+                       )
+                VALUES (
+                        ':id'
+                       ,':schemaID'
+                       ,':nameID'
+                       ,':mname'
+                       ,':mformat'
+                       ,':mlength'
+                       ,':mdecimal'
+                       ,':pk'
+                       ,':orderBy'
+                       ,':projectID'
+                       ,':comment'
+                       ,':isDel'
+                       ,':createUserID'
+                       ,':updateUserID'
+                       ,SYSDATE
+                       ,SYSDATE
+                       )
+                ]]>
+            </content>
+            
+            <content if="POSTGRESQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT  INTO TProbeSchemaMeta
+                       (
+                        id
+                       ,schemaID
+                       ,nameID
+                       ,mname
+                       ,mformat
+                       ,mlength
+                       ,mdecimal
+                       ,pk
+                       ,orderBy
+                       ,projectID 
+                       ,comment
+                       ,isDel
+                       ,createUserID
+                       ,updateUserID
+                       ,createTime
+                       ,updateTime
+                       )
+                VALUES (
+                        ':id'
+                       ,':schemaID'
+                       ,':nameID'
+                       ,':mname'
+                       ,':mformat'
+                       ,':mlength'
+                       ,':mdecimal'
+                       ,':pk'
+                       ,':orderBy'
+                       ,':projectID'
+                       ,':comment'
+                       ,':isDel'
+                       ,':createUserID'
+                       ,':updateUserID'
+                       ,LOCALTIMESTAMP
+                       ,LOCALTIMESTAMP
+                       )
+                ]]>
+            </content>
+            
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT  INTO TProbeSchemaMeta
+                       (
+                        id
+                       ,schemaID
+                       ,nameID
+                       ,mname
+                       ,mformat
+                       ,mlength
+                       ,mdecimal
+                       ,pk
+                       ,orderBy
+                       ,projectID 
+                       ,comment
+                       ,isDel
+                       ,createUserID
+                       ,updateUserID
+                       ,createTime
+                       ,updateTime
+                       )
+                VALUES (
+                        ':id'
+                       ,':schemaID'
+                       ,':nameID'
+                       ,':mname'
+                       ,':mformat'
+                       ,':mlength'
+                       ,':mdecimal'
+                       ,':pk'
+                       ,':orderBy'
+                       ,':projectID'
+                       ,':comment'
+                       ,':isDel'
+                       ,':createUserID'
+                       ,':updateUserID'
+                       ,NOW()
+                       ,NOW()
+                       )
+                ]]>
+            </content>
+            
+            <content if="SQLITE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                INSERT  INTO TProbeSchemaMeta
+                       (
+                        id
+                       ,schemaID
+                       ,nameID
+                       ,mname
+                       ,mformat
+                       ,mlength
+                       ,mdecimal
+                       ,pk
+                       ,orderBy
+                       ,projectID 
+                       ,comment
+                       ,isDel
+                       ,createUserID
+                       ,updateUserID
+                       ,createTime
+                       ,updateTime
+                       )
+                VALUES (
+                        ':id'
+                       ,':schemaID'
+                       ,':nameID'
+                       ,':mname'
+                       ,':mformat'
+                       ,':mlength'
+                       ,':mdecimal'
+                       ,':pk'
+                       ,':orderBy'
+                       ,':projectID'
+                       ,':comment'
+                       ,':isDel'
+                       ,':createUserID'
+                       ,':updateUserID'
+                       ,DATETIME('now')
+                       ,DATETIME('now')
+                       )
+                ]]>
+            </content>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_ProbeSchemaMeta_Delete"> 
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                UPDATE  TProbeSchemaMeta
+                   SET  updateTime   = SYSDATE
+                       ,updateUserID = ':updateUserID'
+                       ,isDel        = 1
+                 WHERE  schemaID     = ':Schema.id'
+                   AND  nameID       = ':Schema.nameID'
+                ]]>
+            </content>
+            
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                UPDATE  TProbeSchemaMeta
+                   SET  updateTime   = SYSDATE
+                       ,updateUserID = ':updateUserID'
+                       ,isDel        = 1
+                 WHERE  schemaID     = ':Schema.id'
+                   AND  nameID       = ':Schema.nameID'
+                ]]>
+            </content>
+            
+            <content if="POSTGRESQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                UPDATE  TProbeSchemaMeta
+                   SET  updateTime   = LOCALTIMESTAMP
+                       ,updateUserID = ':updateUserID'
+                       ,isDel        = 1
+                 WHERE  schemaID     = ':Schema.id'
+                   AND  nameID       = ':Schema.nameID'
+                ]]>
+            </content>
+            
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                UPDATE  TProbeSchemaMeta
+                   SET  updateTime   = NOW()
+                       ,updateUserID = ':updateUserID'
+                       ,isDel        = 1
+                 WHERE  schemaID     = ':Schema.id'
+                   AND  nameID       = ':Schema.nameID'
+                ]]>
+            </content>
+            
+            <content if="SQLITE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                UPDATE  TProbeSchemaMeta
+                   SET  updateTime   = DATETIME('now')
+                       ,updateUserID = ':updateUserID'
+                       ,isDel        = 1
+                 WHERE  schemaID     = ':Schema.id'
+                   AND  nameID       = ':Schema.nameID'
+                ]]>
+            </content>
+            
+        </sql>
+        
+                
+        
+        <sql id="XSQL_Common_ProbeSchemaMeta_IsExists"> 
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                SELECT  COUNT(1) AS ProbeSchemaMeta_IsExists
+                  FROM  TProbeSchemaMeta
+                 WHERE  id = ':id'
+                   FOR  UPDATE
+                ]]>
+            </content>
+            
+            <result>
+                <row>java.util.HashMap</row>
+                <cfill>put(colName ,colValue)</cfill>
+                <cstyle>UPPER</cstyle>
+            </result>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_ProbeSchemaMeta_Query"> 
+            
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                SELECT  A.id
+                       ,A.schemaID
+                       ,A.nameID
+                       ,A.mname
+                       ,A.mformat
+                       ,A.mlength
+                       ,A.mdecimal
+                       ,A.pk
+                       ,A.orderBy
+                       ,A.projectID 
+                       ,A.comment
+                       ,A.isDel
+                       ,A.createUserID
+                       ,A.updateUserID
+                       ,A.createTime
+                       ,A.updateTime
+                       ,B.id                AS "items.id"
+                       ,(
+                         SELECT  COUNT(1)
+                           FROM  TFavoriteData  SA 
+                          WHERE  SA.updateUserID = ':userID'
+                            AND  SA.serviceType  = 'ProbeSchemaMeta'
+                            AND  SA.dataID       = A.id
+                            AND  SA.isDel        = 0
+                        )    AS  isFavorite
+                  FROM  TProbeSchemaMeta  A
+                 WHERE  A.isDel         = 0
+              <[   AND  A.id            = ':id'           ]>
+              <[   AND  A.schemaID      = ':schemaID'     ]>
+              <[   AND  A.nameID        = ':nameID'       ]>
+              <[   AND  A.mname         = ':mname'        ]>
+              <[   AND  A.mformat       = ':mformat'      ]>
+              <[   AND  A.mlength       = ':mlength'      ]>
+              <[   AND  A.mdecimal      = ':mdecimal'     ]>
+              <[   AND  A.pk            = ':pk'           ]>
+              <[   AND  A.projectID     = ':projectID'    ]>
+              <[   AND  (
+                         SELECT  COUNT(1)
+                           FROM  TFavoriteData  SA 
+                          WHERE  SA.updateUserID = ':userID'
+                            AND  SA.serviceType  = 'ProbeSchemaMeta'
+                            AND  SA.dataID       = A.id
+                            AND  SA.isDel        = 0
+                        ) >= :isFavorite                  ]>
+                 ORDER  BY A.updateTime DESC
+                ]]>
+            </content>
+            
+            <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT  A.id
+                       ,A.schemaID
+                       ,A.nameID
+                       ,A.mname
+                       ,A.mformat
+                       ,A.mlength
+                       ,A.mdecimal
+                       ,A.pk
+                       ,A.orderBy
+                       ,A.projectID
+                       ,A."COMMENT"
+                       ,A.isDel
+                       ,A.createUserID
+                       ,A.updateUserID
+                       ,A.createTime
+                       ,A.updateTime
+                       ,(
+                         SELECT  COUNT(1)
+                           FROM  TFavoriteData  SA 
+                          WHERE  SA.updateUserID = ':userID'
+                            AND  SA.serviceType  = 'ProbeSchemaMeta'
+                            AND  SA.dataID       = A.id
+                            AND  SA.isDel        = 0
+                        )    AS  isFavorite
+                  FROM  TProbeSchemaMeta  A
+                 WHERE  A.isDel         = 0
+              <[   AND  A.id            = ':id'           ]>
+              <[   AND  A.schemaID      = ':schemaID'     ]>
+              <[   AND  A.nameID        = ':nameID'       ]>
+              <[   AND  A.mname         = ':mname'        ]>
+              <[   AND  A.mformat       = ':mformat'      ]>
+              <[   AND  A.mlength       = ':mlength'      ]>
+              <[   AND  A.mdecimal      = ':mdecimal'     ]>
+              <[   AND  A.pk            = ':pk'           ]>
+              <[   AND  A.projectID     = ':projectID'    ]>
+              <[   AND  (
+                         SELECT  COUNT(1)
+                           FROM  TFavoriteData  SA 
+                          WHERE  SA.updateUserID = ':userID'
+                            AND  SA.serviceType  = 'ProbeSchemaMeta'
+                            AND  SA.dataID       = A.id
+                            AND  SA.isDel        = 0
+                        ) >= :isFavorite                  ]>
+                 ORDER  BY A.updateTime DESC
+                ]]>
+            </content>
+            
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT  A.id
+                       ,A.schemaID
+                       ,A.nameID
+                       ,A.mname
+                       ,A.mformat
+                       ,A.mlength
+                       ,A.mdecimal
+                       ,A.pk
+                       ,A.orderBy
+                       ,A.projectID
+                       ,A."COMMENT"
+                       ,A.isDel
+                       ,A.createUserID
+                       ,A.updateUserID
+                       ,A.createTime
+                       ,A.updateTime
+                       ,(
+                         SELECT  COUNT(1)
+                           FROM  TFavoriteData  SA 
+                          WHERE  SA.updateUserID = ':userID'
+                            AND  SA.serviceType  = 'ProbeSchemaMeta'
+                            AND  SA.dataID       = A.id
+                            AND  SA.isDel        = 0
+                        )    AS  isFavorite
+                  FROM  TProbeSchemaMeta  A
+                 WHERE  A.isDel         = 0
+              <[   AND  A.schemaID      = ':schemaID'     ]>
+              <[   AND  A.nameID        = ':nameID'       ]>
+              <[   AND  A.mname         = ':mname'        ]>
+              <[   AND  A.mformat       = ':mformat'      ]>
+              <[   AND  A.mlength       = ':mlength'      ]>
+              <[   AND  A.mdecimal      = ':mdecimal'     ]>
+              <[   AND  A.pk            = ':pk'           ]>
+              <[   AND  A.projectID     = ':projectID'    ]>
+              <[   AND  (
+                         SELECT  COUNT(1)
+                           FROM  TFavoriteData  SA 
+                          WHERE  SA.updateUserID = ':userID'
+                            AND  SA.serviceType  = 'ProbeSchemaMeta'
+                            AND  SA.dataID       = A.id
+                            AND  SA.isDel        = 0
+                        ) >= :isFavorite                  ]>
+                 ORDER  BY A.updateTime DESC
+                ]]>
+            </content>
+            
+            <result>
+                <table>java.util.LinkedHashMap</table>
+                <fill>put(row.id ,row)</fill>
+                <row>org.hy.microservice.common.probe.schema.ProbeSchemaMeta</row>
+                <cfill>setter(colValue)</cfill>
+            </result>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_ProbeSchemaMeta_Query_ByPage"> 
+            
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content ref="XSQL_Common_ProbeSchemaMeta_Query.getContent" />
+            <result  ref="XSQL_Common_ProbeSchemaMeta_Query.getResult"/>
+            <comment>分页查询</comment>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_ProbeSchemaMeta_Count"> 
+            
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                SELECT  COUNT(1) AS totalCount
+                  FROM  TProbeSchemaMeta  A
+                 WHERE  A.isDel         = 0
+              <[   AND  A.id            = ':id'           ]>
+              <[   AND  A.schemaID      = ':schemaID'     ]>
+              <[   AND  A.nameID        = ':nameID'       ]>
+              <[   AND  A.mname         = ':mname'        ]>
+              <[   AND  A.mformat       = ':mformat'      ]>
+              <[   AND  A.mlength       = ':mlength'      ]>
+              <[   AND  A.mdecimal      = ':mdecimal'     ]>
+              <[   AND  A.pk            = ':pk'           ]>
+              <[   AND  A.projectID     = ':projectID'    ]>
+              <[   AND  (
+                         SELECT  COUNT(1)
+                           FROM  TFavoriteData  SA 
+                          WHERE  SA.updateUserID = ':userID'
+                            AND  SA.serviceType  = 'ProbeSchemaMeta'
+                            AND  SA.dataID       = A.id
+                            AND  SA.isDel        = 0
+                        ) >= :isFavorite                  ]>
+                ]]>
+            </content>
+            
+        </sql>
+        
+    </sqls>
+    
+</config>

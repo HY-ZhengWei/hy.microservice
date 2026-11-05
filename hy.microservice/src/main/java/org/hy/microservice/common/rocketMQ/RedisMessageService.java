@@ -32,7 +32,7 @@ public class RedisMessageService
 
     public RedisMessageService()
     {
-        boolean v_UseRemote = "启用".equals(XJava.getParam("MS_Common_IsHeartbeat").getValue());
+        boolean v_UseRemote = "启用".equals(XJava.getParam("MS_Common_IsRedis").getValue());
         this.redisCache = CacheFactory.newInstanceOf(v_UseRemote ,MessageEntity.class);
     }
 

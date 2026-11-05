@@ -13,6 +13,7 @@ import org.hy.common.Help;
 import org.hy.common.xml.log.Logger;
 import org.hy.microservice.common.BaseData;
 import org.hy.microservice.common.BaseDomain;
+import org.hy.microservice.common.BaseView;
 
 
 
@@ -24,11 +25,162 @@ import org.hy.microservice.common.BaseDomain;
  * @author      ZhengWei(HY)
  * @createDate  2024-06-27
  * @version     v1.0
+ *              v2.0  2026-10-12  添加：将交互层的集合转为领域层的集合
  */
 public class DomainUtil
 {
     
     private static final Logger $Logger = new Logger(DomainUtil.class);
+    
+    
+    
+    /**
+     * 将交互层的集合转为领域层的集合
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-10-12
+     * @version     v1.0
+     *
+     * @param <Data>         数据层的泛型
+     * @param <Domain>       领域层的泛型
+     * @param <View>         交互层的泛型
+     * @param i_Datas        交互层的数据集合
+     * @return
+     */
+    public static <Data extends BaseData ,Domain extends BaseDomain<Data> ,View extends BaseView<Domain>> List<Domain> toDomain(List<View> i_Views)
+    {
+        if ( i_Views == null )
+        {
+            return null;
+        }
+        else if ( i_Views.isEmpty() )
+        {
+            return new ArrayList<Domain>();
+        }
+        
+        List<Domain> v_Domains = new ArrayList<Domain>();
+        for (View v_View : i_Views)
+        {
+            Domain v_Domain = v_View.gatDomain();
+            if ( v_Domain != null )
+            {
+                v_Domains.add(v_Domain);
+            }
+        }
+        return v_Domains;
+    }
+    
+    
+    
+    /**
+     * 将交互层的集合转为领域层的集合
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-10-12
+     * @version     v1.0
+     *
+     * @param <Data>         数据层的泛型
+     * @param <Domain>       领域层的泛型
+     * @param <View>         交互层的泛型
+     * @param i_Datas        交互层的数据集合
+     * @return
+     */
+    public static <Data extends BaseData ,Domain extends BaseDomain<Data> ,View extends BaseView<Domain>> Map<String ,Domain> toDomain(Map<String ,View> i_Views)
+    {
+        if ( i_Views == null )
+        {
+            return null;
+        }
+        else if ( i_Views.isEmpty() )
+        {
+            return new LinkedHashMap<String ,Domain>();
+        }
+        
+        Map<String ,Domain> v_Domains = new LinkedHashMap<String ,Domain>();
+        for (Map.Entry<String ,View> v_View : i_Views.entrySet())
+        {
+            Domain v_Domain = v_View.getValue().gatDomain();
+            if ( v_Domain != null )
+            {
+                v_Domains.put(v_View.getKey() ,v_Domain);
+            }
+        }
+        return v_Domains;
+    }
+    
+    
+    
+    /**
+     * 将交互层的集合转为领域层的集合
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-10-12
+     * @version     v1.0
+     *
+     * @param <Data>         数据层的泛型
+     * @param <Domain>       领域层的泛型
+     * @param <View>         交互层的泛型
+     * @param i_Datas        交互层的数据集合
+     * @return
+     */
+    public static <Data extends BaseData ,Domain extends BaseDomain<Data> ,View extends BaseView<Domain>> Set<Domain> toDomain(Set<View> i_Views)
+    {
+        if ( i_Views == null )
+        {
+            return null;
+        }
+        else if ( i_Views.isEmpty() )
+        {
+            return new LinkedHashSet<Domain>();
+        }
+        
+        Set<Domain> v_Domains = new LinkedHashSet<Domain>();
+        for (View v_View : i_Views)
+        {
+            Domain v_Domain = v_View.gatDomain();
+            if ( v_Domain != null )
+            {
+                v_Domains.add(v_Domain);
+            }
+        }
+        return v_Domains;
+    }
+    
+    
+    
+    /**
+     * 将数据层的转为领域层的集合
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-10-12
+     * @version     v1.0
+     *
+     * @param <Data>         数据层的泛型
+     * @param <Domain>       领域层的泛型
+     * @param i_Data         数据层的数据集合
+     * @param i_DomainClass  领域层的元类型
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static <Data extends BaseData ,Domain extends BaseDomain<Data>> Domain toDomain(Data i_Data ,Class<Domain> i_DomainClass)
+    {
+        if ( i_Data == null )
+        {
+            return null;
+        }
+        else if ( i_DomainClass == null )
+        {
+            throw new NullPointerException("Domain.class is null");
+        }
+        
+        Constructor<Domain> v_DomainConstructor = findConstructor((Class<Data>) i_Data.getClass() ,i_DomainClass);
+        if ( v_DomainConstructor == null )
+        {
+            throw new RuntimeException("Can't find Doamin Constructor(<? extends BaseData>)");
+        }
+        
+        return newDomain(v_DomainConstructor ,i_Data);
+    }
     
     
     
