@@ -105,6 +105,14 @@ public class OperationLogService implements IOperationLogService ,Serializable
         {
             i_OperationLog.setUrlRequestBody(i_OperationLog.getUrlRequestBody().substring(0 ,this.logMaxLength.getValueInt() - 1));
         }
+        if ( !Help.isNull(i_OperationLog.getUrlResponse())    && i_OperationLog.getUrlResponse().length()    >= this.logMaxLength.getValueInt() )
+        {
+            i_OperationLog.setUrlResponse(i_OperationLog.getUrlResponse().substring(0 ,this.logMaxLength.getValueInt() - 1));
+        }
+        if ( !Help.isNull(i_OperationLog.getUserDatas())      && i_OperationLog.getUserDatas().length()      >= this.logMaxLength.getValueInt() )
+        {
+            i_OperationLog.setUserDatas(i_OperationLog.getUserDatas().substring(0 ,this.logMaxLength.getValueInt() - 1));
+        }
         
         i_OperationLog.setId(Help.NVL(i_OperationLog.getId() ,StringHelp.getUUID()));
         i_OperationLog.appendCacheToDBFlag(OperationLogCache.$C2DB_Append_Insert);
