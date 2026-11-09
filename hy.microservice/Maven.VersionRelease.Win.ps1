@@ -1,3 +1,9 @@
+param(
+    [string]$mode = ""   # 当 -mode org 时，只处理路径包含resources目录下的pom.xml
+)
+
+
+
 $pomPath = "pom.xml"
 $targetDirs = @(
     "../.."
@@ -14,6 +20,7 @@ if (Test-Path $pomPath) {
     # 加载XML文件并解析版本号
     $pomXml = [xml](Get-Content $pomPath -Encoding UTF8)
     $newVersion = $pomXml.project.version
+    $sourcePomPath = (Resolve-Path $pomPath).Path
     
     # 显示版本号
     if ($newVersion) {
@@ -47,7 +54,8 @@ $targetPomFiles = $targetDirs | ForEach-Object {
         # 条件2：排除当前目录下的所有pom.xml
         $_.FullName -notlike "$currentDirPrefix*" -and 
         $_.FullName -notlike "*\target\*" -and (
-        $_.FullName -like "*WorkSpace*")
+        $_.FullName -like "*WorkSpace*") -and
+        ( $mode -ne "org" -or $_.FullName.Contains("resources") )
 }
 
 if ($targetPomFiles.Count -eq 0) {
