@@ -18,7 +18,7 @@
                 <![CDATA[
                 CREATE TABLE TProbeData
                 (
-                 assetID                    VARCHAR2(200)  NOT NULL
+                 assetID                    VARCHAR2(72)   NOT NULL
                 ,isDel                      NUMBER(1 ,0)   NOT NULL
                 ,createUserID               VARCHAR2(64)   NOT NULL
                 ,updateUserID               VARCHAR2(64)   NOT NULL
@@ -47,7 +47,7 @@
                 <![CDATA[
                 CREATE TABLE TProbeData
                 (
-                 assetID                    VARCHAR2(200)  NOT NULL
+                 assetID                    VARCHAR2(72)   NOT NULL
                 ,isDel                      NUMBER(1 ,0)   NOT NULL
                 ,createUserID               VARCHAR2(64)   NOT NULL
                 ,updateUserID               VARCHAR2(64)   NOT NULL
@@ -76,12 +76,12 @@
                 <![CDATA[
                 CREATE TABLE TProbeData
                 (
-                 assetID                    VARCHAR(200)   NOT NULL
-                ,isDel                      NUMERIC(1 ,0)  NOT NULL
-                ,createUserID               VARCHAR(64)    NOT NULL
-                ,updateUserID               VARCHAR(64)    NOT NULL
-                ,createTime                 TIMESTAMP      NOT NULL
-                ,updateTime                 TIMESTAMP      NOT NULL
+                 assetID                    VARCHAR(72)     NOT NULL
+                ,isDel                      NUMERIC(1 ,0)   NOT NULL
+                ,createUserID               VARCHAR(64)     NOT NULL
+                ,updateUserID               VARCHAR(64)     NOT NULL
+                ,createTime                 TIMESTAMP       NOT NULL
+                ,updateTime                 TIMESTAMP       NOT NULL
                 :STRING                     VARCHAR(1L)
                 :NUMBER                     NUMERIC(1L ,0D)
                 :BOOLEAN                    NUMERIC(1 ,0)
@@ -105,12 +105,12 @@
                 <![CDATA[
                 CREATE TABLE TProbeData
                 (
-                 assetID                    VARCHAR(200)  NOT NULL        COMMENT '数据资产编号'
-                ,isDel                      INT           NOT NULL        COMMENT '删除标记。1删除；0未删除'
-                ,createUserID               VARCHAR(64)   NOT NULL        COMMENT '数据创建人ID'
-                ,updateUserID               VARCHAR(64)   NOT NULL        COMMENT '数据修改人ID'
-                ,createTime                 DATETIME      NOT NULL        COMMENT '创建时间'
-                ,updateTime                 DATETIME      NOT NULL        COMMENT '修改时间'
+                 assetID                    VARCHAR(72)     NOT NULL        COMMENT '数据资产编号'
+                ,isDel                      INT             NOT NULL        COMMENT '删除标记。1删除；0未删除'
+                ,createUserID               VARCHAR(64)     NOT NULL        COMMENT '数据创建人ID'
+                ,updateUserID               VARCHAR(64)     NOT NULL        COMMENT '数据修改人ID'
+                ,createTime                 DATETIME        NOT NULL        COMMENT '创建时间'
+                ,updateTime                 DATETIME        NOT NULL        COMMENT '修改时间'
                 :STRING                     VARCHAR(1L)
                 :NUMBER                     DECIMAL(1L ,0D)
                 :BOOLEAN                    DECIMAL(1 ,0)

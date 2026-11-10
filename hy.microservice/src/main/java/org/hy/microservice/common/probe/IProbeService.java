@@ -18,17 +18,18 @@ import org.hy.microservice.common.probe.schema.ProbeSchemaDomain;
 public interface IProbeService
 {
     
+    
     /**
-     * 数据探针
+     * 按归类查询数据探针的结构（带缓存的）
      * 
      * @author      ZhengWei(HY)
-     * @createDate  2026-10-12
+     * @createDate  2026-11-06
      * @version     v1.0
      *
-     * @param i_ProbeRequest  数据探针的请求
-     * @return                数据探针的响应
+     * @param i_Type  本体结构的归类
+     * @return
      */
-    public ProbeResponseDomain data(ProbeRequestDomain i_ProbeRequest);
+    public ProbeSchemaDomain queryByType(String i_Type);
     
     
     
@@ -45,5 +46,35 @@ public interface IProbeService
      *                   Return.paramObj  表示成功时的数据探针的本体结构
      */
     public Return<ProbeSchemaDomain> saveSchema(ProbeSchemaDomain io_Schema);
+    
+    
+    
+    /**
+     * 数据探针的数据保存
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-10-12
+     * @version     v1.0
+     *
+     * @param i_Schema        数据探针的结构
+     * @param i_ProbeRequest  数据探针的请求
+     * @return                数据探针的响应
+     */
+    public ProbeResponseDomain dataSaves(ProbeSchemaDomain i_Schema ,ProbeRequestDomain i_ProbeRequest);
+    
+    
+    
+    /**
+     * 数据探针的数据删除
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-11-09
+     * @version     v1.0
+     *
+     * @param i_Schema        数据探针的结构
+     * @param i_ProbeRequest  数据探针的请求
+     * @return                数据探针的响应
+     */
+    public ProbeResponseDomain dataDels(ProbeSchemaDomain i_Schema ,ProbeRequestDomain i_ProbeRequest);
     
 }

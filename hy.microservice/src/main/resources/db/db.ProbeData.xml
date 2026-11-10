@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="sqls"            class="java.util.ArrayList" />
+    <import name="sqlGroup"        class="org.hy.common.xml.plugins.XSQLGroup" />
+    <import name="sql"             class="org.hy.common.xml.XSQL" />
+
+
+
+    <!-- 数据探针的原数据的相关SQL -->
+    <sqls>
+    
+        <sql id="XSQL_Common_ProbeData_Insert"> 
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                INSERT  INTO :tableName
+                       (
+                         assetID
+                        ,isDel
+                        ,createUserID
+                        ,updateUserID
+                        ,createTime
+                        ,updateTime
+                        :1DataName
+                       )
+                VALUES (
+                         ':assetID'
+                        ,':isDel'
+                        ,':createUserID'
+                        ,':updateUserID'
+                        ,':createTime'
+                        ,':updateTime'
+                        :1DataValue
+                       )
+                ]]>
+            </content>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_ProbeData_Update"> 
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <contentDB>
+                <safeCheck>false</safeCheck>
+            </contentDB>
+            
+            <content>
+                <![CDATA[
+                UPDATE  :tableName
+                   SET  updateTime   = ':updateTime'
+                       ,updateUserID = ':updateUserID'
+                       ,isDel        = ':isDel'
+                       :1SetS
+                 WHERE  assetID      = ':assetID'
+                ]]>
+            </content>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_ProbeData_IsExists"> 
+            
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                SELECT  COUNT(1) AS ProbeData_IsExists
+                  FROM  :tableName
+                 WHERE  assetID = ':assetID'
+                   FOR  UPDATE
+                ]]>
+            </content>
+            
+            <result>
+                <row>java.util.HashMap</row>
+                <cfill>put(colName ,colValue)</cfill>
+                <cstyle>UPPER</cstyle>
+            </result>
+            
+        </sql>
+        
+    </sqls>
+    
+</config>

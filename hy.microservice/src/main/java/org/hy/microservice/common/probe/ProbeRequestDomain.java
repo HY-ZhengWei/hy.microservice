@@ -70,6 +70,26 @@ public class ProbeRequestDomain extends BaseDomain<ProbeRequest>
             this.data.setSchema(null);
         }
     }
+    
+    
+    /**
+     * 获取：数据资产编号中的归类
+     */
+    public String getType()
+    {
+        return this.data.getType();
+    }
+
+    
+    /**
+     * 设置：数据资产编号中的归类
+     * 
+     * @param i_Type 数据资产编号中的归类
+     */
+    public void setType(String i_Type)
+    {
+        this.data.setType(i_Type);
+    }
 
     
     /**
@@ -89,26 +109,6 @@ public class ProbeRequestDomain extends BaseDomain<ProbeRequest>
     public void setSource(String i_Source)
     {
         this.data.setSource(i_Source);
-    }
-
-    
-    /**
-     * 获取：数据资产编号中的归类
-     */
-    public String getType()
-    {
-        return this.data.getType();
-    }
-
-    
-    /**
-     * 设置：数据资产编号中的归类
-     * 
-     * @param i_Type 数据资产编号中的归类
-     */
-    public void setType(String i_Type)
-    {
-        this.data.setType(i_Type);
     }
 
     

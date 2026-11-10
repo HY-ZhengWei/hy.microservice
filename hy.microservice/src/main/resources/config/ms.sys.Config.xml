@@ -103,7 +103,7 @@
             
             <item id="MS_Common_RootPackageName">
                 <name>MS_Common_RootPackageName</name>
-                <value>com.lps.microservice</value>
+                <value>org.hy.microservice</value>
                 <comment>顶级包的路径。用于初始化。一般不修改。多个用英文逗号分隔，按先后顺序加载</comment>
                 <onlyRead>false</onlyRead>
             </item>
@@ -152,7 +152,7 @@
 
             <item id="MS_Common_Version">
                 <name>MS_Common_Version</name>
-                <value>1.23.0</value>
+                <value>1.23.1</value>
                 <comment>边缘计算服务的版本号</comment>
                 <onlyRead>false</onlyRead>
             </item>

@@ -14,7 +14,7 @@
             <wsURL>ws://10.8.3.23/msModbus/report/WaterContent/ZhengWei</wsURL>
             <callFlowXID>:XNode_Show</callFlowXID>
             <returnID>Message</returnID>
-            <!-- returnClass>com.lps.microservice.common.webSocket.WSData</returnClass -->
+            <!-- returnClass>org.hy..microservice.common.webSocket.WSData</returnClass -->
         </xwspull>
         
         

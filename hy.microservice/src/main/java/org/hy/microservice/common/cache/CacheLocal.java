@@ -23,11 +23,14 @@ import org.hy.common.xml.XJava;
  * @param <Data>  缓存的数据对象
  *              v2.0  2024-09-20  添加：getRowsList 和 getRowsMap 全表数据获取的方法
  *              v3.0  2024-09-23  添加：开放字符串的get、set方法
+ *              v4.0  2026-11-09  添加：队列
  */
 public class CacheLocal<Data> implements ICache<Data>
 {
     
     private static final String $Level = ">";
+    
+    
     
     /** 数据类型 */
     private Class<Data> dataClass;
@@ -259,6 +262,46 @@ public class CacheLocal<Data> implements ICache<Data>
         }
         
         return v_Ret;
+    }
+    
+    
+    
+    /**
+     * 队列中添加数据
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-11-09
+     * @version     v1.0
+     *
+     * @param i_DataBase  数据库名称
+     * @param i_Table     表名称
+     * @param i_ID        主键ID（要求：全域、全库、全表均是惟一的）
+     * @param i_Data      数据
+     */
+    @Override
+    public void putQueue(String i_DataBase ,String i_Table ,String i_ID ,Data i_Data)
+    {
+        XJava.putQueue(i_DataBase + $Level + i_Table ,i_ID ,i_Data);
+    }
+    
+    
+    
+    /**
+     * 队列数据弹出
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-11-09
+     * @version     v1.0
+     *
+     * @param i_DataBase  数据库名称
+     * @param i_Table     表名称
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public Data getQueue(String i_DataBase ,String i_Table)
+    {
+        return (Data) XJava.getQueue(i_DataBase + $Level + i_Table);
     }
     
     

@@ -1,6 +1,7 @@
 package org.hy.microservice.common.probe.schema;
 
 import java.io.Serializable;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,10 +13,12 @@ import org.hy.common.license.IHash;
 import org.hy.common.xml.XJava;
 import org.hy.common.xml.XSQL;
 import org.hy.common.xml.annotation.Xjava;
+import org.hy.common.xml.log.Logger;
 
 import org.hy.microservice.common.domain.DataUtil;
 import org.hy.microservice.common.domain.DomainUtil;
 import org.hy.microservice.common.probe.enums.MetaFormat;
+import org.hy.microservice.common.probe.enums.ProbeKeyword;
 
 
 
@@ -33,6 +36,8 @@ public class ProbeSchemaService implements IProbeSchemaService ,Serializable
 {
     
     private static final long serialVersionUID = -6326649858946286980L;
+    
+    private static final Logger $Logger = new Logger(ProbeSchemaService.class);
 
     
     
@@ -140,13 +145,13 @@ public class ProbeSchemaService implements IProbeSchemaService ,Serializable
     
     
     /**
-     * 按XID查询数据探针的结构（带缓存的）
+     * 按XID（归类）查询数据探针的结构（带缓存的）
      * 
      * @author      ZhengWei(HY)
      * @createDate  2026-10-12
      * @version     v1.0
      * 
-     * @param i_XID  数据探针的结构的XID
+     * @param i_XID  数据探针的结构的XID。即，结构归类type
      * @return
      */
     @Override
@@ -170,6 +175,8 @@ public class ProbeSchemaService implements IProbeSchemaService ,Serializable
         }
         else
         {
+            v_ProbeSchema.setAllName(this.probeSchemaNameDAO.queryBySchemaID(v_ProbeSchema.getId()));
+            
             ProbeSchemaDomain v_Ret = new ProbeSchemaDomain(v_ProbeSchema);
             this.probeSchemaCache.refreshXObject(v_Ret);
             return v_Ret;
@@ -205,7 +212,7 @@ public class ProbeSchemaService implements IProbeSchemaService ,Serializable
             return null;
         }
         
-        ProbeSchemaDomain v_Old    = this.queryByType(io_ProbeSchema.getType());
+        ProbeSchemaDomain v_Old = this.queryByXID(io_ProbeSchema.getType());
         if ( v_Old != null )
         {
             io_ProbeSchema.setId(v_Old.getId());
@@ -242,11 +249,23 @@ public class ProbeSchemaService implements IProbeSchemaService ,Serializable
         if ( !Help.isNull(io_ProbeSchema.getMetas()) )
         {
             // 所有目标的数据探针的结构ID指向数据探针的结构本体
-            int v_OrderBy = 0;
+            int v_OrderBy  = 0;
             for (ProbeSchemaMetaDomain v_Item : io_ProbeSchema.getMetas())
             {
                 if ( Help.isNull(v_Item.getMname()) )
                 {
+                    return null;
+                }
+                
+                v_Item.setMname(v_Item.getMname().trim());
+                if ( v_Item.getMname().length() <= 1 )
+                {
+                    // TODO 将异常信息返回给外界
+                    return null;
+                }
+                if ( ProbeKeyword.get(v_Item.getMname()) != null )
+                {
+                    // TODO 将异常信息返回给外界
                     return null;
                 }
                 
@@ -255,12 +274,24 @@ public class ProbeSchemaService implements IProbeSchemaService ,Serializable
                 v_Item.setMlength( v_Item.getMlength()  == null ? 0     : v_Item.getMlength());
                 v_Item.setMdecimal(v_Item.getMdecimal() == null ? 0     : v_Item.getMdecimal());
                 v_Item.setPk(      v_Item.getPk()       == null ? false : v_Item.getPk());
+                v_Item.setNullable(v_Item.getNullable() == null ? true  : v_Item.getNullable());
                 v_Item.setSchemaID(    io_ProbeSchema.getId());
                 v_Item.setNameID(      io_ProbeSchema.getNameID());
                 v_Item.setCreateUserID(io_ProbeSchema.getCreateUserID());
                 v_Item.setUpdateUserID(io_ProbeSchema.getUpdateUserID());
                 v_Item.setIsDel(       io_ProbeSchema.getIsDel());
                 v_Item.setOrderBy(++v_OrderBy);
+                
+                if ( v_Item.getPk() )
+                {
+                    v_Item.setNullable(false);
+                }
+            }
+            
+            if ( io_ProbeSchema.getName().getMetasNames().size() != v_OrderBy * 2 )
+            {
+                // 字段名称与名称代号有雷同，请更换字段命名。 TODO 将异常信息返回给外界
+                return null;
             }
         }
         else 
@@ -270,9 +301,9 @@ public class ProbeSchemaService implements IProbeSchemaService ,Serializable
         
         io_ProbeSchema.getName().setMetaCode(this.metaCode(io_ProbeSchema.getType() ,io_ProbeSchema.getMetas()));
         
-        boolean                      v_Change      = false;  // 新旧在整体层面上是否有变化 
-        boolean                      v_CreateMetas = false;  // 是否创建本体结构，即创建本体数据对应的表
-        Map<String ,ProbeSchemaName> v_AllName     = this.probeSchemaNameDAO.queryBySchemaID(io_ProbeSchema.getId());
+        boolean                            v_Change      = false;  // 新旧在整体层面上是否有变化 
+        boolean                            v_CreateMetas = false;  // 是否创建本体结构，即创建本体数据对应的表
+        Map<String ,ProbeSchemaNameDomain> v_AllName     = v_Old == null ? null : v_Old.getAllName();
         if ( Help.isNull(v_AllName) )
         {
             v_Change      = true;
@@ -280,7 +311,7 @@ public class ProbeSchemaService implements IProbeSchemaService ,Serializable
         }
         else 
         {
-            ProbeSchemaName v_OldName = v_AllName.get(io_ProbeSchema.getName().getMetaCode());
+            ProbeSchemaNameDomain v_OldName = v_AllName.get(io_ProbeSchema.getName().getMetaCode());
             if ( v_OldName == null )
             {
                 v_Change      = true;
@@ -298,7 +329,7 @@ public class ProbeSchemaService implements IProbeSchemaService ,Serializable
             }
             else
             {
-                io_ProbeSchema.setName(new ProbeSchemaNameDomain(v_OldName));
+                io_ProbeSchema.setName(v_OldName);
                 
                 // 判定是否有变化
                 if ( !v_Old.getNameID().equals(io_ProbeSchema.getNameID()) )
@@ -317,8 +348,13 @@ public class ProbeSchemaService implements IProbeSchemaService ,Serializable
         if ( v_CreateMetas )
         {
             io_ProbeSchema.getName().setTableName("TProbeData" + Date.getNowTime().getFull_ID());
-            if ( !this.createProbeDataTable(io_ProbeSchema) )
+            if ( this.createProbeDataTable(io_ProbeSchema) )
             {
+                $Logger.info("保存数据探针的本体表结构成功：" + io_ProbeSchema.getComment());
+            }
+            else
+            {
+                // TODO 将异常信息返回给外界
                 return null;
             }
         }
@@ -338,9 +374,17 @@ public class ProbeSchemaService implements IProbeSchemaService ,Serializable
                 if ( v_Old != null )
                 {
                     io_ProbeSchema.setXidOld(v_Old.getXid());
+                    io_ProbeSchema.setAllName(v_AllName);
+                }
+                else
+                {
+                    io_ProbeSchema.setAllName(new LinkedHashMap<String ,ProbeSchemaNameDomain>());
                 }
                 
+                io_ProbeSchema.gatData().getAllName().put(io_ProbeSchema.getName().getMetaCode() ,io_ProbeSchema.getName().gatData());
                 this.probeSchemaCache.refreshXObject(io_ProbeSchema);
+                
+                $Logger.info("保存数据探针的本体元数据成功：" + io_ProbeSchema.getComment());
             }
         }
         
@@ -420,7 +464,7 @@ public class ProbeSchemaService implements IProbeSchemaService ,Serializable
         
         try
         {
-            XSQL v_Clone = XJava.getXSQL("XSQL_Common_Create_ProbeData" ,true);
+            XSQL v_Clone = XJava.getXSQL(this.probeData.getXJavaID() ,true);
             v_Clone.setContent(StringHelp.replaceAll(v_SQL.toString() ,"TProbeData" ,i_ProbeSchema.getName().getTableName()));
             v_Clone.setCreate(i_ProbeSchema.getName().getTableName());
             return true;

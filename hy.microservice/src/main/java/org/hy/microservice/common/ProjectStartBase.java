@@ -296,7 +296,7 @@ public class ProjectStartBase
         JavaConfig                                                v_JConfig           = new JavaConfig();
         int                                                       v_SpringBootVersion = XJavaSpringBootLoadingText.getVersion();
         v_JConfig.setXid("XJavaSpringBoot");
-        v_JConfig.setJava(StringHelp.replaceFirst(XJavaSpringBootLoadingText.getJava(v_SpringBootVersion) ,"package org.hy.common.xml.plugins" ,"package com.lps.microservice.callflow"));
+        v_JConfig.setJava(StringHelp.replaceFirst(XJavaSpringBootLoadingText.getJava(v_SpringBootVersion) ,"package org.hy.common.xml.plugins" ,"package org.hy.microservice.callflow"));
         v_JConfig.setReturnID("XAnnotationConfigServletWebServerApplicationContext");
         
         Return<Object> v_CheckRet = CallFlow.getHelpCheck().check(v_JConfig);

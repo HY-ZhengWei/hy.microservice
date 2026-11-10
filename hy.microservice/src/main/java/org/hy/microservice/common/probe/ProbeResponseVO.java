@@ -1,6 +1,9 @@
 package org.hy.microservice.common.probe;
 
 import java.util.List;
+import java.util.Map;
+
+import org.hy.common.Help;
 
 import org.hy.microservice.common.BaseView;
 
@@ -41,6 +44,10 @@ public class ProbeResponseVO extends BaseView<ProbeResponseDomain>
      */
     public List<String> getLasts()
     {
+        if ( Help.isNull(this.domain.getLasts()) )
+        {
+            return null;
+        }
         return this.domain.getLasts();
     }
 
@@ -61,6 +68,10 @@ public class ProbeResponseVO extends BaseView<ProbeResponseDomain>
      */
     public List<String> getCompletes()
     {
+        if ( Help.isNull(this.domain.getCompletes()) )
+        {
+            return null;
+        }
         return this.domain.getCompletes();
     }
 
@@ -81,6 +92,10 @@ public class ProbeResponseVO extends BaseView<ProbeResponseDomain>
      */
     public List<String> getRedos()
     {
+        if ( Help.isNull(this.domain.getRedos()) )
+        {
+            return null;
+        }
         return this.domain.getRedos();
     }
 
@@ -93,6 +108,30 @@ public class ProbeResponseVO extends BaseView<ProbeResponseDomain>
     public void setRedos(List<String> i_Redos)
     {
         this.domain.setRedos(i_Redos);
+    }
+    
+    
+    /**
+     * 获取：非法数据
+     */
+    public Map<String ,String> getErrorDatas()
+    {
+        if ( Help.isNull(this.domain.getErrorDatas()) )
+        {
+            return null;
+        }
+        return this.domain.getErrorDatas();
+    }
+
+    
+    /**
+     * 设置：非法数据
+     * 
+     * @param i_ErrorDatas 非法数据
+     */
+    public void setErrorDatas(Map<String ,String> i_ErrorDatas)
+    {
+        this.domain.setErrorDatas(i_ErrorDatas);
     }
     
 }

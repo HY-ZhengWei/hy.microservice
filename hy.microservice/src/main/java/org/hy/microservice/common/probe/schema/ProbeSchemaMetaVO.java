@@ -116,6 +116,15 @@ public class ProbeSchemaMetaVO extends BaseView<ProbeSchemaMetaDomain>
     
     
     /**
+     * 获取：名称的ABC代号
+     */
+    public String getMnameABC()
+    {
+        return this.domain.getMnameABC();
+    }
+    
+    
+    /**
      * 获取：格式类型
      */
     public String getMformat()
@@ -200,6 +209,26 @@ public class ProbeSchemaMetaVO extends BaseView<ProbeSchemaMetaDomain>
     public void setPk(Boolean i_Pk)
     {
         this.domain.setPk(i_Pk);
+    }
+    
+    
+    /**
+     * 获取：是否允许空，默认为1，即允许空
+     */
+    public Boolean getNullable()
+    {
+        return this.domain.getNullable();
+    }
+
+    
+    /**
+     * 设置：是否允许空，默认为1，即允许空
+     * 
+     * @param i_Nullable 是否允许空，默认为1，即允许空
+     */
+    public void setNullable(Boolean i_Nullable)
+    {
+        this.domain.setNullable(i_Nullable);
     }
     
 }

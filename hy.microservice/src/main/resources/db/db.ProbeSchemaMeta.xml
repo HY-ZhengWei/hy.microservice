@@ -31,6 +31,7 @@
                        ,mlength
                        ,mdecimal
                        ,pk
+                       ,nullable
                        ,orderBy
                        ,projectID 
                        ,"COMMENT" 
@@ -49,6 +50,7 @@
                        ,':mlength'
                        ,':mdecimal'
                        ,':pk'
+                       ,':nullable'
                        ,':orderBy'
                        ,':projectID'
                        ,':comment'
@@ -73,6 +75,7 @@
                        ,mlength
                        ,mdecimal
                        ,pk
+                       ,nullable
                        ,orderBy
                        ,projectID 
                        ,"COMMENT" 
@@ -91,6 +94,7 @@
                        ,':mlength'
                        ,':mdecimal'
                        ,':pk'
+                       ,':nullable'
                        ,':orderBy'
                        ,':projectID'
                        ,':comment'
@@ -115,6 +119,7 @@
                        ,mlength
                        ,mdecimal
                        ,pk
+                       ,nullable
                        ,orderBy
                        ,projectID 
                        ,comment
@@ -133,6 +138,7 @@
                        ,':mlength'
                        ,':mdecimal'
                        ,':pk'
+                       ,':nullable'
                        ,':orderBy'
                        ,':projectID'
                        ,':comment'
@@ -157,6 +163,7 @@
                        ,mlength
                        ,mdecimal
                        ,pk
+                       ,nullable
                        ,orderBy
                        ,projectID 
                        ,comment
@@ -175,6 +182,7 @@
                        ,':mlength'
                        ,':mdecimal'
                        ,':pk'
+                       ,':nullable'
                        ,':orderBy'
                        ,':projectID'
                        ,':comment'
@@ -199,6 +207,7 @@
                        ,mlength
                        ,mdecimal
                        ,pk
+                       ,nullable
                        ,orderBy
                        ,projectID 
                        ,comment
@@ -217,6 +226,7 @@
                        ,':mlength'
                        ,':mdecimal'
                        ,':pk'
+                       ,':nullable'
                        ,':orderBy'
                        ,':projectID'
                        ,':comment'
@@ -333,6 +343,7 @@
                        ,A.mlength
                        ,A.mdecimal
                        ,A.pk
+                       ,A.nullable
                        ,A.orderBy
                        ,A.projectID 
                        ,A.comment
@@ -360,6 +371,7 @@
               <[   AND  A.mlength       = ':mlength'      ]>
               <[   AND  A.mdecimal      = ':mdecimal'     ]>
               <[   AND  A.pk            = ':pk'           ]>
+              <[   AND  A.nullable      = ':nullable'     ]>
               <[   AND  A.projectID     = ':projectID'    ]>
               <[   AND  (
                          SELECT  COUNT(1)
@@ -383,6 +395,7 @@
                        ,A.mlength
                        ,A.mdecimal
                        ,A.pk
+                       ,A.nullable
                        ,A.orderBy
                        ,A.projectID
                        ,A."COMMENT"
@@ -409,6 +422,7 @@
               <[   AND  A.mlength       = ':mlength'      ]>
               <[   AND  A.mdecimal      = ':mdecimal'     ]>
               <[   AND  A.pk            = ':pk'           ]>
+              <[   AND  A.nullable      = ':nullable'     ]>
               <[   AND  A.projectID     = ':projectID'    ]>
               <[   AND  (
                          SELECT  COUNT(1)
@@ -432,6 +446,7 @@
                        ,A.mlength
                        ,A.mdecimal
                        ,A.pk
+                       ,A.nullable
                        ,A.orderBy
                        ,A.projectID
                        ,A."COMMENT"
@@ -457,6 +472,7 @@
               <[   AND  A.mlength       = ':mlength'      ]>
               <[   AND  A.mdecimal      = ':mdecimal'     ]>
               <[   AND  A.pk            = ':pk'           ]>
+              <[   AND  A.nullable      = ':nullable'     ]>
               <[   AND  A.projectID     = ':projectID'    ]>
               <[   AND  (
                          SELECT  COUNT(1)
@@ -510,6 +526,7 @@
               <[   AND  A.mlength       = ':mlength'      ]>
               <[   AND  A.mdecimal      = ':mdecimal'     ]>
               <[   AND  A.pk            = ':pk'           ]>
+              <[   AND  A.nullable      = ':nullable'     ]>
               <[   AND  A.projectID     = ':projectID'    ]>
               <[   AND  (
                          SELECT  COUNT(1)

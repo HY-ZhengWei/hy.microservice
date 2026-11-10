@@ -26,6 +26,7 @@
                 ,mlength                    NUMBER(10 ,0)  NOT NULL
                 ,mdecimal                   NUMBER(3 ,0)   NOT NULL
                 ,pk                         NUMBER(1 ,0)   NOT NULL
+                ,nullable                   NUMBER(1 ,0)   NOT NULL
                 ,orderBy                    NUMBER(10 ,0)  NOT NULL
                 ,projectID                  VARCHAR2(64)
                 ,"COMMENT"                  VARCHAR2(4000)
@@ -51,6 +52,7 @@
                 COMMENT ON COLUMN TProbeSchemaMeta.mlength                        IS '总长度';/
                 COMMENT ON COLUMN TProbeSchemaMeta.mdecimal                       IS '小数位数';/
                 COMMENT ON COLUMN TProbeSchemaMeta.pk                             IS '是否为主键';/
+                COMMENT ON COLUMN TProbeSchemaMeta.nullable                       IS '是否允许空';/
                 COMMENT ON COLUMN TProbeSchemaMeta.orderBy                        IS '排列显示顺序';/
                 COMMENT ON COLUMN TProbeSchemaMeta.projectID                      IS '项目ID';/
                 COMMENT ON COLUMN TProbeSchemaMeta."COMMENT"                      IS '注释说明';/
@@ -74,6 +76,7 @@
                 ,mlength                    NUMBER(10 ,0)  NOT NULL
                 ,mdecimal                   NUMBER(3 ,0)   NOT NULL
                 ,pk                         NUMBER(1 ,0)   NOT NULL
+                ,nullable                   NUMBER(1 ,0)   NOT NULL
                 ,orderBy                    NUMBER(10 ,0)  NOT NULL
                 ,projectID                  VARCHAR2(64)
                 ,"COMMENT"                  VARCHAR2(4000)
@@ -99,6 +102,7 @@
                 COMMENT ON COLUMN TProbeSchemaMeta.mlength                        IS '总长度';/
                 COMMENT ON COLUMN TProbeSchemaMeta.mdecimal                       IS '小数位数';/
                 COMMENT ON COLUMN TProbeSchemaMeta.pk                             IS '是否为主键';/
+                COMMENT ON COLUMN TProbeSchemaMeta.nullable                       IS '是否允许空';/
                 COMMENT ON COLUMN TProbeSchemaMeta.orderBy                        IS '排列显示顺序';/
                 COMMENT ON COLUMN TProbeSchemaMeta.projectID                      IS '项目ID';/
                 COMMENT ON COLUMN TProbeSchemaMeta."COMMENT"                      IS '注释说明';/
@@ -122,6 +126,7 @@
                 ,mlength                    NUMERIC(10 ,0) NOT NULL
                 ,mdecimal                   NUMERIC(3 ,0)  NOT NULL
                 ,pk                         NUMERIC(1 ,0)  NOT NULL
+                ,nullable                   NUMERIC(1 ,0)  NOT NULL
                 ,orderBy                    NUMERIC(10 ,0) NOT NULL
                 ,projectID                  VARCHAR(64)
                 ,comment                    TEXT
@@ -147,6 +152,7 @@
                 COMMENT ON COLUMN TProbeSchemaMeta.mlength                        IS '总长度';/
                 COMMENT ON COLUMN TProbeSchemaMeta.mdecimal                       IS '小数位数';/
                 COMMENT ON COLUMN TProbeSchemaMeta.pk                             IS '是否为主键';/
+                COMMENT ON COLUMN TProbeSchemaMeta.nullable                       IS '是否允许空';/
                 COMMENT ON COLUMN TProbeSchemaMeta.orderBy                        IS '排列显示顺序';/
                 COMMENT ON COLUMN TProbeSchemaMeta.projectID                      IS '项目ID';/
                 COMMENT ON COLUMN TProbeSchemaMeta.comment                        IS '注释说明';/
@@ -170,6 +176,7 @@
                 ,mlength                    DECIMAL(10 ,0) NOT NULL       COMMENT '总长度'
                 ,mdecimal                   DECIMAL(3 ,0)  NOT NULL       COMMENT '小数位数'
                 ,pk                         DECIMAL(1 ,0)  NOT NULL       COMMENT '是否为主键'
+                ,nullable                   DECIMAL(1 ,0)  NOT NULL       COMMENT '是否允许空'
                 ,orderBy                    DECIMAL(10 ,0) NOT NULL       COMMENT '排列显示顺序'
                 ,projectID                  VARCHAR(64)                   COMMENT '项目ID'
                 ,comment                    VARCHAR(4000)                 COMMENT '注释说明'

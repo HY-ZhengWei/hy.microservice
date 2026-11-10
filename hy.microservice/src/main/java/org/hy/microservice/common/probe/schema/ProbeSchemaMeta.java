@@ -42,8 +42,11 @@ public class ProbeSchemaMeta extends BaseData
     /** 小数位数 */
     private Integer mdecimal;
     
-    /** 是否为主键，默认为0 */
+    /** 是否为主键，默认为0，即非主键 */
     private Integer pk;
+    
+    /** 是否允许空，默认为1，即允许空 */
+    private Integer nullable;
     
     
     
@@ -53,6 +56,7 @@ public class ProbeSchemaMeta extends BaseData
         this.mlength  = 1;
         this.mdecimal = 0;
         this.pk       = 0;
+        this.nullable = 1;
     }
     
     
@@ -217,6 +221,27 @@ public class ProbeSchemaMeta extends BaseData
     }
     
     
+    /**
+     * 获取：是否允许空，默认为1，即允许空
+     */
+    public Integer getNullable()
+    {
+        return nullable;
+    }
+
+    
+    /**
+     * 设置：是否允许空，默认为1，即允许空
+     * 
+     * @param i_Nullable 是否允许空，默认为1，即允许空
+     */
+    public void setNullable(Integer i_Nullable)
+    {
+        this.nullable = i_Nullable;
+    }
+
+
+
     @Override
     public String toString()
     {
@@ -227,6 +252,7 @@ public class ProbeSchemaMeta extends BaseData
         v_Buffer.append(this.mlength) .append(";");
         v_Buffer.append(this.mdecimal).append(";");
         v_Buffer.append(this.pk);
+        v_Buffer.append(this.nullable);
         
         return v_Buffer.toString();
     }

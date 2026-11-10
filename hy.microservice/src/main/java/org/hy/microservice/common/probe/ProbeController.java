@@ -80,7 +80,7 @@ public class ProbeController extends BaseController
         
         try
         {
-            $Logger.info("data Start: " + i_Token + ":" + i_ProbeRequest.toString());
+            $Logger.info("data Start: " + i_Token);
             
             if ( Help.isNull(i_ProbeRequest.getUserID()) )
             {
@@ -109,6 +109,12 @@ public class ProbeController extends BaseController
             }
             
             v_ProbeRequest.setType(v_ProbeRequest.getType().trim());
+            if ( v_ProbeRequest.getType().length() > 128 )
+            {
+                // 返回异常 TODO
+            }
+            
+            ProbeSchemaDomain v_Schema = null;
             if ( v_ProbeRequest.getSchema() != null )
             {
                 v_ProbeRequest.getSchema().setType(  v_ProbeRequest.getType());
@@ -117,11 +123,69 @@ public class ProbeController extends BaseController
                 Return<ProbeSchemaDomain> v_SaveSchemaRet = this.probeService.saveSchema(v_ProbeRequest.getSchema());
                 if ( v_SaveSchemaRet.booleanValue() )
                 {
-                    $Logger.info("保存数据探针的本体结构成功：" + v_SaveSchemaRet.getParamObj().getComment());
+                    v_Schema = v_SaveSchemaRet.paramObj;
+                }
+                else
+                {
+                    // 返回异常 TODO
+                }
+            }
+            else
+            {
+                v_Schema = this.probeService.queryByType(v_ProbeRequest.getType());
+                if ( v_Schema == null )
+                {
+                    // 返回异常 TODO
                 }
             }
             
-            return v_RetResp.setData((ProbeResponseVO) null).setDataCount(v_Count).setTotalCount(v_Total);
+            ProbeResponseDomain v_ProbeResponse = null;
+            if ( !Help.isNull(v_ProbeRequest.getSaves()) )
+            {
+                if ( Help.isNull(v_ProbeRequest.getSource()) )
+                {
+                    // 返回异常 TODO
+                }
+                
+                v_ProbeRequest.setSource(v_ProbeRequest.getSource().trim());
+                if ( v_ProbeRequest.getSource().length() > 55 )
+                {
+                    // 返回异常 TODO
+                }
+                
+                v_ProbeResponse = this.probeService.dataSaves(v_Schema ,v_ProbeRequest);
+            }
+            
+            if ( !Help.isNull(v_ProbeRequest.getDels()) )
+            {
+                if ( Help.isNull(v_ProbeRequest.getSource()) )
+                {
+                    // 返回异常 TODO
+                }
+                
+                v_ProbeRequest.setSource(v_ProbeRequest.getSource().trim());
+                if ( v_ProbeRequest.getSource().length() > 55 )
+                {
+                    // 返回异常 TODO
+                }
+                
+                if ( v_ProbeResponse == null )
+                {
+                    v_ProbeResponse = this.probeService.dataDels(v_Schema ,v_ProbeRequest);
+                }
+                else
+                {
+                    v_ProbeResponse.getErrorDatas().putAll(this.probeService.dataDels(v_Schema ,v_ProbeRequest).getErrorDatas());
+                }
+            }
+            
+            // TODO 完备信息的返回
+            if ( v_ProbeResponse == null )
+            {
+                
+            }
+            
+            return v_RetResp.setData(new ProbeResponseVO(v_ProbeResponse)).setDataCount(v_Count).setTotalCount(v_Total);
         }
         catch (Exception exce)
         {
@@ -130,7 +194,7 @@ public class ProbeController extends BaseController
         }
         finally
         {
-            $Logger.info("data End: "  + i_Token + ":" + i_ProbeRequest.toString() + " 返回: " + v_Count);
+            $Logger.info("data End: " + i_Token + " 返回: " + v_Count);
         }
     }
     

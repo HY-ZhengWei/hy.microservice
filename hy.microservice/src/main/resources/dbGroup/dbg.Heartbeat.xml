@@ -17,6 +17,7 @@
             <sqlNode>
                 <sql  ref="XSQL_Common_Heartbeat_IsExists" />
                 <type ref="this.$Type_Query" />
+                <oneConnection>true</oneConnection>
             </sqlNode>
             
             <sqlNode>

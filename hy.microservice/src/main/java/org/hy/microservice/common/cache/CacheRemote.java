@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.hy.common.redis.IRedis;
+import org.hy.common.xml.XJSON;
 
 
 
@@ -20,9 +21,14 @@ import org.hy.common.redis.IRedis;
  * @param <Data>  缓存的数据对象
  *              v2.0  2024-09-20  添加：getRowsList 和 getRowsMap 全表数据获取的方法
  *              v3.0  2024-09-23  添加：开放字符串的get、set方法
+ *              v4.0  2026-11-09  添加：队列
  */
 public class CacheRemote<Data> implements ICache<Data>
 {
+    
+    private static final String $Level = ">";
+    
+    
     
     /** Redis接口 */
     private IRedis      redis;
@@ -218,6 +224,49 @@ public class CacheRemote<Data> implements ICache<Data>
     public List<Data> getRowsList(String i_DataBase ,String i_Table)
     {
         return this.redis.getRowsList(i_DataBase ,i_Table ,this.dataClass);
+    }
+    
+    
+    
+    /**
+     * 队列中添加数据
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-11-09
+     * @version     v1.0
+     *
+     * @param i_DataBase  数据库名称
+     * @param i_Table     表名称
+     * @param i_ID        主键ID（要求：全域、全库、全表均是惟一的）
+     * @param i_Data      数据
+     */
+    @Override
+    public void putQueue(String i_DataBase ,String i_Table ,String i_ID ,Data i_Data)
+    {
+        XJSON v_XJson = new XJSON();
+        this.redis.lpush(i_DataBase + $Level + i_Table ,v_XJson.toJsonText(i_Data));
+    }
+    
+    
+    
+    /**
+     * 队列数据弹出
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-11-09
+     * @version     v1.0
+     *
+     * @param i_DataBase  数据库名称
+     * @param i_Table     表名称
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public Data getQueue(String i_DataBase ,String i_Table)
+    {
+        String v_Text  = this.redis.rpop(i_DataBase + $Level + i_Table);
+        XJSON  v_XJson = new XJSON();
+        return (Data) v_XJson.toJava(v_Text ,this.dataClass);
     }
     
     

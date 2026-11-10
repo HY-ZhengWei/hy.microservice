@@ -72,26 +72,6 @@ public class ProbeRequestVO extends BaseView<ProbeRequestDomain>
 
     
     /**
-     * 获取：数据资产编号中的来源
-     */
-    public String getSource()
-    {
-        return this.domain.getSource();
-    }
-
-    
-    /**
-     * 设置：数据资产编号中的来源
-     * 
-     * @param i_Source 数据资产编号中的来源
-     */
-    public void setSource(String i_Source)
-    {
-        this.domain.setSource(i_Source);
-    }
-
-    
-    /**
      * 获取：数据资产编号中的归类
      */
     public String getType()
@@ -108,6 +88,26 @@ public class ProbeRequestVO extends BaseView<ProbeRequestDomain>
     public void setType(String i_Type)
     {
         this.domain.setType(i_Type);
+    }
+    
+    
+    /**
+     * 获取：数据资产编号中的来源
+     */
+    public String getSource()
+    {
+        return this.domain.getSource();
+    }
+
+    
+    /**
+     * 设置：数据资产编号中的来源
+     * 
+     * @param i_Source 数据资产编号中的来源
+     */
+    public void setSource(String i_Source)
+    {
+        this.domain.setSource(i_Source);
     }
 
     

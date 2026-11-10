@@ -1,8 +1,14 @@
 package org.hy.microservice.common.probe.schema;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.hy.common.Help;
 
 import org.hy.microservice.common.BaseDomain;
+import org.hy.microservice.common.domain.DataUtil;
+import org.hy.microservice.common.domain.DomainUtil;
 
 
 
@@ -21,6 +27,11 @@ public class ProbeSchemaNameDomain extends BaseDomain<ProbeSchemaName>
     private static final long serialVersionUID = -554786264695830782L;
 
     
+    
+    /** 通过字段名称或名称代号快速定位字段信息的缓存（仅内部使用） */
+    private Map<String ,ProbeSchemaMetaDomain> metasNames;
+    
+    
 
     public ProbeSchemaNameDomain()
     {
@@ -32,6 +43,7 @@ public class ProbeSchemaNameDomain extends BaseDomain<ProbeSchemaName>
     public ProbeSchemaNameDomain(ProbeSchemaName i_Data)
     {
         super(i_Data);
+        this.metasNames = new HashMap<>();
     }
     
     
@@ -119,9 +131,9 @@ public class ProbeSchemaNameDomain extends BaseDomain<ProbeSchemaName>
     /**
      * 获取：本体结构
      */
-    public List<ProbeSchemaMeta> getMetas()
+    public List<ProbeSchemaMetaDomain> getMetas()
     {
-        return this.data.getMetas();
+        return DomainUtil.toDomain(this.data.getMetas() ,ProbeSchemaMetaDomain.class);
     }
 
     
@@ -130,9 +142,27 @@ public class ProbeSchemaNameDomain extends BaseDomain<ProbeSchemaName>
      * 
      * @param i_Metas 本体结构
      */
-    public void setMetas(List<ProbeSchemaMeta> i_Metas)
+    public synchronized void setMetas(List<ProbeSchemaMetaDomain> i_Metas)
     {
-        this.data.setMetas(i_Metas);
+        this.data.setMetas(DataUtil.toData(i_Metas));
+        this.metasNames.clear();
     }
     
+    
+    /**
+     * 获取：通过字段名称或名称代号快速定位字段信息的缓存
+     */
+    public synchronized Map<String ,ProbeSchemaMetaDomain> getMetasNames()
+    {
+        if ( Help.isNull(this.metasNames) && !Help.isNull(this.data.getMetas()) )
+        {
+            for (ProbeSchemaMetaDomain v_Item : this.getMetas())
+            {
+                this.metasNames.put(v_Item.getMname()    ,v_Item);
+                this.metasNames.put(v_Item.getMnameABC() ,v_Item);
+            }
+        }
+        
+        return this.metasNames;
+    }
 }

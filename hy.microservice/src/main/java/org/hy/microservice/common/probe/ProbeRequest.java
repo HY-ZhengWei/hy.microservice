@@ -27,11 +27,11 @@ public class ProbeRequest extends BaseData
     /** 数据探针的结构 */
     private ProbeSchema                      schema;
     
-    /** 数据资产编号中的来源 */
-    private String                           source;
-    
     /** 数据资产编号中的归类 */
     private String                           type;
+    
+    /** 数据资产编号中的来源 */
+    private String                           source;
     
     /** 保存数据。Map.key 为数据资产编号中的：日期 + 序号。Map.value 为KeyValue的数据 */
     private Map<String ,Map<String ,Object>> saves;
@@ -59,6 +59,26 @@ public class ProbeRequest extends BaseData
     {
         this.schema = i_Schema;
     }
+    
+    
+    /**
+     * 获取：数据资产编号中的归类
+     */
+    public String getType()
+    {
+        return type;
+    }
+
+    
+    /**
+     * 设置：数据资产编号中的归类
+     * 
+     * @param i_Type 数据资产编号中的归类
+     */
+    public void setType(String i_Type)
+    {
+        this.type = i_Type;
+    }
 
     
     /**
@@ -78,26 +98,6 @@ public class ProbeRequest extends BaseData
     public void setSource(String i_Source)
     {
         this.source = i_Source;
-    }
-
-    
-    /**
-     * 获取：数据资产编号中的归类
-     */
-    public String getType()
-    {
-        return type;
-    }
-
-    
-    /**
-     * 设置：数据资产编号中的归类
-     * 
-     * @param i_Type 数据资产编号中的归类
-     */
-    public void setType(String i_Type)
-    {
-        this.type = i_Type;
     }
 
     

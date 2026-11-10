@@ -23,6 +23,19 @@
         </job>
         
         
+        <job id="JOB_MS_Common_SaveProbeData">
+            <code>JOB_MS_Common_SaveProbeData</code>
+            <name>数据探针的数据持久化入库</name>
+            <comment>数据探针的数据持久化入库</comment>
+            <intervalType ref="this.$IntervalType_Minute"/>
+            <intervalLen>1</intervalLen>
+            <startTime>2026-11-10 00:00:00</startTime>
+            <xid>ProbeDataService</xid>
+            <methodName>saves</methodName>
+            <slaveRun>true</slaveRun>
+        </job>
+        
+        
         <job id="JOB_MS_Common_Heartbeat">
             <code>JOB_MS_Common_Heartbeat</code>
             <name>定时心跳任务</name>
@@ -64,6 +77,7 @@
         
         <jobs id="JOBS_MS_Common" this="JOBS_MS_Common">
             <addJob ref="JOB_MS_Common_SaveOperationLogs" />
+            <addJob ref="JOB_MS_Common_SaveProbeData" />
             
             <addJob ref="JOB_MS_Common_Heartbeat"               if="MS_Common_IsHeartbeat.getValue == 启用" />
             <addJob ref="JOB_MS_Common_HeartbeatRedisDelExpire" if="MS_Common_IsHeartbeat.getValue == 启用" />

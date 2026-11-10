@@ -1,6 +1,7 @@
 package org.hy.microservice.common.probe.schema;
 
 import org.hy.common.Help;
+import org.hy.common.StringHelp;
 import org.hy.common.xml.log.Logger;
 
 import org.hy.microservice.common.BaseDomain;
@@ -29,6 +30,9 @@ public class ProbeSchemaMetaDomain extends BaseDomain<ProbeSchemaMeta>
     /** 格式类型 */
     private MetaFormat mformat;
     
+    /** 名称的ABC代号 */
+    private String     mnameABC;
+    
     
 
     public ProbeSchemaMetaDomain()
@@ -53,6 +57,9 @@ public class ProbeSchemaMetaDomain extends BaseDomain<ProbeSchemaMeta>
                 throw new RuntimeException(v_ErrMsg);
             }
         }
+        
+        // 转换：名称ABC代号
+        this.setOrderBy(i_Data.getOrderBy());
     }
     
     
@@ -138,6 +145,31 @@ public class ProbeSchemaMetaDomain extends BaseDomain<ProbeSchemaMeta>
     
     
     /**
+     * 获取：名称的ABC代号
+     */
+    public String getMnameABC()
+    {
+        return mnameABC;
+    }
+
+    
+    @Override
+    public void setOrderBy(Integer i_OrderBy)
+    {
+        super.setOrderBy(i_OrderBy);
+        
+        if ( !Help.isNull(i_OrderBy) )
+        {
+            this.mnameABC = StringHelp.toABC26(i_OrderBy - 1);
+        }
+        else
+        {
+            this.mnameABC = "";
+        }
+    }
+
+
+    /**
      * 获取：格式类型
      */
     public MetaFormat getMformat()
@@ -222,6 +254,26 @@ public class ProbeSchemaMetaDomain extends BaseDomain<ProbeSchemaMeta>
     public void setPk(Boolean i_Pk)
     {
         this.data.setPk(i_Pk != null && i_Pk ? 1 : 0);
+    }
+    
+    
+    /**
+     * 获取：是否允许空，默认为1，即允许空
+     */
+    public Boolean getNullable()
+    {
+        return this.data.getNullable() != null && this.data.getNullable() >= 1;
+    }
+
+    
+    /**
+     * 设置：是否允许空，默认为1，即允许空
+     * 
+     * @param i_Nullable 是否允许空，默认为1，即允许空
+     */
+    public void setNullable(Boolean i_Nullable)
+    {
+        this.data.setNullable(i_Nullable != null && i_Nullable ? 1 : 0);
     }
 
 

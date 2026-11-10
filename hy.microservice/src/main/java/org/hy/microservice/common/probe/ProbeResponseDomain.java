@@ -1,6 +1,7 @@
 package org.hy.microservice.common.probe;
 
 import java.util.List;
+import java.util.Map;
 
 import org.hy.microservice.common.BaseDomain;
 
@@ -93,6 +94,26 @@ public class ProbeResponseDomain extends BaseDomain<ProbeResponse>
     public void setRedos(List<String> i_Redos)
     {
         this.data.setRedos(i_Redos);
+    }
+    
+    
+    /**
+     * 获取：非法数据
+     */
+    public Map<String ,String> getErrorDatas()
+    {
+        return this.data.getErrorDatas();
+    }
+
+    
+    /**
+     * 设置：非法数据
+     * 
+     * @param i_ErrorDatas 非法数据
+     */
+    public void setErrorDatas(Map<String ,String> i_ErrorDatas)
+    {
+        this.data.setErrorDatas(i_ErrorDatas);
     }
     
 }

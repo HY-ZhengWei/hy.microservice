@@ -3,6 +3,8 @@ package org.hy.microservice.common.probe.schema;
 import java.util.List;
 
 import org.hy.microservice.common.BaseView;
+import org.hy.microservice.common.domain.DomainUtil;
+import org.hy.microservice.common.view.ViewModelUtil;
 
 
 
@@ -119,9 +121,9 @@ public class ProbeSchemaNameVO extends BaseView<ProbeSchemaNameDomain>
     /**
      * 获取：本体结构
      */
-    public List<ProbeSchemaMeta> getMetas()
+    public List<ProbeSchemaMetaVO> getMetas()
     {
-        return this.domain.getMetas();
+        return ViewModelUtil.toView(this.domain.getMetas() ,ProbeSchemaMetaVO.class);
     }
 
     
@@ -130,9 +132,9 @@ public class ProbeSchemaNameVO extends BaseView<ProbeSchemaNameDomain>
      * 
      * @param i_Metas 本体结构
      */
-    public void setMetas(List<ProbeSchemaMeta> i_Metas)
+    public void setMetas(List<ProbeSchemaMetaVO> i_Metas)
     {
-        this.domain.setMetas(i_Metas);
+        this.domain.setMetas(DomainUtil.toDomain(i_Metas));
     }
     
 }

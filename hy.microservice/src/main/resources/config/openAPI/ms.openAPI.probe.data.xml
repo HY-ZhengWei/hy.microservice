@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="xconfig"         class="java.util.ArrayList" />
+    <import name="openapis"        class="java.util.Hashtable" />
+    <import name="openapi"         class="org.hy.microservice.common.openapi.OpenApiConfig" />
+    
+    
+    
+    <!-- 配置接口的最大允许的请求量 -->
+    <!-- 接口路径，如 /probe/data 。接口路径不包含服务名称 -->
+    <!-- maxCount 等于0 表示不限制访问量； 小与0 表示取默认值 -->
+    <xconfig>
+    
+        <openapi id="MS_Common_ProbeData_probe_data">
+            <url>/probe/data</url>
+            <maxCountMinute>0</maxCountMinute>
+            <maxCountMinute10>0</maxCountMinute10>
+        </openapi>
+        
+        
+        
+        <!-- 每分钟最大允许的请求量。当没有对接口个性化配置时，默认使用 ms.sys.Config.xml 中的默认值 -->
+        <openapis id="MS_Common_ApiUseMaxCountMinuteMap" this="MS_Common_ApiUseMaxCountMinuteMap" key="url">
+            <openapi ref="MS_Common_ProbeData_probe_data" />
+        </openapis>
+        
+        
+        
+        <!-- 每10分钟最大允许的请求量。当没有对接口个性化配置时，默认使用 ms.sys.Config.xml 中的默认值 -->
+        <openapis id="MS_Common_ApiUseMaxCountMinute10Map" this="MS_Common_ApiUseMaxCountMinute10Map" key="url">
+            <openapi ref="MS_Common_ProbeData_probe_data" />
+        </openapis>
+        
+    </xconfig>
+    
+</config>

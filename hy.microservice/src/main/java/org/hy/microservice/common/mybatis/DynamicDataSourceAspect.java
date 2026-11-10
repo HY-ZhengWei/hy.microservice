@@ -164,7 +164,7 @@ public class DynamicDataSourceAspect
      *
      * @param i_SpelStr          原始SpEL表达式字符串，来自@SourceData注解value，以#开头,
      *                             例如 `"#dbName"`
-     *                             例如 `"#T(com.lps.microservice.workorder.config.routingdatasource.TenantContextHolder).getDsKey()"`
+     *                             例如 `"#T(org.hy.microservice.workorder.config.routingdatasource.TenantContextHolder).getDsKey()"`
      * @param i_MethodSignature  方法签名对象，用于获取方法参数名称、方法元信息
      * @param i_Args             被AOP拦截的目标方法实际入参数组，与paramNames一一对应
      * @param i_Target           AOP拦截的目标对象（被切面代理的Bean实例）

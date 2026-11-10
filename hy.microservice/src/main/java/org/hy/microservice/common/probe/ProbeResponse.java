@@ -1,6 +1,7 @@
 package org.hy.microservice.common.probe;
 
 import java.util.List;
+import java.util.Map;
 
 import org.hy.microservice.common.BaseData;
 
@@ -23,13 +24,16 @@ public class ProbeResponse extends BaseData
     
     
     /** 今天之前最后一天完备的数据资产编号，预防丢失最后一天中的最后一条 */
-    private List<String> lasts;
+    private List<String>        lasts;
     
     /** 完备的数据资产编号，会重复回应 */
-    private List<String> completes;
+    private List<String>        completes;
     
     /** 丢失的数据资产编号，可能会多次回应 */
-    private List<String> redos;
+    private List<String>        redos;
+    
+    /** 非法数据。Map.key是数据资产编号，Map.value是错误编号和原因 */
+    private Map<String ,String> errorDatas;
 
     
     
@@ -90,6 +94,26 @@ public class ProbeResponse extends BaseData
     public void setRedos(List<String> i_Redos)
     {
         this.redos = i_Redos;
+    }
+
+    
+    /**
+     * 获取：非法数据
+     */
+    public Map<String ,String> getErrorDatas()
+    {
+        return errorDatas;
+    }
+
+    
+    /**
+     * 设置：非法数据
+     * 
+     * @param i_ErrorDatas 非法数据
+     */
+    public void setErrorDatas(Map<String ,String> i_ErrorDatas)
+    {
+        this.errorDatas = i_ErrorDatas;
     }
     
 }
