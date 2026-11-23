@@ -1,6 +1,13 @@
 package org.hy.microservice.common.probe.data;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.hy.common.Help;
 import org.hy.common.StringHelp;
+import org.hy.common.TablePartitionRID;
+import org.hy.common.app.Param;
 import org.hy.common.xml.XJava;
 import org.hy.common.xml.XSQL;
 import org.hy.common.xml.annotation.Xjava;
@@ -9,6 +16,8 @@ import org.hy.common.xml.plugins.XSQLGroup;
 import org.hy.common.xml.plugins.XSQLGroupResult;
 import org.hy.common.xml.plugins.XSQLNode;
 
+import org.hy.microservice.common.probe.client.AssetID;
+import org.hy.microservice.common.probe.enums.MetaFormat;
 import org.hy.microservice.common.probe.schema.ProbeSchemaMeta;
 import org.hy.microservice.common.probe.schema.ProbeSchemaName;
 
@@ -42,6 +51,48 @@ public class ProbeDataDAO implements IProbeDataDAO
     
     @Xjava(ref="GXSQL_Common_ProbeData_Save")
     private XSQLGroup save;
+    
+    @Xjava(ref="XSQL_Common_ProbeData_FindAssetID")
+    private XSQL      findAssetID;
+    
+    @Xjava(ref="XSQL_Common_ProbeData_MaxAssetID")
+    private XSQL      maxAssetID;
+    
+    @Xjava(ref="XSQL_Common_ProbeData_Query_RequireSync")
+    private XSQL      requireSync;
+    
+    @Xjava(ref="XSQL_Common_ProbeData_Update_AssetStates")
+    private XSQL      updateAssetStates;
+    
+    @Xjava(ref="MS_Common_ProbeData_SyncMaxCount")
+    private Param     requireSyncMaxCount;
+    
+    
+    
+    /**
+     * 更新数据资产状态
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-11-15
+     * @version     v1.0
+     *
+     * @param i_TableName   表名
+     * @param i_AssetIDs    多个数据资产编号
+     * @param i_AssetState  未同步false； 已同步true
+     * @param i_UserID      更新用户ID
+     * @return              更新成功数量
+     */
+    public int updateAssetStates(String i_TableName ,List<String> i_AssetIDs ,boolean i_AssetState ,String i_UserID)
+    {
+        Map<String ,Object> v_Data = new HashMap<String ,Object>();
+        
+        v_Data.put("tableName"    ,i_TableName);
+        v_Data.put("assetIDs"     ,StringHelp.toString(i_AssetIDs));
+        v_Data.put("assetState"   ,i_AssetState ? 1 : 0);
+        v_Data.put("updateUserID" ,i_UserID);
+        
+        return this.updateAssetStates.executeUpdate(v_Data);
+    }
     
     
     
@@ -194,6 +245,218 @@ public class ProbeDataDAO implements IProbeDataDAO
         v_MyUpdate.setXJavaID(v_MyUpdateXID);
         XJava.putObject(v_MyUpdateXID ,v_MyUpdate);
         return v_MyUpdate;
+    }
+    
+    
+    
+    /**
+     * 获取一个用于查询需要同步的数据的XSQL
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-11-13
+     * @version     v1.0
+     *
+     * @param i_SchemaName  数据探针的结构
+     * @return
+     */
+    private synchronized XSQL getRequireSync(ProbeSchemaName i_SchemaName)
+    {
+        String v_MyQueryXID = StringHelp.replaceAll(this.requireSync.getXJavaID() ,"ProbeData" ,i_SchemaName.getTableName());
+        XSQL   v_MyQuery    = XJava.getXSQL(v_MyQueryXID);
+        
+        if ( v_MyQuery != null )
+        {
+            return v_MyQuery;
+        }
+        
+        v_MyQuery = XJava.getXSQL(this.requireSync.getXJavaID() ,true);
+        String        v_SQL   = v_MyQuery.getContentDB().getSqlText();
+        StringBuilder v_Names = new StringBuilder();
+        
+        for (ProbeSchemaMeta v_Meta : i_SchemaName.getMetas())
+        {
+            v_Names .append(",").append(v_Meta.getMname());
+        }
+        
+        v_SQL = StringHelp.replaceAll(v_SQL ,new String[] {":tableName" 
+                                                          ,":1DataName"
+                                                          ,":MaxCount"} 
+                                            ,new String[] {i_SchemaName.getTableName()
+                                                          ,v_Names.toString()
+                                                          ,"" + (this.requireSyncMaxCount != null ? Help.NVL(this.requireSyncMaxCount.getValueInt() ,100) : 100)});
+        v_MyQuery.getContentDB().setSqlText(v_SQL);
+        v_MyQuery.setXJavaID(v_MyQueryXID);
+        XJava.putObject(v_MyQueryXID ,v_MyQuery);
+        return v_MyQuery;
+    }
+    
+    
+    
+    /**
+     * 获取一个用于查询主键的XSQL
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-11-22
+     * @version     v1.0
+     *
+     * @param i_SchemaName  数据探针的结构
+     * @return
+     */
+    private synchronized XSQL getFindAssetID(ProbeSchemaName i_SchemaName)
+    {
+        String v_MyQueryXID = StringHelp.replaceAll(this.findAssetID.getXJavaID() ,"ProbeData" ,i_SchemaName.getTableName());
+        XSQL   v_MyQuery    = XJava.getXSQL(v_MyQueryXID);
+        
+        if ( v_MyQuery != null )
+        {
+            return v_MyQuery;
+        }
+        
+        v_MyQuery = XJava.getXSQL(this.findAssetID.getXJavaID() ,true);
+        String        v_SQL   = v_MyQuery.getContentDB().getSqlText();
+        StringBuilder v_Names = new StringBuilder();
+        int           v_Count = 0;
+        
+        for (ProbeSchemaMeta v_Meta : i_SchemaName.getMetas())
+        {
+            if ( v_Meta.getPk() == null || v_Meta.getPk() < 1 )
+            {
+                continue;
+            }
+            
+            if ( v_Count >= 1 )
+            {
+                v_Names.append(" AND ");
+            }
+            v_Names.append(v_Meta.getMname()).append(" = ");
+            if ( MetaFormat.String.getValue().equals(v_Meta.getMformat()) )
+            {
+                v_Names.append("':").append(v_Meta.getMname()).append("'");
+            }
+            else
+            {
+                v_Names.append(":").append(v_Meta.getMname());
+            }
+            v_Count++;
+        }
+        
+        if ( v_Count <= 0 )
+        {
+            v_SQL = "";  // 空即无效
+        }
+        else
+        {
+            v_SQL = StringHelp.replaceAll(v_SQL ,new String[] {":tableName" 
+                                                              ,":1WhereNV"} 
+                                                ,new String[] {i_SchemaName.getTableName()
+                                                              ,v_Names.toString()});
+        }
+        v_MyQuery.getContentDB().setSqlText(v_SQL);
+        v_MyQuery.setXJavaID(v_MyQueryXID);
+        XJava.putObject(v_MyQueryXID ,v_MyQuery);
+        return v_MyQuery;
+    }
+    
+    
+    
+    /**
+     * 按用户主键查数据资产编号
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-11-22
+     * @version     v1.0
+     *
+     * @param <D>
+     * @param i_SchemaName  数据探针的结构
+     * @param i_Data        数据
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public String queryAssetIDByPK(ProbeSchemaName i_SchemaName ,Object i_Data)
+    {
+        XSQL v_Query = this.getFindAssetID(i_SchemaName);
+        if ( v_Query == null || Help.isNull(v_Query.getContent().getSqlText()) )
+        {
+            return null;
+        }
+        
+        List<List<String>> v_QueryRet = (List<List<String>>) v_Query.query(i_Data);
+        if ( Help.isNull(v_QueryRet) )
+        {
+            return null;
+        }
+        else
+        {
+            if ( Help.isNull(v_QueryRet.get(0)) )
+            {
+                return null;
+            }
+            else if ( Help.isNull(v_QueryRet.get(0).get(0)) )
+            {
+                return null;
+            }
+        }
+        
+        return v_QueryRet.get(0).get(0);
+    }
+    
+    
+    
+    /**
+     * 查当前表中最大的数据资产编号
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-11-12
+     * @version     v1.0
+     *
+     * @param i_SchemaName  数据探针的结构
+     * @param i_Source      数据资产编号中的来源
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public AssetID queryMaxAssetID(ProbeSchemaName i_SchemaName ,String i_Source)
+    {
+        List<List<String>> v_QueryRet = (List<List<String>>) this.maxAssetID.query(i_SchemaName);
+        
+        if ( Help.isNull(v_QueryRet) )
+        {
+            return new AssetID();
+        }
+        else
+        {
+            if ( Help.isNull(v_QueryRet.get(0)) )
+            {
+                return new AssetID();
+            }
+            else if ( Help.isNull(v_QueryRet.get(0).get(0)) )
+            {
+                return new AssetID();
+            }
+        }
+        
+        return new AssetID(StringHelp.replaceLast(v_QueryRet.get(0).get(0) ,i_Source ,""));
+    }
+    
+    
+    
+    /**
+     * 查询需要同步的数据
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-11-13
+     * @version     v1.0
+     *
+     * @param i_SchemaName  数据探针的结构
+     * @return              按用户ID分区，按数据资产编号为主键
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public TablePartitionRID<String ,Map<String ,Object>> queryRequireSync(ProbeSchemaName i_SchemaName)
+    {
+        XSQL v_Query = this.getRequireSync(i_SchemaName);
+        return (TablePartitionRID<String ,Map<String ,Object>>) v_Query.query();
     }
     
 }

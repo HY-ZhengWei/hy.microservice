@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+
+    <import name="xconfig"         class="java.util.ArrayList" />
+    <import name="xparam"          class="java.util.Hashtable" />
+    <import name="item"            class="org.hy.common.app.Param" />
+    
+    
+    
+    <!-- 数据探针来源（客户端配置） -->
+    <xconfig>
+
+        <xparam id="SYSParam_MS_Common" this="SYSParam_MS_Common" key="name">
+        
+            <item id="MS_Common_AssetID_Source">
+                <name>MS_Common_AssetID_Source</name>
+                <value>http://127.0.0.1:8080/ms</value>
+                <comment>当前服务地址，数据探针的数据资产编号中的来源</comment>
+                <onlyRead>true</onlyRead>
+            </item>
+            
+        </xparam>
+        
+    </xconfig>
+    
+</config>

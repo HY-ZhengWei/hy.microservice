@@ -48,6 +48,9 @@ public class ProbeSchemaMeta extends BaseData
     /** 是否允许空，默认为1，即允许空 */
     private Integer nullable;
     
+    /** 序列号属性索引号（仅客户端使用） */
+    private Integer propIndex;
+    
     
     
     public ProbeSchemaMeta()
@@ -239,9 +242,28 @@ public class ProbeSchemaMeta extends BaseData
     {
         this.nullable = i_Nullable;
     }
+    
+    
+    /**
+     * 获取：序列号属性索引号（仅客户端使用）
+     */
+    public Integer getPropIndex()
+    {
+        return propIndex;
+    }
 
+    
+    /**
+     * 设置：序列号属性索引号（仅客户端使用）
+     * 
+     * @param i_PropIndex 序列号属性索引号（仅客户端使用）
+     */
+    public void setPropIndex(Integer i_PropIndex)
+    {
+        this.propIndex = i_PropIndex;
+    }
 
-
+    
     @Override
     public String toString()
     {

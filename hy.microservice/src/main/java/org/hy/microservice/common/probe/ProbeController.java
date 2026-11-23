@@ -84,13 +84,19 @@ public class ProbeController extends BaseController
             
             if ( Help.isNull(i_ProbeRequest.getUserID()) )
             {
-                return v_RetResp.setCode("-2").setMessage("用户编号为空");
+                return v_RetResp.setCode("-2").setMessage("数据探针：用户编号为空");
             }
             
             ProbeRequestDomain v_ProbeRequest = i_ProbeRequest.gatDomain();
             if ( Help.isNull(v_ProbeRequest.getType()) )
             {
-                return v_RetResp.setCode("-11").setMessage("数据探针的本体结构的归类为空");
+                return v_RetResp.setCode("-11").setMessage("数据探针：归类为空");
+            }
+            
+            v_ProbeRequest.setType(v_ProbeRequest.getType().trim());
+            if ( v_ProbeRequest.getType().length() > 128 )
+            {
+                return v_RetResp.setCode("-12").setMessage("数据探针：归类[" + v_ProbeRequest.getType() + "]长度 > 128"); 
             }
             
             if ( isCheckToken != null && Boolean.parseBoolean(isCheckToken.getValue()) )
@@ -108,12 +114,6 @@ public class ProbeController extends BaseController
                 }
             }
             
-            v_ProbeRequest.setType(v_ProbeRequest.getType().trim());
-            if ( v_ProbeRequest.getType().length() > 128 )
-            {
-                // 返回异常 TODO
-            }
-            
             ProbeSchemaDomain v_Schema = null;
             if ( v_ProbeRequest.getSchema() != null )
             {
@@ -127,7 +127,7 @@ public class ProbeController extends BaseController
                 }
                 else
                 {
-                    // 返回异常 TODO
+                    return v_RetResp.setCode("-101").setMessage("数据探针：保存本体结构异常：" + v_SaveSchemaRet.paramStr);
                 }
             }
             else
@@ -135,7 +135,8 @@ public class ProbeController extends BaseController
                 v_Schema = this.probeService.queryByType(v_ProbeRequest.getType());
                 if ( v_Schema == null )
                 {
-                    // 返回异常 TODO
+                    // 暂时不支持自动识别数据报文来创建本体结构，因而返回异常
+                    return v_RetResp.setCode("-102").setMessage("数据探针：归类[" + v_ProbeRequest.getType() + "]不存");
                 }
             }
             
@@ -144,7 +145,7 @@ public class ProbeController extends BaseController
             {
                 if ( Help.isNull(v_ProbeRequest.getSource()) )
                 {
-                    // 返回异常 TODO
+                    return v_RetResp.setCode("-103").setMessage("数据探针：归类[" + v_ProbeRequest.getType() + "]的来源[" + v_ProbeRequest.getSource() + "]不存");
                 }
                 
                 v_ProbeRequest.setSource(v_ProbeRequest.getSource().trim());

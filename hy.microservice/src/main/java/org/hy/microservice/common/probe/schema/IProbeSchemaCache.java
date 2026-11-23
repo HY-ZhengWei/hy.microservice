@@ -1,5 +1,7 @@
 package org.hy.microservice.common.probe.schema;
 
+import java.util.List;
+
 
 
 
@@ -13,6 +15,18 @@ package org.hy.microservice.common.probe.schema;
  */
 public interface IProbeSchemaCache
 {
+    
+    /**
+     * 获取所有数据探针的结构
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-11-13
+     * @version     v1.0
+     *
+     */
+    public List<ProbeSchema> getAll();
+    
+    
     
     /**
      * 用XID获取数据

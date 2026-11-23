@@ -1,5 +1,6 @@
 package org.hy.microservice.common.probe.schema;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -96,5 +97,20 @@ public interface IProbeSchemaService
      * @return
      */
     public ProbeSchemaDomain save(ProbeSchemaDomain io_ProbeSchema);
+    
+    
+    
+    /**
+     * 生成本体结构串码
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-10-26
+     * @version     v1.0
+     *
+     * @param i_Type   归类
+     * @param i_Metas  本体结构
+     * @return
+     */
+    public String metaCode(String i_Type ,List<ProbeSchemaMetaDomain> i_Metas);
     
 }

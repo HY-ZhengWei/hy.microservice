@@ -14,15 +14,6 @@ package org.hy.microservice.common.probe.data;
 public interface IProbeDataService
 {
     
-    /**
-     * 数据探针的数据持久化入库
-     * 
-     * @author      ZhengWei(HY)
-     * @createDate  2026-11-09
-     * @version     v1.0
-     *
-     * @return
-     */
-    public void saves();
+    
     
 }

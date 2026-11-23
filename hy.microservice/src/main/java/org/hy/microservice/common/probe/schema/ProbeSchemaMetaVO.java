@@ -1,5 +1,7 @@
 package org.hy.microservice.common.probe.schema;
 
+import org.hy.common.Date;
+
 import org.hy.microservice.common.BaseView;
 import org.hy.microservice.common.probe.enums.MetaFormat;
 
@@ -38,7 +40,7 @@ public class ProbeSchemaMetaVO extends BaseView<ProbeSchemaMetaDomain>
     /**
      * 获取：主键
      */
-    public String getId()
+    protected String getId()
     {
         return this.domain.getId();
     }
@@ -49,7 +51,7 @@ public class ProbeSchemaMetaVO extends BaseView<ProbeSchemaMetaDomain>
      * 
      * @param i_Id 主键
      */
-    public void setId(String i_Id)
+    protected void setId(String i_Id)
     {
         this.domain.setId(i_Id);
     }
@@ -58,7 +60,7 @@ public class ProbeSchemaMetaVO extends BaseView<ProbeSchemaMetaDomain>
     /**
      * 获取：归类ID
      */
-    public String getSchemaID()
+    protected String getSchemaID()
     {
         return this.domain.getSchemaID();
     }
@@ -69,7 +71,7 @@ public class ProbeSchemaMetaVO extends BaseView<ProbeSchemaMetaDomain>
      * 
      * @param i_SchemaID 归类ID
      */
-    public void setSchemaID(String i_SchemaID)
+    protected void setSchemaID(String i_SchemaID)
     {
         this.domain.setSchemaID(i_SchemaID);
     }
@@ -78,7 +80,7 @@ public class ProbeSchemaMetaVO extends BaseView<ProbeSchemaMetaDomain>
     /**
      * 获取：逻辑名称ID
      */
-    public String getNameID()
+    protected String getNameID()
     {
         return this.domain.getNameID();
     }
@@ -89,7 +91,7 @@ public class ProbeSchemaMetaVO extends BaseView<ProbeSchemaMetaDomain>
      * 
      * @param i_NameID 逻辑名称ID
      */
-    public void setNameID(String i_NameID)
+    protected void setNameID(String i_NameID)
     {
         this.domain.setNameID(i_NameID);
     }
@@ -118,7 +120,7 @@ public class ProbeSchemaMetaVO extends BaseView<ProbeSchemaMetaDomain>
     /**
      * 获取：名称的ABC代号
      */
-    public String getMnameABC()
+    protected String getMnameABC()
     {
         return this.domain.getMnameABC();
     }
@@ -229,6 +231,60 @@ public class ProbeSchemaMetaVO extends BaseView<ProbeSchemaMetaDomain>
     public void setNullable(Boolean i_Nullable)
     {
         this.domain.setNullable(i_Nullable);
+    }
+    
+    
+    /**
+     * 获取：创建时间
+     */
+    public Date getCreateTime()
+    {
+        return null;  // 返回NULL时，转Json时不生成
+    }
+    
+    
+    /**
+     * 获取：修改时间
+     */
+    public Date getUpdateTime()
+    {
+        return null;  // 返回NULL时，转Json时不生成
+    }
+    
+    
+    /**
+     * 获取：创建人编号
+     */
+    public String getCreateUserID()
+    {
+        return null;  // 返回NULL时，转Json时不生成
+    }
+    
+    
+    /**
+     * 获取：修改者编号
+     */
+    public String getUpdateUserID()
+    {
+        return null;  // 返回NULL时，转Json时不生成
+    }
+    
+    
+    /**
+     * 获取：删除标记。1删除；0未删除
+     */
+    public Integer getIsDel()
+    {
+        return null;  // 返回NULL时，转Json时不生成
+    }
+    
+    
+    /**
+     * 获取：排列显示顺序。数据越大越在前显示
+     */
+    public Integer getOrderBy()
+    {
+        return null;  // 返回NULL时，转Json时不生成
     }
     
 }

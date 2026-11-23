@@ -1,5 +1,7 @@
 package org.hy.microservice.common.probe.schema;
 
+import java.util.List;
+
 import org.hy.common.Help;
 import org.hy.common.app.Param;
 import org.hy.common.xml.XJava;
@@ -40,6 +42,22 @@ public class ProbeSchemaCache implements IProbeSchemaCache
     {
         boolean v_UseRemote = "启用".equals(XJava.getParam("MS_Common_IsRedis").getValue());
         this.cache = CacheFactory.newInstanceOf(v_UseRemote ,ProbeSchema.class);
+    }
+    
+    
+    
+    /**
+     * 获取所有数据探针的结构
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-11-13
+     * @version     v1.0
+     *
+     */
+    @Override
+    public List<ProbeSchema> getAll()
+    {
+        return this.cache.getRowsList(this.cacheDatabase.getValue() ,$RTable);
     }
     
     

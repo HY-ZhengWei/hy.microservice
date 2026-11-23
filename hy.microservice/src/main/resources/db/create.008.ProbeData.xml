@@ -19,6 +19,7 @@
                 CREATE TABLE TProbeData
                 (
                  assetID                    VARCHAR2(72)   NOT NULL
+                ,assetState                 NUMBER(1 ,0)   NOT NULL
                 ,isDel                      NUMBER(1 ,0)   NOT NULL
                 ,createUserID               VARCHAR2(64)   NOT NULL
                 ,updateUserID               VARCHAR2(64)   NOT NULL
@@ -31,10 +32,11 @@
                 
                 ALTER TABLE TProbeData ADD CONSTRAINT PK_TProbeData PRIMARY KEY (assetID);/
                 
-                CREATE INDEX IDX_TProbeData_updateTime ON TProbeData (updateTime);/
+                CREATE INDEX IDX_TProbeData_UT ON TProbeData (updateTime);/
                 
                 COMMENT ON TABLE  TProbeData                                IS '数据探针的原数据';/
                 COMMENT ON COLUMN TProbeData.assetID                        IS '数据资产编号';/
+                COMMENT ON COLUMN TProbeData.assetState                     IS '数据资产状态。0未同步；1已同步';/
                 COMMENT ON COLUMN TProbeData.isDel                          IS '删除标记。1删除；0未删除';/
                 COMMENT ON COLUMN TProbeData.createUserID                   IS '数据创建人ID';/
                 COMMENT ON COLUMN TProbeData.updateUserID                   IS '数据修改人ID';/
@@ -48,6 +50,7 @@
                 CREATE TABLE TProbeData
                 (
                  assetID                    VARCHAR2(72)   NOT NULL
+                ,assetState                 NUMBER(1 ,0)   NOT NULL
                 ,isDel                      NUMBER(1 ,0)   NOT NULL
                 ,createUserID               VARCHAR2(64)   NOT NULL
                 ,updateUserID               VARCHAR2(64)   NOT NULL
@@ -60,10 +63,11 @@
                 
                 ALTER TABLE TProbeData ADD CONSTRAINT PK_TProbeData PRIMARY KEY (assetID);/
                 
-                CREATE INDEX IDX_TProbeData_updateTime ON TProbeData (updateTime);/
+                CREATE INDEX IDX_TProbeData_UT ON TProbeData (updateTime);/
                 
                 COMMENT ON TABLE  TProbeData                                IS '数据探针的原数据';/
                 COMMENT ON COLUMN TProbeData.assetID                        IS '数据资产编号';/
+                COMMENT ON COLUMN TProbeData.assetState                     IS '数据资产状态。0未同步；1已同步';/
                 COMMENT ON COLUMN TProbeData.isDel                          IS '删除标记。1删除；0未删除';/
                 COMMENT ON COLUMN TProbeData.createUserID                   IS '数据创建人ID';/
                 COMMENT ON COLUMN TProbeData.updateUserID                   IS '数据修改人ID';/
@@ -77,6 +81,7 @@
                 CREATE TABLE TProbeData
                 (
                  assetID                    VARCHAR(72)     NOT NULL
+                ,assetState                 NUMERIC(1 ,0)   NOT NULL
                 ,isDel                      NUMERIC(1 ,0)   NOT NULL
                 ,createUserID               VARCHAR(64)     NOT NULL
                 ,updateUserID               VARCHAR(64)     NOT NULL
@@ -89,10 +94,11 @@
                 
                 ALTER TABLE TProbeData ADD CONSTRAINT PK_TProbeData PRIMARY KEY (assetID);/
                 
-                CREATE INDEX IDX_TProbeData_updateTime ON TProbeData (updateTime);/
+                CREATE INDEX IDX_TProbeData_UT ON TProbeData (updateTime);/
                 
                 COMMENT ON TABLE  TProbeData                                IS '数据探针的原数据';/
                 COMMENT ON COLUMN TProbeData.assetID                        IS '数据资产编号';/
+                COMMENT ON COLUMN TProbeData.assetState                     IS '数据资产状态。0未同步；1已同步';/
                 COMMENT ON COLUMN TProbeData.isDel                          IS '删除标记。1删除；0未删除';/
                 COMMENT ON COLUMN TProbeData.createUserID                   IS '数据创建人ID';/
                 COMMENT ON COLUMN TProbeData.updateUserID                   IS '数据修改人ID';/
@@ -106,6 +112,7 @@
                 CREATE TABLE TProbeData
                 (
                  assetID                    VARCHAR(72)     NOT NULL        COMMENT '数据资产编号'
+                ,assetState                 INT             NOT NULL        COMMENT '数据资产状态。0未同步；1已同步'
                 ,isDel                      INT             NOT NULL        COMMENT '删除标记。1删除；0未删除'
                 ,createUserID               VARCHAR(64)     NOT NULL        COMMENT '数据创建人ID'
                 ,updateUserID               VARCHAR(64)     NOT NULL        COMMENT '数据修改人ID'
@@ -114,13 +121,13 @@
                 :STRING                     VARCHAR(1L)
                 :NUMBER                     DECIMAL(1L ,0D)
                 :BOOLEAN                    DECIMAL(1 ,0)
-                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;/
+                );/
                 
                 ALTER TABLE TProbeData COMMENT                      = '数据探针的原数据';/
 
                 ALTER TABLE TProbeData ADD CONSTRAINT PK_TProbeData PRIMARY KEY (assetID);/
                                 
-                CREATE INDEX IDX_TProbeData_updateTime ON TProbeData (updateTime);/
+                CREATE INDEX IDX_TProbeData_UT ON TProbeData (updateTime);/
                 ]]>
             </content>
             

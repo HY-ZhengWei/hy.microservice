@@ -82,7 +82,7 @@ public class ProbeSchemaVO extends BaseView<ProbeSchemaDomain>
     /**
      * 获取：默认的逻辑名称ID
      */
-    public String getNameID()
+    protected String getNameID()
     {
         return this.domain.getNameID();
     }
@@ -93,7 +93,7 @@ public class ProbeSchemaVO extends BaseView<ProbeSchemaDomain>
      * 
      * @param i_NameID  默认的逻辑名称ID
      */
-    public void setNameID(String i_NameID)
+    protected void setNameID(String i_NameID)
     {
         this.domain.setNameID(i_NameID);
     }
@@ -102,7 +102,7 @@ public class ProbeSchemaVO extends BaseView<ProbeSchemaDomain>
     /**
      * 获取：默认的逻辑名称
      */
-    public ProbeSchemaNameVO getName()
+    protected ProbeSchemaNameVO getName()
     {
         return new ProbeSchemaNameVO(this.domain.getName());
     }
@@ -113,7 +113,7 @@ public class ProbeSchemaVO extends BaseView<ProbeSchemaDomain>
      * 
      * @param i_Name 默认的逻辑名称
      */
-    public void setName(ProbeSchemaNameVO i_Name)
+    protected void setName(ProbeSchemaNameVO i_Name)
     {
         this.domain.setName(i_Name.gatDomain());
     }
@@ -142,7 +142,7 @@ public class ProbeSchemaVO extends BaseView<ProbeSchemaDomain>
     /**
      * 获取：所有逻辑名称。Map.key为本体结构串码metaCode
      */
-    public Map<String ,ProbeSchemaNameVO> getAllName()
+    protected Map<String ,ProbeSchemaNameVO> getAllName()
     {
         return ViewModelUtil.toView(this.domain.getAllName() ,ProbeSchemaNameVO.class);
     }
@@ -153,7 +153,7 @@ public class ProbeSchemaVO extends BaseView<ProbeSchemaDomain>
      * 
      * @param i_AllName 所有逻辑名称。Map.key为本体结构串码metaCode
      */
-    public void setAllName(Map<String ,ProbeSchemaNameVO> i_AllName)
+    protected void setAllName(Map<String ,ProbeSchemaNameVO> i_AllName)
     {
         this.domain.setAllName(DomainUtil.toDomain(i_AllName));
     }

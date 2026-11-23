@@ -36,7 +36,7 @@ public class ProbeSchemaName extends BaseData
     
     /** 本体结构 */
     private List<ProbeSchemaMeta> metas;
-
+    
     
     
     /**

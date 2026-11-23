@@ -17,6 +17,7 @@ public enum ProbeKeyword implements BaseEnum<String>
 {
     
     AssetID     ("assetID"      ,"数据资产编号"),
+    AssetState  ("assetState"   ,"数据资产状态"),
     IsDel       ("isDel"        ,"删除标记"),
     CreateUserID("createUserID" ,"数据创建人ID"),
     UpdateUserID("updateUserID" ,"数据修改人ID"),

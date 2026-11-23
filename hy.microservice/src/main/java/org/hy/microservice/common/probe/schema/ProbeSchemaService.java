@@ -51,7 +51,7 @@ public class ProbeSchemaService implements IProbeSchemaService ,Serializable
     private IProbeSchemaCache   probeSchemaCache;
     
     @Xjava(ref="XSQL_Common_Create_ProbeData")
-    private XSQL                probeData;
+    private XSQL                probeCreate;
     
     
     
@@ -329,6 +329,13 @@ public class ProbeSchemaService implements IProbeSchemaService ,Serializable
             }
             else
             {
+                // 尝试恢复ProbeClient客户端定位到的属性索引（仅用于客户端）
+                for (int x=0; x<v_OldName.getMetas().size(); x++)
+                {
+                    ProbeSchemaMetaDomain v_OldMeta = v_OldName.getMetas().get(x);
+                    v_OldMeta.setPropIndex(io_ProbeSchema.getName().getMetas().get(x).getPropIndex());
+                }
+                
                 io_ProbeSchema.setName(v_OldName);
                 
                 // 判定是否有变化
@@ -393,7 +400,6 @@ public class ProbeSchemaService implements IProbeSchemaService ,Serializable
     
     
     
-    
     /**
      * 生成本体结构串码
      * 
@@ -405,7 +411,8 @@ public class ProbeSchemaService implements IProbeSchemaService ,Serializable
      * @param i_Metas  本体结构
      * @return
      */
-    private String metaCode(String i_Type ,List<ProbeSchemaMetaDomain> i_Metas)
+    @Override
+    public String metaCode(String i_Type ,List<ProbeSchemaMetaDomain> i_Metas)
     {
         StringBuilder v_Buffer = new StringBuilder();
         
@@ -436,37 +443,59 @@ public class ProbeSchemaService implements IProbeSchemaService ,Serializable
      */
     private boolean createProbeDataTable(ProbeSchemaDomain i_ProbeSchema)
     {
-        String        v_SQLText = this.probeData.getContent().getSqlText();
+        String        v_SQLText = this.probeCreate.getContent().getSqlText();
         int           v_BIndex  = v_SQLText.indexOf(":STRING");
         int           v_EIndex  = v_SQLText.indexOf(");");
         String []     v_Fields  = v_SQLText.substring(v_BIndex ,v_EIndex).trim().split("\\)");
         StringBuilder v_SQL     = new StringBuilder();
+        String        v_PKNames = "";
         
         v_SQL.append(v_SQLText.substring(0 ,v_BIndex));
         
-        for (ProbeSchemaMetaDomain v_Item : i_ProbeSchema.getMetas())
+        for (ProbeSchemaMetaDomain v_Meta : i_ProbeSchema.getMetas())
         {
-            if ( v_Item.getMformat().equals(MetaFormat.Boolean) )
+            if ( v_Meta.getMformat().equals(MetaFormat.Boolean) )
             {
-                v_SQL.append(",").append(StringHelp.replaceAll(v_Fields[2].trim() ,":BOOLEAN" ,v_Item.getMname())).append(")");
+                v_SQL.append(",").append(StringHelp.replaceAll(v_Fields[2].trim() ,":BOOLEAN" ,v_Meta.getMname())).append(")");
             }
-            else if ( v_Item.getMformat().equals(MetaFormat.Number) )
+            else if ( v_Meta.getMformat().equals(MetaFormat.Number) )
             {
-                v_SQL.append(",").append(StringHelp.replaceAll(v_Fields[1].trim() ,new String[] {":NUMBER" ,"1L" ,"0D"} ,new String[] {v_Item.getMname() ,v_Item.getMlength() + "" ,v_Item.getMdecimal() + ""})).append(")");
+                v_SQL.append(",").append(StringHelp.replaceAll(v_Fields[1].trim() ,new String[] {":NUMBER" ,"1L" ,"0D"} ,new String[] {v_Meta.getMname() ,v_Meta.getMlength() + "" ,v_Meta.getMdecimal() + ""})).append(")");
             }
-            else if ( v_Item.getMformat().equals(MetaFormat.String) )
+            else if ( v_Meta.getMformat().equals(MetaFormat.String) )
             {
-                v_SQL.append(",").append(StringHelp.replaceAll(v_Fields[0].trim() ,new String[] {":STRING" ,"1L"} ,new String[] {v_Item.getMname() ,v_Item.getMlength() + ""})).append(")");
+                v_SQL.append(",").append(StringHelp.replaceAll(v_Fields[0].trim() ,new String[] {":STRING" ,"1L"} ,new String[] {v_Meta.getMname() ,v_Meta.getMlength() + ""})).append(")");
+            }
+            
+            if ( v_Meta.getPk() || !v_Meta.getNullable() )
+            {
+                v_SQL.append(" NOT NULL ");
+            }
+            
+            if ( v_Meta.getPk() )
+            {
+                if ( !Help.isNull(v_PKNames) )
+                {
+                    v_PKNames += " ,";
+                }
+                v_PKNames += v_Meta.getMname();
             }
         }
         
         v_SQL.append(v_SQLText.substring(v_EIndex));
         
+        if ( !Help.isNull(v_PKNames) )
+        {
+            v_SQL.append(" ALTER TABLE TProbeData ADD CONSTRAINT UK_TProbeData UNIQUE KEY (").append(v_PKNames).append(");/");
+        }
+        
         try
         {
-            XSQL v_Clone = XJava.getXSQL(this.probeData.getXJavaID() ,true);
-            v_Clone.setContent(StringHelp.replaceAll(v_SQL.toString() ,"TProbeData" ,i_ProbeSchema.getName().getTableName()));
+            XSQL v_Clone = XJava.getXSQL(this.probeCreate.getXJavaID() ,true);
+            v_Clone.setXJavaID(StringHelp.replaceAll(this.probeCreate.getXJavaID() ,"ProbeData"  ,i_ProbeSchema.getName().getTableName()));
+            v_Clone.setContent(StringHelp.replaceAll(v_SQL.toString()              ,"TProbeData" ,i_ProbeSchema.getName().getTableName()));
             v_Clone.setCreate(i_ProbeSchema.getName().getTableName());
+            XJava.putObject(v_Clone.getXJavaID() ,v_Clone);
             return true;
         }
         catch (Exception exce)

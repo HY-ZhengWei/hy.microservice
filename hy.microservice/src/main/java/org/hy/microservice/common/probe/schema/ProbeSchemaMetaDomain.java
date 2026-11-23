@@ -275,6 +275,26 @@ public class ProbeSchemaMetaDomain extends BaseDomain<ProbeSchemaMeta>
     {
         this.data.setNullable(i_Nullable != null && i_Nullable ? 1 : 0);
     }
+    
+    
+    /**
+     * 获取：序列号属性索引号（仅客户端使用）
+     */
+    public Integer getPropIndex()
+    {
+        return this.data.getPropIndex();
+    }
+
+    
+    /**
+     * 设置：序列号属性索引号（仅客户端使用）
+     * 
+     * @param i_PropIndex 序列号属性索引号（仅客户端使用）
+     */
+    public void setPropIndex(Integer i_PropIndex)
+    {
+        this.data.setPropIndex(i_PropIndex);
+    }
 
 
     @Override

@@ -185,7 +185,7 @@ public class ProbeService implements IProbeService ,Serializable
                         v_FieldItem.setValue(Boolean.valueOf(v_Value) ? 1 : 0);
                     }
                 }
-                else
+                else if ( MetaFormat.String.equals(v_Filed.getMformat()) )
                 {
                     if ( v_Value.length() > v_Filed.getMlength() )
                     {
@@ -194,7 +194,9 @@ public class ProbeService implements IProbeService ,Serializable
                         v_Continue = true;
                         break;
                     }
-                    
+                }
+                else
+                {
                     if ( MetaFormat.Number.equals(v_Filed.getMformat()) )
                     {
                         if ( !Help.isNumber(v_Value) )
@@ -205,20 +207,38 @@ public class ProbeService implements IProbeService ,Serializable
                             break;
                         }
                         
-                        int v_Decimal = v_Value.indexOf("\\.");
-                        if ( v_Filed.getMdecimal() <= 0 && v_Decimal > 0 )
+                        Double v_Num = Help.round(Double.valueOf(v_Value) ,v_Filed.getMdecimal());
+                        if ( v_Filed.getMdecimal() <= 0 )
                         {
-                            v_ErrorDatas.put(v_AssetID ,ProbeError.E007_Lenght.toString(v_Key));
-                            $Logger.warn(v_AssetIDLog + ProbeError.E007_Lenght.toString(v_Key));
-                            v_Continue = true;
-                            break;
+                            v_FieldItem.setValue(v_Num.longValue());
+                            v_Value = v_Num.longValue() + "";
+                            if ( v_Value.length() > v_Filed.getMlength() )
+                            {
+                                v_ErrorDatas.put(v_AssetID ,ProbeError.E007_Lenght.toString(v_Key));
+                                $Logger.warn(v_AssetIDLog + ProbeError.E007_Lenght.toString(v_Key));
+                                v_Continue = true;
+                                break;
+                            }
                         }
-                        else if ( v_Decimal > 0 && v_Value.length() - v_Decimal - 1 > v_Filed.getMdecimal() )
+                        else 
                         {
-                            v_ErrorDatas.put(v_AssetID ,ProbeError.E007_Lenght.toString(v_Key));
-                            $Logger.warn(v_AssetIDLog + ProbeError.E007_Lenght.toString(v_Key));
-                            v_Continue = true;
-                            break;
+                            v_FieldItem.setValue(v_Num);
+                            v_Value = v_Num.toString();
+                            int v_Decimal = v_Value.indexOf(".");
+                            if ( v_Decimal >= 0 && v_Value.length() > v_Filed.getMlength() + 1 )
+                            {
+                                v_ErrorDatas.put(v_AssetID ,ProbeError.E007_Lenght.toString(v_Key));
+                                $Logger.warn(v_AssetIDLog + ProbeError.E007_Lenght.toString(v_Key));
+                                v_Continue = true;
+                                break;
+                            }
+                            else if ( v_Decimal < 0 && v_Value.length() > v_Filed.getMlength() )
+                            {
+                                v_ErrorDatas.put(v_AssetID ,ProbeError.E007_Lenght.toString(v_Key));
+                                $Logger.warn(v_AssetIDLog + ProbeError.E007_Lenght.toString(v_Key));
+                                v_Continue = true;
+                                break;
+                            }
                         }
                     }
                 }
@@ -281,6 +301,7 @@ public class ProbeService implements IProbeService ,Serializable
             v_ProbeData.setMetaCode(i_Schema.getName().getMetaCode());
             v_ProbeData.getData().put(ProbeKeyword.TableName   .getValue() ,i_Schema.getName().getTableName());
             v_ProbeData.getData().put(ProbeKeyword.AssetID     .getValue() ,v_AssetIDDB);
+            v_ProbeData.getData().put(ProbeKeyword.AssetState  .getValue() ,1);
             v_ProbeData.getData().put(ProbeKeyword.IsDel       .getValue() ,0);
             v_ProbeData.getData().put(ProbeKeyword.CreateUserID.getValue() ,i_ProbeRequest.getUserID());
             v_ProbeData.getData().put(ProbeKeyword.UpdateUserID.getValue() ,i_ProbeRequest.getUserID());
@@ -359,6 +380,7 @@ public class ProbeService implements IProbeService ,Serializable
             v_ProbeData.setMetaCode(i_Schema.getName().getMetaCode());
             v_ProbeData.getData().put(ProbeKeyword.TableName   .getValue() ,i_Schema.getName().getTableName());
             v_ProbeData.getData().put(ProbeKeyword.AssetID     .getValue() ,v_AssetIDDB);
+            v_ProbeData.getData().put(ProbeKeyword.AssetState  .getValue() ,1);
             v_ProbeData.getData().put(ProbeKeyword.IsDel       .getValue() ,1);
             v_ProbeData.getData().put(ProbeKeyword.UpdateUserID.getValue() ,i_ProbeRequest.getUserID());
             v_ProbeData.getData().put(ProbeKeyword.UpdateTime  .getValue() ,Date.getNowTime().getFull());

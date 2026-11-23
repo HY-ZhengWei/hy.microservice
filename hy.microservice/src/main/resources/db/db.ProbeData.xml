@@ -20,6 +20,7 @@
                 INSERT  INTO :tableName
                        (
                          assetID
+                        ,assetState
                         ,isDel
                         ,createUserID
                         ,updateUserID
@@ -29,6 +30,7 @@
                        )
                 VALUES (
                          ':assetID'
+                        ,':assetState'
                         ,':isDel'
                         ,':createUserID'
                         ,':updateUserID'
@@ -57,8 +59,77 @@
                    SET  updateTime   = ':updateTime'
                        ,updateUserID = ':updateUserID'
                        ,isDel        = ':isDel'
+                       ,assetState   = ':assetState'
                        :1SetS
                  WHERE  assetID      = ':assetID'
+                ]]>
+            </content>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_ProbeData_Update_AssetStates"> 
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                UPDATE  :tableName
+                   SET  updateTime   = SYSDATE
+                       ,updateUserID = ':updateUserID'
+                       ,assetState   = :assetState
+                 WHERE  assetID     IN (:assetIDs)
+                ]]>
+            </content>
+            
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                UPDATE  :tableName
+                   SET  updateTime   = SYSDATE
+                       ,updateUserID = ':updateUserID'
+                       ,assetState   = :assetState
+                 WHERE  assetID     IN (:assetIDs)
+                ]]>
+            </content>
+            
+            <content if="POSTGRESQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                UPDATE  :tableName
+                   SET  updateTime   = LOCALTIMESTAMP
+                       ,updateUserID = ':updateUserID'
+                       ,assetState   = :assetState
+                 WHERE  assetID     IN (:assetIDs)
+                ]]>
+            </content>
+            
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                UPDATE  :tableName
+                   SET  updateTime   = NOW()
+                       ,updateUserID = ':updateUserID'
+                       ,assetState   = :assetState
+                 WHERE  assetID     IN (:assetIDs)
+                ]]>
+            </content>
+            
+            <content if="SQLITE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                UPDATE  :tableName
+                   SET  updateTime   = DATETIME('now')
+                       ,updateUserID = ':updateUserID'
+                       ,assetState   = :assetState
+                 WHERE  assetID     IN (:assetIDs)
+                ]]>
+            </content>
+            
+            <content if="IOTDB == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                UPDATE  :tableName
+                   SET  updateTime   = now()
+                       ,updateUserID = ':updateUserID'
+                       ,assetState   = :assetState
+                 WHERE  assetID     IN (:assetIDs)
                 ]]>
             </content>
             
@@ -81,6 +152,143 @@
             
             <result>
                 <row>java.util.HashMap</row>
+                <cfill>put(colName ,colValue)</cfill>
+                <cstyle>UPPER</cstyle>
+            </result>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_ProbeData_FindAssetID"> 
+            
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                SELECT  assetID
+                  FROM  :tableName
+                 WHERE  :1WhereNV
+                ]]>
+            </content>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_ProbeData_MaxAssetID"> 
+            
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content>
+                <![CDATA[
+                SELECT  MAX(assetID) AS AssetID
+                  FROM  :tableName
+                ]]>
+            </content>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_ProbeData_Query_RequireSync"> 
+            
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT  WA.*
+                       (
+                        SELECT  assetID
+                               ,isDel
+                               ,updateUserID
+                               :1DataName
+                          FROM :tableName
+                         WHERE  assetState  = 0
+                           AND  updateTime >= SYSDATE - 10
+                         ORDER  BY updateTime
+                       )    WA
+                 WHERE  ROWNUM <= :MaxCount
+                ]]>
+            </content>
+            
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT  WA.*
+                       (
+                        SELECT  assetID
+                               ,isDel
+                               ,updateUserID
+                               :1DataName
+                          FROM :tableName
+                         WHERE  assetState  = 0
+                           AND  updateTime >= SYSDATE - 10
+                         ORDER  BY updateTime
+                       )    WA
+                 WHERE  ROWNUM <= :MaxCount
+                ]]>
+            </content>
+            
+            <content if="POSTGRESQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT  assetID
+                       ,isDel
+                       ,updateUserID
+                       :1DataName
+                  FROM :tableName
+                 WHERE  assetState  = 0
+                   AND  updateTime >= LOCALTIMESTAMP - make_interval(days => 10)
+                 ORDER  BY updateTime
+                 LIMIT  :MaxCount
+                ]]>
+            </content>
+            
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT  assetID
+                       ,isDel
+                       ,updateUserID
+                       :1DataName
+                  FROM :tableName
+                 WHERE  assetState  = 0
+                   AND  updateTime >= DATE_ADD(NOW(), INTERVAL -10 DAY)
+                 ORDER  BY updateTime
+                 LIMIT  0 ,:MaxCount
+                ]]>
+            </content>
+            
+            <content if="SQLITE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT  assetID
+                       ,isDel
+                       ,updateUserID
+                       :1DataName
+                  FROM :tableName
+                 WHERE  assetState  = 0
+                   AND  updateTime >= DATETIME('now' ,'-10 day')
+                 ORDER  BY updateTime
+                 LIMIT  :MaxCount
+                ]]>
+            </content>
+            
+            <content if="IOTDB == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT  assetID
+                       ,isDel
+                       ,updateUserID
+                       :1DataName
+                  FROM :tableName
+                 WHERE  assetState  = 0
+                   AND  updateTime >= now() - (10.0 * 24.0 * 60.0 * 60.0 * 1000.0)
+                 ORDER  BY updateTime
+                 LIMIT  :MaxCount
+                ]]>
+            </content>
+            
+            <result>
+                <table>org.hy.common.TablePartitionRID</table>
+                <fill>putRow(row.UPDATEUSERID ,row.ASSETID ,row)</fill>
+                <row>java.util.LinkedHashMap</row>
                 <cfill>put(colName ,colValue)</cfill>
                 <cstyle>UPPER</cstyle>
             </result>

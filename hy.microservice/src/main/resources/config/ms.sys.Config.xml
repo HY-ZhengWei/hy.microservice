@@ -141,6 +141,18 @@
             </item>
             
             
+            
+            <!-- 数据探针 Start -->
+            <item id="MS_Common_ProbeData_SyncMaxCount">
+                <name>MS_Common_ProbeData_SyncMaxCount</name>
+                <valueInt>100</valueInt>
+                <comment>数据探针单次最大同步多少条数据</comment>
+                <onlyRead>false</onlyRead>
+            </item>
+            <!-- 数据探针 End -->
+            
+            
+            
             <!-- 边缘心跳相关配置 Start -->
             <item id="MS_Common_IsHeartbeat">
                 <name>MS_Common_IsHeartbeat</name>
