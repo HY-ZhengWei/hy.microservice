@@ -1,4 +1,4 @@
-package org.hy.microservice.common.probe.annotation;
+package org.hy.microservice.common.probe.ontology;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

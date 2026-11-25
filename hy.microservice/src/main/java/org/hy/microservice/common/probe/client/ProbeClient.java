@@ -1,6 +1,7 @@
 package org.hy.microservice.common.probe.client;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.hy.common.Date;
@@ -10,13 +11,15 @@ import org.hy.common.StringHelp;
 import org.hy.common.app.Param;
 import org.hy.common.xml.SerializableDef;
 import org.hy.common.xml.annotation.Xjava;
+import org.hy.common.xml.log.Logger;
 
 import org.hy.microservice.common.probe.IProbeService;
-import org.hy.microservice.common.probe.annotation.XOntology;
+import org.hy.microservice.common.probe.ontology.XOntology;
 import org.hy.microservice.common.probe.data.IProbeDataDAO;
 import org.hy.microservice.common.probe.data.ProbeData;
 import org.hy.microservice.common.probe.enums.MetaFormat;
 import org.hy.microservice.common.probe.enums.ProbeKeyword;
+import org.hy.microservice.common.probe.enums.ProbeRole;
 import org.hy.microservice.common.probe.schema.IProbeSchemaService;
 import org.hy.microservice.common.probe.schema.ProbeSchemaDomain;
 import org.hy.microservice.common.probe.schema.ProbeSchemaMetaDomain;
@@ -35,6 +38,8 @@ import org.hy.microservice.common.probe.schema.ProbeSchemaMetaDomain;
 @Xjava
 public class ProbeClient
 {
+    
+    private static final Logger $Logger = new Logger(ProbeClient.class);
     
     /** 数据探针的本体结构缓存（程序固化的）。Map.key为体定义的对象元素类型 */
     private static Map<Class<?> ,ProbeSchemaDomain> $SchemaCaches   = new HashMap<>();
@@ -106,6 +111,299 @@ public class ProbeClient
     
     
     /**
+     * 查询列表数据（用户动态的）
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-11-24
+     * @version     v1.0
+     *
+     * @param i_Schema  数据探针的结构
+     * @param i_Data    查询条件
+     * @return
+     */
+    public List<Map<String ,Object>> queryData(ProbeSchemaDomain i_Schema ,Map<String ,Object> i_Data ,String i_UserID)
+    {
+        if ( i_Schema == null )
+        {
+            throw new RuntimeException("Ontology User is null");
+        }
+        
+        String v_Type = i_Schema.getType();
+        if ( Help.isNull(v_Type) )
+        {
+            throw new RuntimeException("Ontology User type is null");
+        }
+        
+        ProbeSchemaDomain v_Schema = null;
+        if ( !Help.isNull(i_Schema.getMetas()) )
+        {
+            synchronized (this)
+            {
+                Return<String> v_ChectRet = this.checkSchema(i_Schema);
+                if ( !v_ChectRet.booleanValue() )
+                {
+                    throw new RuntimeException(v_ChectRet.paramStr);
+                }
+                
+                String v_MetaCode = this.probeSchemaService.metaCode(i_Schema.getType() ,i_Schema.getMetas());
+                v_Schema = $MetaCodeCaches.get(v_MetaCode);
+                
+                if ( v_Schema == null )
+                {
+                    v_Schema = i_Schema;
+                    v_Schema.setRoleType(ProbeRole.Client);
+                    v_Schema.setCreateUserID(i_UserID);
+                    v_Schema.setUpdateUserID(i_UserID);
+                    
+                    Return<ProbeSchemaDomain> v_RetSchema = this.probeService.saveSchema(v_Schema);
+                    if ( !v_RetSchema.booleanValue() )
+                    {
+                        throw new RuntimeException("Ontology User type[" + v_Schema.getName() + "] create schema error: " + v_RetSchema.getParamStr());
+                    }
+                    
+                    $MetaCodeCaches.put(v_MetaCode ,v_Schema);
+                    $AssetIDs      .put(v_Schema.getType() ,this.probeDataDAO.queryMaxAssetID(v_RetSchema.getParamObj().getName().gatData() ,this.source));
+                }
+            }
+        }
+        else
+        {
+            v_Schema = this.probeSchemaService.queryByXID(v_Type);
+        }
+        
+        if ( v_Schema == null )
+        {
+            throw new RuntimeException("Ontology User type[" + i_Schema.getType() + "] is not exits");
+        }
+        
+        return this.probeDataDAO.query(v_Schema.getName().gatData() ,i_Data);
+    }
+    
+    
+    
+    /**
+     * 查询列表数据（程序固化的）
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-11-25
+     * @version     v1.0
+     *
+     * @param <D>
+     * @param i_Data    数据
+     * @param i_UserID  用户ID
+     */
+    public <D extends SerializableDef> List<Map<String ,Object>> queryData(D i_Data ,String i_UserID)
+    {
+        if ( i_Data == null )
+        {
+            throw new RuntimeException("Ontology User is null");
+        }
+        
+        Class<? extends SerializableDef> v_DataClass = i_Data.getClass();
+        ProbeSchemaDomain                v_Schema    = null;
+        
+        synchronized (this)
+        {
+            v_Schema = $SchemaCaches.get(v_DataClass);
+            if ( v_Schema == null )
+            {
+                v_Schema = XOntology.parser(i_Data);
+                if ( v_Schema == null )
+                {
+                    throw new RuntimeException("Ontology[" + v_DataClass.getName() + "] is error");
+                }
+                
+                v_Schema.setRoleType(ProbeRole.Client);
+                v_Schema.setCreateUserID(i_UserID);
+                v_Schema.setUpdateUserID(i_UserID);
+                
+                Return<ProbeSchemaDomain> v_RetSchema = this.probeService.saveSchema(v_Schema);
+                if ( !v_RetSchema.booleanValue() )
+                {
+                    throw new RuntimeException("Ontology[" + v_DataClass.getName() + "] create schema error: " + v_RetSchema.getParamStr());
+                }
+                
+                $SchemaCaches.put(v_DataClass ,v_Schema);
+                $AssetIDs    .put(v_Schema.getType() ,this.probeDataDAO.queryMaxAssetID(v_RetSchema.getParamObj().getName().gatData() ,this.source));
+            }
+        }
+        
+        return this.probeDataDAO.query(v_Schema.getName().gatData() ,i_Data);
+    }
+    
+    
+    
+    /**
+     * 删除数据（用户动态的）
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-11-25
+     * @version     v1.0
+     *
+     * @param i_Data      数据
+     * @param i_AssetIDs  数据资产编号
+     * @param i_UserID    用户ID
+     */
+    public void delData(ProbeSchemaDomain i_Schema ,List<String> i_AssetIDs ,String i_UserID)
+    {
+        if ( Help.isNull(i_AssetIDs) )
+        {
+            throw new RuntimeException("Ontology User AssetID is null");
+        }
+        
+        if ( i_Schema == null )
+        {
+            throw new RuntimeException("Ontology User is null");
+        }
+        
+        String v_Type = i_Schema.getType();
+        if ( Help.isNull(v_Type) )
+        {
+            throw new RuntimeException("Ontology User type is null");
+        }
+        
+        ProbeSchemaDomain v_Schema = null;
+        if ( !Help.isNull(i_Schema.getMetas()) )
+        {
+            synchronized (this)
+            {
+                Return<String> v_ChectRet = this.checkSchema(i_Schema);
+                if ( !v_ChectRet.booleanValue() )
+                {
+                    throw new RuntimeException(v_ChectRet.paramStr);
+                }
+                
+                String v_MetaCode = this.probeSchemaService.metaCode(i_Schema.getType() ,i_Schema.getMetas());
+                v_Schema = $MetaCodeCaches.get(v_MetaCode);
+                
+                if ( v_Schema == null )
+                {
+                    v_Schema = i_Schema;
+                    v_Schema.setRoleType(ProbeRole.Client);
+                    v_Schema.setCreateUserID(i_UserID);
+                    v_Schema.setUpdateUserID(i_UserID);
+                    
+                    Return<ProbeSchemaDomain> v_RetSchema = this.probeService.saveSchema(v_Schema);
+                    if ( !v_RetSchema.booleanValue() )
+                    {
+                        throw new RuntimeException("Ontology User type[" + v_Schema.getName() + "] create schema error: " + v_RetSchema.getParamStr());
+                    }
+                    
+                    $MetaCodeCaches.put(v_MetaCode ,v_Schema);
+                    $AssetIDs      .put(v_Schema.getType() ,this.probeDataDAO.queryMaxAssetID(v_RetSchema.getParamObj().getName().gatData() ,this.source));
+                }
+            }
+        }
+        else
+        {
+            v_Schema = this.probeSchemaService.queryByXID(v_Type);
+        }
+        
+        if ( v_Schema == null )
+        {
+            throw new RuntimeException("Ontology User type[" + i_Schema.getType() + "] is not exits");
+        }
+        
+        for (String v_AssetID : i_AssetIDs)
+        {
+            String v_AssetIDDB = v_AssetID;
+            if ( v_AssetIDDB.startsWith(v_Schema.getType()) )
+            {
+                v_AssetIDDB = v_AssetIDDB.substring(v_Schema.getType().length());
+            }
+            
+            ProbeData v_ProbeData = new ProbeData();
+            v_ProbeData.setType(v_Schema.getType());
+            v_ProbeData.getData().put(ProbeKeyword.TableName   .getValue() ,v_Schema.getName().getTableName());
+            v_ProbeData.getData().put(ProbeKeyword.AssetID     .getValue() ,v_AssetIDDB);
+            v_ProbeData.getData().put(ProbeKeyword.AssetState  .getValue() ,0);
+            v_ProbeData.getData().put(ProbeKeyword.IsDel       .getValue() ,1);
+            v_ProbeData.getData().put(ProbeKeyword.UpdateUserID.getValue() ,i_UserID);
+            v_ProbeData.getData().put(ProbeKeyword.UpdateTime  .getValue() ,Date.getNowTime().getFull());
+            
+            this.probeDataDAO.save(v_Schema.getName().gatData() ,v_ProbeData);
+        }
+    }
+    
+    
+    
+    /**
+     * 删除数据（程序固化的）
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-11-25
+     * @version     v1.0
+     *
+     * @param <D>
+     * @param i_Data      数据
+     * @param i_AssetIDs  数据资产编号
+     * @param i_UserID    用户ID
+     */
+    public <D extends SerializableDef> void delData(D i_Data ,List<String> i_AssetIDs ,String i_UserID)
+    {
+        if ( i_Data == null )
+        {
+            throw new RuntimeException("Ontology User is null");
+        }
+        
+        if ( Help.isNull(i_AssetIDs) )
+        {
+            throw new RuntimeException("Ontology User AssetID is null");
+        }
+        
+        Class<? extends SerializableDef> v_DataClass = i_Data.getClass();
+        ProbeSchemaDomain                v_Schema    = null;
+        
+        synchronized (this)
+        {
+            v_Schema = $SchemaCaches.get(v_DataClass);
+            if ( v_Schema == null )
+            {
+                v_Schema = XOntology.parser(i_Data);
+                if ( v_Schema == null )
+                {
+                    throw new RuntimeException("Ontology[" + v_DataClass.getName() + "] is error");
+                }
+                
+                v_Schema.setRoleType(ProbeRole.Client);
+                v_Schema.setCreateUserID(i_UserID);
+                v_Schema.setUpdateUserID(i_UserID);
+                
+                Return<ProbeSchemaDomain> v_RetSchema = this.probeService.saveSchema(v_Schema);
+                if ( !v_RetSchema.booleanValue() )
+                {
+                    throw new RuntimeException("Ontology[" + v_DataClass.getName() + "] create schema error: " + v_RetSchema.getParamStr());
+                }
+                
+                $SchemaCaches.put(v_DataClass ,v_Schema);
+                $AssetIDs    .put(v_Schema.getType() ,this.probeDataDAO.queryMaxAssetID(v_RetSchema.getParamObj().getName().gatData() ,this.source));
+            }
+        }
+        
+        for (String v_AssetID : i_AssetIDs)
+        {
+            String v_AssetIDDB = v_AssetID;
+            if ( v_AssetIDDB.startsWith(v_Schema.getType()) )
+            {
+                v_AssetIDDB = v_AssetIDDB.substring(v_Schema.getType().length());
+            }
+            
+            ProbeData v_ProbeData = new ProbeData();
+            v_ProbeData.setType(v_Schema.getType());
+            v_ProbeData.getData().put(ProbeKeyword.TableName   .getValue() ,v_Schema.getName().getTableName());
+            v_ProbeData.getData().put(ProbeKeyword.AssetID     .getValue() ,v_AssetIDDB);
+            v_ProbeData.getData().put(ProbeKeyword.AssetState  .getValue() ,0);
+            v_ProbeData.getData().put(ProbeKeyword.IsDel       .getValue() ,1);
+            v_ProbeData.getData().put(ProbeKeyword.UpdateUserID.getValue() ,i_UserID);
+            v_ProbeData.getData().put(ProbeKeyword.UpdateTime  .getValue() ,Date.getNowTime().getFull());
+            
+            this.probeDataDAO.save(v_Schema.getName().gatData() ,v_ProbeData);
+        }
+    }
+    
+    
+    
+    /**
      * 检查数据探针的结构（用户动态的）
      * 
      * @author      ZhengWei(HY)
@@ -169,6 +467,11 @@ public class ProbeClient
             if ( io_Schema.getName().getMetasNames().size() != v_OrderBy * 2 )
             {
                 // 字段名称与名称代号有雷同，请更换字段命名
+                $Logger.warn("ABC and mname size[" + io_Schema.getName().getMetasNames().size() + "]; name size[" + v_OrderBy + "]");
+                for (ProbeSchemaMetaDomain v_Item : io_Schema.getName().getMetas())
+                {
+                    $Logger.warn(StringHelp.lpad(v_Item.getMnameABC() ,2 ," ") + " -> " + v_Item.getMname());
+                }
                 return v_Ret.paramStr("Ontology User type[" + io_Schema.getType() + "] mname is similar to mnameABC");
             }
         }
@@ -189,7 +492,6 @@ public class ProbeClient
      * @createDate  2026-11-11
      * @version     v1.0
      *
-     * @param <D>
      * @param i_Schema  数据探针的结构
      * @param i_Data    数据
      * @param i_UserID  用户ID
@@ -211,6 +513,7 @@ public class ProbeClient
             if ( v_Schema == null )
             {
                 v_Schema = i_Schema;
+                v_Schema.setRoleType(ProbeRole.Client);
                 v_Schema.setCreateUserID(i_UserID);
                 v_Schema.setUpdateUserID(i_UserID);
                 
@@ -243,6 +546,11 @@ public class ProbeClient
      */
     public <D extends SerializableDef> void dataSave(D i_Data ,String i_UserID)
     {
+        if ( i_Data == null )
+        {
+            throw new RuntimeException("Ontology User is null");
+        }
+        
         Class<? extends SerializableDef> v_DataClass = i_Data.getClass();
         ProbeSchemaDomain                v_Schema    = null;
         
@@ -257,6 +565,7 @@ public class ProbeClient
                     throw new RuntimeException("Ontology[" + v_DataClass.getName() + "] is error");
                 }
                 
+                v_Schema.setRoleType(ProbeRole.Client);
                 v_Schema.setCreateUserID(i_UserID);
                 v_Schema.setUpdateUserID(i_UserID);
                 
@@ -289,12 +598,12 @@ public class ProbeClient
      */
     private void dataSaveHandle(ProbeSchemaDomain i_Schema ,ProbeClientData i_Data ,String i_UserID)
     {
-     // 判定按用户主键PK添加或更新数据，还是保存新数据
+        // 判定按用户主键PK添加或更新数据，还是保存新数据
         String v_AssetIDDB = this.probeDataDAO.queryAssetIDByPK(i_Schema.getName().gatData() ,i_Data.getData());
         if ( Help.isNull(v_AssetIDDB) )
         {
             AssetID v_AssetID = $AssetIDs.get(i_Schema.getType());
-            v_AssetIDDB = v_AssetID.newAssetID();      // 注：客户端的本地数据库不追加来源 this.source
+            v_AssetIDDB = v_AssetID.newAssetID() + this.source; 
         }
         
         ProbeData v_ProbeData = new ProbeData();
@@ -311,7 +620,7 @@ public class ProbeClient
         for (ProbeSchemaMetaDomain v_Meta : i_Schema.getName().getMetas())
         {
             String v_Key   = v_Meta.getMname();
-            Object v_Value = i_Data.getFiledValue(v_Meta.getPropIndex());
+            Object v_Value = i_Data.getFiledValue(v_Meta);
             
             if ( v_Meta.getPk() && v_Value == null )
             {
@@ -322,61 +631,51 @@ public class ProbeClient
                 throw new RuntimeException("Ontology[" + i_Schema.getType() + "] name[" + v_Meta.getMname() + "] not allow null");
             }
             
-            if ( v_Meta.getMformat().equals(MetaFormat.Number) )
+            if ( v_Value == null )
             {
-                if ( v_Value == null )
-                {
-                    v_ProbeData.getData().put(v_Key ,0);
-                }
-                else
-                {
-                    Number v_Num  = (Number) v_Value;
-                    String v_Text = v_Value.toString();
-                    if ( v_Meta.getMdecimal() <= 0 )
-                    {
-                        if ( v_Text.length() > v_Meta.getMlength() )
-                        {
-                            throw new RuntimeException("Ontology[" + i_Schema.getType() + "] name[" + v_Meta.getMname() + "] [" + v_Text + "].lenght > " + v_Meta.getMlength());
-                        }
-                        v_ProbeData.getData().put(v_Key ,v_Num.longValue());
-                    }
-                    else
-                    {
-                        v_Num  = Help.round(v_Num.doubleValue() ,v_Meta.getMdecimal());
-                        v_Text = v_Num.toString();
-                                
-                        int v_Decimal = v_Text.indexOf(".");
-                        if ( v_Decimal >= 0 && v_Text.length() > v_Meta.getMlength() + 1 )
-                        {
-                            throw new RuntimeException("Ontology[" + i_Schema.getType() + "] name[" + v_Meta.getMname() + "] [" + v_Text + "].lenght > " + v_Meta.getMlength());
-                        }
-                        else if ( v_Decimal < 0 && v_Text.length() > v_Meta.getMlength() )
-                        {
-                            throw new RuntimeException("Ontology[" + i_Schema.getType() + "] name[" + v_Meta.getMname() + "] [" + v_Text + "].lenght > " + v_Meta.getMlength());
-                        }
-                        v_ProbeData.getData().put(v_Key ,v_Num);
-                    }
-                }
+                v_ProbeData.getData().put(v_Key ,null);
             }
-            else if ( v_Meta.getMformat().equals(MetaFormat.Boolean) )
+            else if ( v_Meta.getMformat().equals(MetaFormat.Number) )
             {
-                v_ProbeData.getData().put(v_Key ,Help.NVL((Boolean) v_Value) ? 1 : 0);
-            }
-            else
-            {
-                if ( v_Value == null )
+                Number v_Num  = (Number) v_Value;
+                String v_Text = v_Value.toString();
+                if ( v_Meta.getMdecimal() <= 0 )
                 {
-                    v_ProbeData.getData().put(v_Key ,null);
-                }
-                else
-                {
-                    String v_Text = v_Value.toString();
                     if ( v_Text.length() > v_Meta.getMlength() )
                     {
                         throw new RuntimeException("Ontology[" + i_Schema.getType() + "] name[" + v_Meta.getMname() + "] [" + v_Text + "].lenght > " + v_Meta.getMlength());
                     }
-                    v_ProbeData.getData().put(v_Key ,v_Text);
+                    v_ProbeData.getData().put(v_Key ,v_Num.longValue());
                 }
+                else
+                {
+                    v_Num  = Help.round(v_Num.doubleValue() ,v_Meta.getMdecimal());
+                    v_Text = v_Num.toString();
+                            
+                    int v_Decimal = v_Text.indexOf(".");
+                    if ( v_Decimal >= 0 && v_Text.length() > v_Meta.getMlength() + 1 )
+                    {
+                        throw new RuntimeException("Ontology[" + i_Schema.getType() + "] name[" + v_Meta.getMname() + "] [" + v_Text + "].lenght > " + v_Meta.getMlength());
+                    }
+                    else if ( v_Decimal < 0 && v_Text.length() > v_Meta.getMlength() )
+                    {
+                        throw new RuntimeException("Ontology[" + i_Schema.getType() + "] name[" + v_Meta.getMname() + "] [" + v_Text + "].lenght > " + v_Meta.getMlength());
+                    }
+                    v_ProbeData.getData().put(v_Key ,v_Num);
+                }
+            }
+            else if ( v_Meta.getMformat().equals(MetaFormat.Boolean) )
+            {
+                v_ProbeData.getData().put(v_Key ,(Boolean) v_Value ? 1 : 0);
+            }
+            else
+            {
+                String v_Text = v_Value.toString();
+                if ( v_Text.length() > v_Meta.getMlength() )
+                {
+                    throw new RuntimeException("Ontology[" + i_Schema.getType() + "] name[" + v_Meta.getMname() + "] [" + v_Text + "].lenght > " + v_Meta.getMlength());
+                }
+                v_ProbeData.getData().put(v_Key ,v_Text);
             }
         }
         

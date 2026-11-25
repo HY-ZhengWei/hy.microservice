@@ -2,6 +2,8 @@ package org.hy.microservice.common.probe.client;
 
 import java.util.Map;
 
+import org.hy.microservice.common.probe.schema.ProbeSchemaMetaDomain;
+
 
 
 
@@ -50,14 +52,14 @@ public class ProbeClientDataMap implements ProbeClientData
      * @createDate  2026-11-22
      * @version     v1.0
      *
-     * @param i_Key  关键字。有两种可种，
-     *               一种是Java对象成员属性的下标。
-     *               一种是Map对象的key值
+     * @param i_Meta  数据探针的本体结构。有两种可种，
+     *                一种是Java对象成员属性的下标。
+     *                一种是Map对象的key值
      * @return
      */
-    public Object getFiledValue(Object i_Key)
+    public Object getFiledValue(ProbeSchemaMetaDomain i_Meta)
     {
-        return this.data.get(i_Key);
+        return this.data.get(i_Meta.getMname());
     }
     
 }

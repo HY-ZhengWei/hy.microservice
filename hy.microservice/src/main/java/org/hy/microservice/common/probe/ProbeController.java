@@ -6,6 +6,7 @@ import org.hy.common.app.Param;
 import org.hy.common.xml.log.Logger;
 import org.hy.microservice.common.BaseController;
 import org.hy.microservice.common.BaseResponse;
+import org.hy.microservice.common.probe.enums.ProbeRole;
 import org.hy.microservice.common.probe.schema.ProbeSchemaDomain;
 import org.hy.microservice.common.user.UserSSO;
 import org.hy.microservice.common.user.UserService;
@@ -118,6 +119,7 @@ public class ProbeController extends BaseController
             if ( v_ProbeRequest.getSchema() != null )
             {
                 v_ProbeRequest.getSchema().setType(  v_ProbeRequest.getType());
+                v_ProbeRequest.getSchema().setRoleType(Help.NVL(v_ProbeRequest.getSchema().getRoleType() ,ProbeRole.Server));
                 v_ProbeRequest.getSchema().setUserID(v_ProbeRequest.getUserID());
                 
                 Return<ProbeSchemaDomain> v_SaveSchemaRet = this.probeService.saveSchema(v_ProbeRequest.getSchema());

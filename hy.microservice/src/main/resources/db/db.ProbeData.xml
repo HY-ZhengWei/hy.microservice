@@ -15,6 +15,10 @@
         
             <dataSourceGroup ref="DSG_MS_Common" />
             
+            <contentDB>
+                <defaultNull>true</defaultNull>
+            </contentDB>
+            
             <content>
                 <![CDATA[
                 INSERT  INTO :tableName
@@ -79,7 +83,7 @@
                    SET  updateTime   = SYSDATE
                        ,updateUserID = ':updateUserID'
                        ,assetState   = :assetState
-                 WHERE  assetID     IN (:assetIDs)
+                 WHERE  assetID     IN ( :assetIDs )
                 ]]>
             </content>
             
@@ -89,7 +93,7 @@
                    SET  updateTime   = SYSDATE
                        ,updateUserID = ':updateUserID'
                        ,assetState   = :assetState
-                 WHERE  assetID     IN (:assetIDs)
+                 WHERE  assetID     IN ( :assetIDs )
                 ]]>
             </content>
             
@@ -99,7 +103,7 @@
                    SET  updateTime   = LOCALTIMESTAMP
                        ,updateUserID = ':updateUserID'
                        ,assetState   = :assetState
-                 WHERE  assetID     IN (:assetIDs)
+                 WHERE  assetID     IN ( :assetIDs )
                 ]]>
             </content>
             
@@ -109,7 +113,7 @@
                    SET  updateTime   = NOW()
                        ,updateUserID = ':updateUserID'
                        ,assetState   = :assetState
-                 WHERE  assetID     IN (:assetIDs)
+                 WHERE  assetID     IN ( :assetIDs )
                 ]]>
             </content>
             
@@ -119,7 +123,7 @@
                    SET  updateTime   = DATETIME('now')
                        ,updateUserID = ':updateUserID'
                        ,assetState   = :assetState
-                 WHERE  assetID     IN (:assetIDs)
+                 WHERE  assetID     IN ( :assetIDs )
                 ]]>
             </content>
             
@@ -129,7 +133,7 @@
                    SET  updateTime   = now()
                        ,updateUserID = ':updateUserID'
                        ,assetState   = :assetState
-                 WHERE  assetID     IN (:assetIDs)
+                 WHERE  assetID     IN ( :assetIDs )
                 ]]>
             </content>
             
@@ -168,7 +172,8 @@
                 <![CDATA[
                 SELECT  assetID
                   FROM  :tableName
-                 WHERE  :1WhereNV
+                 WHERE  isDel = 0
+                        :1WhereNV
                 ]]>
             </content>
             
@@ -180,10 +185,57 @@
             
             <dataSourceGroup ref="DSG_MS_Common" />
             
-            <content>
+            <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
-                SELECT  MAX(assetID) AS AssetID
+                SELECT  LEFT(MAX(assetID) ,17) AS AssetID
                   FROM  :tableName
+                 WHERE  assetID LIKE '%:Source'
+                   AND  createTime >= SYSDATE - 3
+                ]]>
+            </content>
+            
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT  SUBSTR(MAX(assetID) ,1 ,17) AS AssetID
+                  FROM  :tableName
+                 WHERE  assetID LIKE '%:Source'
+                   AND  createTime >= SYSDATE - 3
+                ]]>
+            </content>
+            
+            <content if="POSTGRESQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT  LEFT(MAX(assetID) ,17) AS AssetID
+                  FROM  :tableName
+                 WHERE  assetID LIKE '%:Source'
+                   AND  createTime >= LOCALTIMESTAMP - make_interval(days => 3)
+                ]]>
+            </content>
+            
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT  LEFT(MAX(assetID) ,17) AS AssetID
+                  FROM  :tableName
+                 WHERE  assetID LIKE '%:Source'
+                   AND  createTime >= DATE_ADD(NOW(), INTERVAL -3 DAY)
+                ]]>
+            </content>
+            
+            <content if="SQLITE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT  SUBSTR(MAX(assetID) ,1 ,17) AS AssetID
+                  FROM  :tableName
+                 WHERE  assetID LIKE '%:Source'
+                   AND  createTime >= DATETIME('now' ,'-3 day')
+                ]]>
+            </content>
+            
+            <content if="IOTDB == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT  SUBSTRING(MAX(assetID) ,FROM 1 FOR 17) AS AssetID
+                  FROM  :tableName
+                 WHERE  assetID LIKE '%:Source'
+                   AND  createTime >= now() - (3.0 * 24.0 * 60.0 * 60.0 * 1000.0)
                 ]]>
             </content>
             
@@ -199,13 +251,14 @@
                 <![CDATA[
                 SELECT  WA.*
                        (
-                        SELECT  assetID
+                        SELECT  LEFT(assetID ,17) AS assetID
                                ,isDel
                                ,updateUserID
                                :1DataName
                           FROM :tableName
                          WHERE  assetState  = 0
                            AND  updateTime >= SYSDATE - 10
+                           AND  assetID  LIKE '%:Source'
                          ORDER  BY updateTime
                        )    WA
                  WHERE  ROWNUM <= :MaxCount
@@ -216,13 +269,14 @@
                 <![CDATA[
                 SELECT  WA.*
                        (
-                        SELECT  assetID
+                        SELECT  SUBSTR(assetID ,1 ,17) AS assetID
                                ,isDel
                                ,updateUserID
                                :1DataName
                           FROM :tableName
                          WHERE  assetState  = 0
                            AND  updateTime >= SYSDATE - 10
+                           AND  assetID  LIKE '%:Source'
                          ORDER  BY updateTime
                        )    WA
                  WHERE  ROWNUM <= :MaxCount
@@ -231,13 +285,14 @@
             
             <content if="POSTGRESQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
-                SELECT  assetID
+                SELECT  LEFT(assetID ,17) AS assetID
                        ,isDel
                        ,updateUserID
                        :1DataName
                   FROM :tableName
                  WHERE  assetState  = 0
                    AND  updateTime >= LOCALTIMESTAMP - make_interval(days => 10)
+                   AND  assetID  LIKE '%:Source'
                  ORDER  BY updateTime
                  LIMIT  :MaxCount
                 ]]>
@@ -245,13 +300,14 @@
             
             <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
-                SELECT  assetID
+                SELECT  LEFT(assetID ,17) AS assetID
                        ,isDel
                        ,updateUserID
                        :1DataName
                   FROM :tableName
                  WHERE  assetState  = 0
                    AND  updateTime >= DATE_ADD(NOW(), INTERVAL -10 DAY)
+                   AND  assetID  LIKE '%:Source'
                  ORDER  BY updateTime
                  LIMIT  0 ,:MaxCount
                 ]]>
@@ -259,13 +315,14 @@
             
             <content if="SQLITE == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
-                SELECT  assetID
+                SELECT  SUBSTR(assetID ,1 ,17) AS assetID
                        ,isDel
                        ,updateUserID
                        :1DataName
                   FROM :tableName
                  WHERE  assetState  = 0
                    AND  updateTime >= DATETIME('now' ,'-10 day')
+                   AND  assetID  LIKE '%:Source'
                  ORDER  BY updateTime
                  LIMIT  :MaxCount
                 ]]>
@@ -273,13 +330,14 @@
             
             <content if="IOTDB == this.getDataSourceGroup.getDbProductType">
                 <![CDATA[
-                SELECT  assetID
+                SELECT  SUBSTRING(assetID ,FROM 1 FOR 17) AS assetID
                        ,isDel
                        ,updateUserID
                        :1DataName
                   FROM :tableName
                  WHERE  assetState  = 0
                    AND  updateTime >= now() - (10.0 * 24.0 * 60.0 * 60.0 * 1000.0)
+                   AND  assetID  LIKE '%:Source'
                  ORDER  BY updateTime
                  LIMIT  :MaxCount
                 ]]>
@@ -287,10 +345,194 @@
             
             <result>
                 <table>org.hy.common.TablePartitionRID</table>
-                <fill>putRow(row.UPDATEUSERID ,row.ASSETID ,row)</fill>
+                <fill>putRow(row.updateUserID ,row.assetID ,row)</fill>
                 <row>java.util.LinkedHashMap</row>
                 <cfill>put(colName ,colValue)</cfill>
-                <cstyle>UPPER</cstyle>
+                <cstyle>NORMAL</cstyle>
+            </result>
+            
+        </sql>
+        
+        
+        
+        <sql id="XSQL_Common_ProbeData_Query"> 
+        
+            <dataSourceGroup ref="DSG_MS_Common" />
+            
+            <content if="DAMENG == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT  assetID                                      AS "assetID"
+                       ,assetState                                   AS "assetState"
+                       ,isDel                                        AS "isDel"
+                       ,createUserID                                 AS "createUserID"
+                       ,updateUserID                                 AS "updateUserID"
+                       ,TO_CHAR(createTime ,'YYYY-MM-DD HH24:MI:SS') AS "createTime"
+                       ,TO_CHAR(updateTime ,'YYYY-MM-DD HH24:MI:SS') AS "updateTime"
+                       :1DataName
+                  FROM :tableName
+                 WHERE 
+               <[  AND  assetID      = ':assetID'       ]>
+               <[  AND  assetState   = ':assetState'    ]>
+               <[  AND  isDel        =  :isDel          ]>
+               <[  AND  createUserID = ':createUserID'  ]>
+               <[  AND  updateUserID = ':updateUserID'  ]>
+               <[  AND  createTime   = ':createTime'    ]>
+               <[  AND  updateTime   = ':updateTime'    ]>
+               <[  AND  updateTime  >= ':startTime'     ]>
+               <[  AND  updateTime  <  ':endTime'       ]>
+                       :1WhereNV
+                 ORDER  BY updateTime
+             <[  WHERE  LIMIT :StartIndex ,:PagePerCount  ]>
+                ]]>
+            </content>
+            
+            <content if="ORACLE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT  WB.*
+                  FROM (
+                        SELECT  ROWNUM AS rowNumber
+                               ,WA.*
+                               (
+                                SELECT  assetID                                      AS "assetID"
+                                       ,assetState                                   AS "assetState"
+                                       ,isDel                                        AS "isDel"
+                                       ,createUserID                                 AS "createUserID"
+                                       ,updateUserID                                 AS "updateUserID"
+                                       ,TO_CHAR(createTime ,'YYYY-MM-DD HH24:MI:SS') AS "createTime"
+                                       ,TO_CHAR(updateTime ,'YYYY-MM-DD HH24:MI:SS') AS "updateTime"
+                                       :1DataName
+                                  FROM :tableName
+                                 WHERE 
+                               <[  AND  assetID      = ':assetID'       ]>
+                               <[  AND  assetState   = ':assetState'    ]>
+                               <[  AND  isDel        =  :isDel          ]>
+                               <[  AND  createUserID = ':createUserID'  ]>
+                               <[  AND  updateUserID = ':updateUserID'  ]>
+                               <[  AND  createTime   = ':createTime'    ]>
+                               <[  AND  updateTime   = ':updateTime'    ]>
+                               <[  AND  updateTime  >= ':startTime'     ]>
+                               <[  AND  updateTime  <  ':endTime'       ]>
+                                       :1WhereNV
+                                 ORDER  BY updateTime
+                               )    WA
+                     <[  WHERE  ROWNUM <= :StartIndex + :PagePerCount  ]>
+                       )  WB
+             <[  WHERE  WB.rowNumber > :StartIndex  ]>
+                ]]>
+            </content>
+            
+            <content if="POSTGRESQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT  assetID                                      AS "assetID"
+                       ,assetState                                   AS "assetState"
+                       ,isDel                                        AS "isDel"
+                       ,createUserID                                 AS "createUserID"
+                       ,updateUserID                                 AS "updateUserID"
+                       ,TO_CHAR(createTime ,'YYYY-MM-DD HH24:MI:SS') AS "createTime"
+                       ,TO_CHAR(updateTime ,'YYYY-MM-DD HH24:MI:SS') AS "updateTime"
+                       :1DataName
+                  FROM :tableName
+                 WHERE 
+               <[  AND  assetID      = ':assetID'       ]>
+               <[  AND  assetState   = ':assetState'    ]>
+               <[  AND  isDel        =  :isDel          ]>
+               <[  AND  createUserID = ':createUserID'  ]>
+               <[  AND  updateUserID = ':updateUserID'  ]>
+               <[  AND  createTime   = ':createTime'    ]>
+               <[  AND  updateTime   = ':updateTime'    ]>
+               <[  AND  updateTime  >= ':startTime'     ]>
+               <[  AND  updateTime  <  ':endTime'       ]>
+                       :1WhereNV
+                 ORDER  BY updateTime
+             <[  LIMIT :PagePerCount OFFSET :StartIndex ]>
+                ]]>
+            </content>
+            
+            <content if="MYSQL == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT  assetID                                      AS "assetID"
+                       ,assetState                                   AS "assetState"
+                       ,isDel                                        AS "isDel"
+                       ,createUserID                                 AS "createUserID"
+                       ,updateUserID                                 AS "updateUserID"
+                       ,DATE_FORMAT(createTime ,'%Y-%m-%d %H:%i:%s') AS `createTime`
+                       ,DATE_FORMAT(updateTime ,'%Y-%m-%d %H:%i:%s') AS `updateTime`
+                       :1DataName
+                  FROM :tableName
+                 WHERE 
+               <[  AND  assetID      = ':assetID'       ]>
+               <[  AND  assetState   = ':assetState'    ]>
+               <[  AND  isDel        =  :isDel          ]>
+               <[  AND  createUserID = ':createUserID'  ]>
+               <[  AND  updateUserID = ':updateUserID'  ]>
+               <[  AND  createTime   = ':createTime'    ]>
+               <[  AND  updateTime   = ':updateTime'    ]>
+               <[  AND  updateTime  >= ':startTime'     ]>
+               <[  AND  updateTime  <  ':endTime'       ]>
+                       :1WhereNV
+                 ORDER  BY updateTime
+             <[  LIMIT  :StartIndex ,:pagePerCount   ]>
+                ]]>
+            </content>
+            
+            <content if="SQLITE == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT  assetID                                   AS "assetID"
+                       ,assetState                                AS "assetState"
+                       ,isDel                                     AS "isDel"
+                       ,createUserID                              AS "createUserID"
+                       ,updateUserID                              AS "updateUserID"
+                       ,STRFTIME('%Y-%m-%d %H:%M:%S' ,createTime) AS "createTime"
+                       ,STRFTIME('%Y-%m-%d %H:%M:%S' ,updateTime) AS "updateTime"
+                       :1DataName
+                  FROM :tableName
+                 WHERE 
+               <[  AND  assetID      = ':assetID'       ]>
+               <[  AND  assetState   = ':assetState'    ]>
+               <[  AND  isDel        =  :isDel          ]>
+               <[  AND  createUserID = ':createUserID'  ]>
+               <[  AND  updateUserID = ':updateUserID'  ]>
+               <[  AND  createTime   = ':createTime'    ]>
+               <[  AND  updateTime   = ':updateTime'    ]>
+               <[  AND  updateTime  >= ':startTime'     ]>
+               <[  AND  updateTime  <  ':endTime'       ]>
+                       :1WhereNV
+                 ORDER  BY updateTime
+             <[  LIMIT :PagePerCount OFFSET :StartIndex   ]>
+                ]]>
+            </content>
+            
+            <content if="IOTDB == this.getDataSourceGroup.getDbProductType">
+                <![CDATA[
+                SELECT  assetID                                        AS "assetID"
+                       ,assetState                                     AS "assetState"
+                       ,isDel                                          AS "isDel"
+                       ,createUserID                                   AS "createUserID"
+                       ,updateUserID                                   AS "updateUserID"
+                       ,TIME_FORMAT(createTime ,'yyyy-MM-dd HH:mm:ss') AS "createTime"
+                       ,TIME_FORMAT(updateTime ,'yyyy-MM-dd HH:mm:ss') AS "updateTime"
+                       :1DataName
+                  FROM :tableName
+                 WHERE 
+               <[  AND  assetID      = ':assetID'       ]>
+               <[  AND  assetState   = ':assetState'    ]>
+               <[  AND  isDel        =  :isDel          ]>
+               <[  AND  createUserID = ':createUserID'  ]>
+               <[  AND  updateUserID = ':updateUserID'  ]>
+               <[  AND  createTime   = ':createTime'    ]>
+               <[  AND  updateTime   = ':updateTime'    ]>
+               <[  AND  updateTime  >= ':startTime'     ]>
+               <[  AND  updateTime  <  ':endTime'       ]>
+                       :1WhereNV
+                 ORDER  BY updateTime
+             <[  LIMIT  LIMIT :PagePerCount OFFSET :StartIndex   ]>
+                ]]>
+            </content>
+            
+            <result>
+                <row>java.util.LinkedHashMap</row>
+                <cfill>put(colName ,colValue)</cfill>
+                <cstyle>NORMAL</cstyle>
             </result>
             
         </sql>

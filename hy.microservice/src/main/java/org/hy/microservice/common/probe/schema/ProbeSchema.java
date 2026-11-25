@@ -29,6 +29,9 @@ public class ProbeSchema extends BaseData
     /** 归类 */
     private String                       type;
     
+    /** 角色类型 */
+    private String                       roleType;
+    
     /** 默认的逻辑名称 */
     private ProbeSchemaName              name;
     
@@ -65,6 +68,26 @@ public class ProbeSchema extends BaseData
     public void setId(String i_Id)
     {
         this.id = i_Id;
+    }
+
+    
+    /**
+     * 获取：角色类型
+     */
+    public String getRoleType()
+    {
+        return roleType;
+    }
+
+    
+    /**
+     * 设置：角色类型
+     * 
+     * @param i_RoleType 角色类型
+     */
+    public void setRoleType(String i_RoleType)
+    {
+        this.roleType = i_RoleType;
     }
 
 

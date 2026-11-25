@@ -25,6 +25,7 @@
                        (
                         id
                        ,type
+                       ,roleType
                        ,nameID
                        ,projectID 
                        ,"COMMENT" 
@@ -37,6 +38,7 @@
                 VALUES (
                         ':Schema.id'
                        ,':Schema.type'
+                       ,':Schema.roleType'
                        ,':Schema.nameID'
                        ,':Schema.projectID'
                        ,':Schema.comment'
@@ -55,6 +57,7 @@
                        (
                         id
                        ,type
+                       ,roleType
                        ,nameID
                        ,projectID 
                        ,"COMMENT" 
@@ -67,6 +70,7 @@
                 VALUES (
                         ':Schema.id'
                        ,':Schema.type'
+                       ,':Schema.roleType'
                        ,':Schema.nameID'
                        ,':Schema.projectID'
                        ,':Schema.comment'
@@ -85,6 +89,7 @@
                        (
                         id
                        ,type
+                       ,roleType
                        ,nameID
                        ,projectID 
                        ,comment
@@ -97,6 +102,7 @@
                 VALUES (
                         ':Schema.id'
                        ,':Schema.type'
+                       ,':Schema.roleType'
                        ,':Schema.nameID'
                        ,':Schema.projectID'
                        ,':Schema.comment'
@@ -115,6 +121,7 @@
                        (
                         id
                        ,type
+                       ,roleType
                        ,nameID
                        ,projectID 
                        ,comment
@@ -127,6 +134,7 @@
                 VALUES (
                         ':Schema.id'
                        ,':Schema.type'
+                       ,':Schema.roleType'
                        ,':Schema.nameID'
                        ,':Schema.projectID'
                        ,':Schema.comment'
@@ -145,6 +153,7 @@
                        (
                         id
                        ,type
+                       ,roleType
                        ,nameID
                        ,projectID 
                        ,comment
@@ -157,6 +166,7 @@
                 VALUES (
                         ':Schema.id'
                        ,':Schema.type'
+                       ,':Schema.roleType'
                        ,':Schema.nameID'
                        ,':Schema.projectID'
                        ,':Schema.comment'
@@ -277,6 +287,7 @@
                 <![CDATA[
                 SELECT  A.id
                        ,A.type
+                       ,A.roleType
                        ,A.nameID
                        ,A.projectID 
                        ,A.comment
@@ -351,6 +362,7 @@
                 <![CDATA[
                 SELECT  A.id
                        ,A.type
+                       ,A.roleType
                        ,A.nameID
                        ,A.projectID 
                        ,A."COMMENT"
@@ -425,6 +437,7 @@
                 <![CDATA[
                 SELECT  A.id
                        ,A.type
+                       ,A.roleType
                        ,A.nameID
                        ,A.projectID 
                        ,A."COMMENT"

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.hy.microservice.common.BaseView;
 import org.hy.microservice.common.domain.DomainUtil;
+import org.hy.microservice.common.probe.enums.ProbeRole;
 import org.hy.microservice.common.view.ViewModelUtil;
 
 
@@ -76,6 +77,34 @@ public class ProbeSchemaVO extends BaseView<ProbeSchemaDomain>
     public void setType(String i_Type)
     {
         this.domain.setType(i_Type);
+    }
+    
+    
+    /**
+     * 获取：角色类型
+     */
+    public String getRoleType()
+    {
+        return this.domain.getRoleType() == null ? ProbeRole.Server.getValue() : this.domain.getRoleType().getValue();
+    }
+
+    
+    /**
+     * 设置：角色类型
+     * 
+     * @param i_RoleType 角色类型
+     */
+    public void setRoleType(String i_RoleType)
+    {
+        ProbeRole v_ProbeRole = ProbeRole.get(i_RoleType);
+        if ( v_ProbeRole != null )
+        {
+            this.domain.setRoleType(v_ProbeRole);
+        }
+        else
+        {
+            this.domain.setRoleType(ProbeRole.Server);
+        }
     }
 
     

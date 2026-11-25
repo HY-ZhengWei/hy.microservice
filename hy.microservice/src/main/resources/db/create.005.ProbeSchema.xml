@@ -20,6 +20,7 @@
                 (
                  id                         VARCHAR2(64)   NOT NULL
                 ,type                       VARCHAR2(128)  NOT NULL
+                ,roleType                   VARCHAR2(1)    NOT NULL
                 ,nameID                     VARCHAR2(64)   NOT NULL
                 ,projectID                  VARCHAR2(64)
                 ,"COMMENT"                  VARCHAR2(4000)
@@ -37,6 +38,7 @@
                 COMMENT ON TABLE  TProbeSchema                                IS '数据探针的结构';/
                 COMMENT ON COLUMN TProbeSchema.id                             IS '主键';/
                 COMMENT ON COLUMN TProbeSchema.type                           IS '归类';/
+                COMMENT ON COLUMN TProbeSchema.roleType                       IS '角色类型';/
                 COMMENT ON COLUMN TProbeSchema.nameID                         IS '默认的逻辑名称ID';/
                 COMMENT ON COLUMN TProbeSchema.projectID                      IS '项目ID';/
                 COMMENT ON COLUMN TProbeSchema."COMMENT"                      IS '注释说明';/
@@ -54,6 +56,7 @@
                 (
                  id                         VARCHAR2(64)   NOT NULL
                 ,type                       VARCHAR2(128)  NOT NULL
+                ,roleType                   VARCHAR2(1)    NOT NULL
                 ,nameID                     VARCHAR2(64)   NOT NULL
                 ,projectID                  VARCHAR2(64)
                 ,"COMMENT"                  VARCHAR2(4000)
@@ -71,6 +74,7 @@
                 COMMENT ON TABLE  TProbeSchema                                IS '数据探针的结构';/
                 COMMENT ON COLUMN TProbeSchema.id                             IS '主键';/
                 COMMENT ON COLUMN TProbeSchema.type                           IS '归类';/
+                COMMENT ON COLUMN TProbeSchema.roleType                       IS '角色类型';/
                 COMMENT ON COLUMN TProbeSchema.nameID                         IS '默认的逻辑名称ID';/
                 COMMENT ON COLUMN TProbeSchema.projectID                      IS '项目ID';/
                 COMMENT ON COLUMN TProbeSchema."COMMENT"                      IS '注释说明';/
@@ -88,6 +92,7 @@
                 (
                  id                         VARCHAR(64)    NOT NULL
                 ,type                       VARCHAR(128)   NOT NULL
+                ,roleType                   VARCHAR(1)     NOT NULL
                 ,nameID                     VARCHAR(64)    NOT NULL
                 ,projectID                  VARCHAR(64)
                 ,comment                    TEXT
@@ -105,6 +110,7 @@
                 COMMENT ON TABLE  TProbeSchema                                IS '数据探针的结构';/
                 COMMENT ON COLUMN TProbeSchema.id                             IS '主键';/
                 COMMENT ON COLUMN TProbeSchema.type                           IS '归类';/
+                COMMENT ON COLUMN TProbeSchema.roleType                       IS '角色类型';/
                 COMMENT ON COLUMN TProbeSchema.nameID                         IS '默认的逻辑名称ID';/
                 COMMENT ON COLUMN TProbeSchema.projectID                      IS '项目ID';/
                 COMMENT ON COLUMN TProbeSchema.comment                        IS '注释说明';/
@@ -122,6 +128,7 @@
                 (
                  id                         VARCHAR(64)   NOT NULL        COMMENT '主键'
                 ,type                       VARCHAR(128)  NOT NULL        COMMENT '归类'
+                ,roleType                   VARCHAR(1)    NOT NULL        COMMENT '角色类型'
                 ,nameID                     VARCHAR(64)   NOT NULL        COMMENT '默认的逻辑名称ID'
                 ,projectID                  VARCHAR(64)                   COMMENT '项目ID'
                 ,comment                    VARCHAR(4000)                 COMMENT '注释说明'

@@ -3,10 +3,14 @@ package org.hy.microservice.common.probe.schema;
 import java.util.List;
 import java.util.Map;
 
+import org.hy.common.Help;
 import org.hy.common.XJavaID;
+import org.hy.common.xml.log.Logger;
+
 import org.hy.microservice.common.BaseDomain;
 import org.hy.microservice.common.domain.DataUtil;
 import org.hy.microservice.common.domain.DomainUtil;
+import org.hy.microservice.common.probe.enums.ProbeRole;
 
 
 
@@ -24,10 +28,15 @@ public class ProbeSchemaDomain extends BaseDomain<ProbeSchema> implements XJavaI
 
     private static final long serialVersionUID = 4622662203502051071L;
     
+    private static final Logger $Logger = new Logger(ProbeSchemaDomain.class);
+    
     
     
     /** 旧的逻辑ID */
-    private String xidOld;
+    private String    xidOld;
+    
+    /** 角色类型 */
+    private ProbeRole probeRole;
     
     
     
@@ -41,6 +50,18 @@ public class ProbeSchemaDomain extends BaseDomain<ProbeSchema> implements XJavaI
     public ProbeSchemaDomain(ProbeSchema i_Data)
     {
         super(i_Data);
+        
+        // 转换：角色类型
+        if ( !Help.isNull(this.gatData().getRoleType()) )
+        {
+            this.probeRole = ProbeRole.get(this.gatData().getRoleType());
+            if ( this.probeRole == null )
+            {
+                String v_ErrMsg = "ProbeRole[" + this.gatData().getRoleType() + "] is not exists.";
+                $Logger.error(v_ErrMsg + i_Data.toString());
+                throw new RuntimeException(v_ErrMsg);
+            }
+        }
     }
     
     
@@ -82,6 +103,34 @@ public class ProbeSchemaDomain extends BaseDomain<ProbeSchema> implements XJavaI
     public void setType(String i_Type)
     {
         this.data.setType(i_Type);
+    }
+    
+    
+    /**
+     * 获取：角色类型
+     */
+    public ProbeRole getRoleType()
+    {
+        return this.probeRole;
+    }
+
+    
+    /**
+     * 设置：角色类型
+     * 
+     * @param i_RoleType 角色类型
+     */
+    public void setRoleType(ProbeRole i_RoleType)
+    {
+        this.probeRole = i_RoleType;
+        if ( this.probeRole == null )
+        {
+            this.data.setRoleType(ProbeRole.Server.getValue());
+        }
+        else
+        {
+            this.data.setRoleType(this.probeRole.getValue());
+        }
     }
 
     

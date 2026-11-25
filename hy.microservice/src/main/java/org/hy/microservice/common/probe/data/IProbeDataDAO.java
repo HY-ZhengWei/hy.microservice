@@ -94,8 +94,24 @@ public interface IProbeDataDAO
      * @version     v1.0
      *
      * @param i_SchemaName  数据探针的结构
+     * @param i_Source      来源
      * @return              按用户ID分区，按数据资产编号为主键
      */
-    public TablePartitionRID<String ,Map<String ,Object>> queryRequireSync(ProbeSchemaName i_SchemaName);
+    public TablePartitionRID<String ,Map<String ,Object>> queryRequireSync(ProbeSchemaName i_SchemaName ,String i_Source);
+    
+    
+    
+    /**
+     * 查询列表数据
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2026-11-24
+     * @version     v1.0
+     *
+     * @param i_SchemaName  数据探针的结构
+     * @param i_QueryData   查询条件
+     * @return
+     */
+    public List<Map<String ,Object>> query(ProbeSchemaName i_SchemaName ,Object i_QueryData);
     
 }

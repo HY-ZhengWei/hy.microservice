@@ -17,7 +17,7 @@
                 <name>MS_Common_AssetID_Source</name>
                 <value>http://127.0.0.1:8080/ms</value>
                 <comment>当前服务地址，数据探针的数据资产编号中的来源</comment>
-                <onlyRead>true</onlyRead>
+                <onlyRead>false</onlyRead>
             </item>
             
         </xparam>

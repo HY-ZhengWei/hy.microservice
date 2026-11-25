@@ -2,7 +2,7 @@ package org.hy.microservice.common.demo;
 
 import org.hy.common.xml.SerializableDef;
 
-import org.hy.microservice.common.probe.annotation.Ontology;
+import org.hy.microservice.common.probe.ontology.Ontology;
 
 
 

@@ -32,6 +32,7 @@
                 
                 ALTER TABLE TProbeData ADD CONSTRAINT PK_TProbeData PRIMARY KEY (assetID);/
                 
+                CREATE INDEX IDX_TProbeData_CT ON TProbeData (createTime);/
                 CREATE INDEX IDX_TProbeData_UT ON TProbeData (updateTime);/
                 
                 COMMENT ON TABLE  TProbeData                                IS '数据探针的原数据';/
@@ -63,6 +64,7 @@
                 
                 ALTER TABLE TProbeData ADD CONSTRAINT PK_TProbeData PRIMARY KEY (assetID);/
                 
+                CREATE INDEX IDX_TProbeData_CT ON TProbeData (createTime);/
                 CREATE INDEX IDX_TProbeData_UT ON TProbeData (updateTime);/
                 
                 COMMENT ON TABLE  TProbeData                                IS '数据探针的原数据';/
@@ -94,6 +96,7 @@
                 
                 ALTER TABLE TProbeData ADD CONSTRAINT PK_TProbeData PRIMARY KEY (assetID);/
                 
+                CREATE INDEX IDX_TProbeData_CT ON TProbeData (createTime);/
                 CREATE INDEX IDX_TProbeData_UT ON TProbeData (updateTime);/
                 
                 COMMENT ON TABLE  TProbeData                                IS '数据探针的原数据';/
@@ -124,9 +127,10 @@
                 );/
                 
                 ALTER TABLE TProbeData COMMENT                      = '数据探针的原数据';/
-
+                
                 ALTER TABLE TProbeData ADD CONSTRAINT PK_TProbeData PRIMARY KEY (assetID);/
-                                
+                
+                CREATE INDEX IDX_TProbeData_CT ON TProbeData (createTime);/
                 CREATE INDEX IDX_TProbeData_UT ON TProbeData (updateTime);/
                 ]]>
             </content>

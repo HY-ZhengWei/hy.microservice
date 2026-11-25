@@ -19,6 +19,7 @@ import org.hy.microservice.common.domain.DataUtil;
 import org.hy.microservice.common.domain.DomainUtil;
 import org.hy.microservice.common.probe.enums.MetaFormat;
 import org.hy.microservice.common.probe.enums.ProbeKeyword;
+import org.hy.microservice.common.probe.enums.ProbeRole;
 
 
 
@@ -213,6 +214,10 @@ public class ProbeSchemaService implements IProbeSchemaService ,Serializable
         }
         
         ProbeSchemaDomain v_Old = this.queryByXID(io_ProbeSchema.getType());
+        if ( v_Old != null && !v_Old.getRoleType().equals(io_ProbeSchema.getRoleType()) )
+        {
+            v_Old = null;    // 角色类型不同，分工不同，按查无对象处理
+        }
         if ( v_Old != null )
         {
             io_ProbeSchema.setId(v_Old.getId());
@@ -221,6 +226,7 @@ public class ProbeSchemaService implements IProbeSchemaService ,Serializable
         if ( Help.isNull(io_ProbeSchema.getId()) )
         {
             io_ProbeSchema.setId("Probe" + StringHelp.getUUID9n());
+            io_ProbeSchema.setRoleType(Help.NVL(io_ProbeSchema.getRoleType() ,ProbeRole.Server));
             io_ProbeSchema.getName().setId("ProbeName" + StringHelp.getUUID9n());
             io_ProbeSchema.getName().setSchemaID(io_ProbeSchema.getId());
             io_ProbeSchema.getName().setTableName(   Help.NVL(io_ProbeSchema.getName().getTableName() ,"TProbeData" + Date.getNowTime().getFull_ID()));
@@ -236,6 +242,7 @@ public class ProbeSchemaService implements IProbeSchemaService ,Serializable
                 v_Old = this.queryByID(io_ProbeSchema.getId());
             }
             
+            io_ProbeSchema.setRoleType(Help.NVL(io_ProbeSchema.getRoleType() ,v_Old.getRoleType()));
             io_ProbeSchema.setMetas(Help.NVL(io_ProbeSchema.getMetas() ,v_Old.getMetas()));
             io_ProbeSchema.getName().setSchemaID(io_ProbeSchema.getId());
             io_ProbeSchema.getName().setId(          Help.NVL(io_ProbeSchema.getName().getId()        ,v_Old.getName().getId()));
@@ -486,7 +493,7 @@ public class ProbeSchemaService implements IProbeSchemaService ,Serializable
         
         if ( !Help.isNull(v_PKNames) )
         {
-            v_SQL.append(" ALTER TABLE TProbeData ADD CONSTRAINT UK_TProbeData UNIQUE KEY (").append(v_PKNames).append(");/");
+            v_SQL.append(" CREATE INDEX IDX_TProbeData_UPK ON TProbeData (").append(v_PKNames).append(");/");
         }
         
         try

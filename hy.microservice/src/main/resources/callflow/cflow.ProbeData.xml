@@ -11,11 +11,11 @@
     
         <xapi id="XCFlow_Common_ProbeData_Sync">
             <comment>数据探针的向云端同步数据</comment>
-            <url>http://127.0.0.1:8080/lps.microservice/probe/data</url>
+            <url>http://127.0.0.1:8080/hy.microservice/probe/data</url>
             <body>:RequestBody</body>
             <showLog>true</showLog>
             <succeedFlag>"code":"200"</succeedFlag>
-            <returnClass>com.lps.microservice.common.probe.ProbeResponseVO</returnClass>
+            <returnClass>org.hy.microservice.common.probe.ProbeResponseVO</returnClass>
             <returnID>ProbeResponse</returnID>
         </xapi>
         

@@ -1,5 +1,6 @@
 package org.hy.microservice.common.probe.client;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.hy.common.Help;
 import org.hy.common.PartitionMap;
 import org.hy.common.TablePartitionLink;
 import org.hy.common.TablePartitionRID;
+import org.hy.common.app.Param;
 import org.hy.common.callflow.CallFlow;
 import org.hy.common.callflow.execute.ExecuteResult;
 import org.hy.common.callflow.node.APIConfig;
@@ -21,8 +23,10 @@ import org.hy.common.xml.log.Logger;
 import org.hy.microservice.common.probe.ProbeRequest;
 import org.hy.microservice.common.probe.ProbeRequestDomain;
 import org.hy.microservice.common.probe.ProbeRequestVO;
+import org.hy.microservice.common.probe.ProbeResponseVO;
 import org.hy.microservice.common.probe.data.IProbeDataDAO;
 import org.hy.microservice.common.probe.enums.ProbeKeyword;
+import org.hy.microservice.common.probe.enums.ProbeRole;
 import org.hy.microservice.common.probe.schema.IProbeSchemaCache;
 import org.hy.microservice.common.probe.schema.IProbeSchemaService;
 import org.hy.microservice.common.probe.schema.ProbeSchema;
@@ -67,6 +71,9 @@ public class ProbeClientJob
     
     @Xjava(ref="XCFlow_Common_ProbeData_Sync")
     private APIConfig           request;
+    
+    @Xjava(ref="MS_Common_ProbeData_SyncMaxCount")
+    private Param               requireSyncMaxCount;
     
     /** 是否在运行中 */
     private int                 isRunning;
@@ -123,29 +130,34 @@ public class ProbeClientJob
                 throw new RuntimeException("数据探针来源[" + this.client.getSource() + "].length > 55");
             }
             
+            int v_MaxCount = (this.requireSyncMaxCount != null ? Help.NVL(this.requireSyncMaxCount.getValueInt() ,100) : 100);
             for (ProbeSchema v_Schema : v_Schemas)
             {
-                // 按归类及逻辑表分类同步
-                for (ProbeSchemaName v_Name : v_Schema.getAllName().values())
+                // 仅同步客户端的数据
+                if ( ProbeRole.Client.getValue().equals(v_Schema.getRoleType()) )
                 {
-                    // 分批多次同步
-                    do
+                    // 按归类及逻辑表分类同步
+                    for (ProbeSchemaName v_Name : v_Schema.getAllName().values())
                     {
-                        TablePartitionRID<String ,Map<String ,Object>> v_Datas = this.probeDataDAO.queryRequireSync(v_Name);
-                        if ( Help.isNull(v_Datas) )
+                        // 分批多次同步
+                        TablePartitionRID<String ,Map<String ,Object>> v_Datas = new TablePartitionRID<>();
+                        do
                         {
-                            break;
+                            v_Datas.clear();
+                            v_Datas = this.probeDataDAO.queryRequireSync(v_Name ,this.client.getSource());
+                            if ( Help.isNull(v_Datas) )
+                            {
+                                break;
+                            }
+                            
+                            PartitionMap<String ,String> v_UserDels = this.handleDatas(v_Name ,v_Datas);
+                            this.syncDatas(v_Schema.getType() ,v_Name ,v_Datas ,v_UserDels);
+                            
+                            v_UserDels.clear();
+                            v_UserDels = null;
                         }
-                        
-                        PartitionMap<String ,String> v_UserDels = this.handleDatas(v_Name ,v_Datas);
-                        this.syncDatas(v_Schema.getType() ,v_Name ,v_Datas ,v_UserDels);
-                        
-                        v_Datas   .clear();
-                        v_UserDels.clear();
-                        v_Datas    = null;
-                        v_UserDels = null;
+                        while ( v_Datas.rowCount() >= v_MaxCount );
                     }
-                    while (true);
                 }
             }
         }
@@ -199,7 +211,7 @@ public class ProbeClientJob
      * 处理数据1：分离需删除数据
      * 处理数据2：分离需上传数据
      * 处理数据3：简化上传数据的字段名称
-     * 处理数据4：数据资产编号剔除来源
+     * 处理数据4：数据资产编号剔除来源（SQL层面实现）
      * 
      * @author      ZhengWei(HY)
      * @createDate  2026-11-13
@@ -219,28 +231,28 @@ public class ProbeClientJob
             Map<String, Map<String ,Object>> v_UserDatas = io_Datas.get(v_UserID);
             for (Map.Entry<String, Map<String ,Object>> v_Item : v_UserDatas.entrySet())
             {
-                String              v_AssetIDDB = v_Item.getKey();
-                Map<String ,Object> v_Row       = v_Item.getValue();
-                int                 v_IsDel     = (int) v_Row.get(ProbeKeyword.IsDel.getValue().toUpperCase());
+                String              v_AssetIDDB  = v_Item.getKey();
+                String              v_YMDNo      = v_AssetIDDB;       // v_AssetIDDB.substring(0 ,8 + AssetID.$NoLen);
+                Map<String ,Object> v_Row        = v_Item.getValue();
+                int                 v_IsDel      = (int) v_Row.get(ProbeKeyword.IsDel.getValue());
                 
-                if ( v_IsDel == 0 )
+                // 注：未上传的，必须先上传，再删除
+                // 简化上传数据的字段名称
+                for (ProbeSchemaMetaDomain v_Meta : v_Name.getMetas())
                 {
-                    // 简化上传数据的字段名称
-                    for (ProbeSchemaMetaDomain v_Meta : v_Name.getMetas())
-                    {
-                        String v_ColName  = v_Meta.getMnameABC();
-                        Object v_ColValue = v_Row.remove(v_Meta.getMname().toUpperCase());
-                        v_Row.put(v_ColName ,v_ColValue);
-                    }
-                    
-                    // 删除无须上传的信息
-                    v_Row.remove(ProbeKeyword.IsDel       .getValue().toUpperCase());
-                    v_Row.remove(ProbeKeyword.UpdateUserID.getValue().toUpperCase());
-                    v_Row.remove(ProbeKeyword.AssetID     .getValue().toUpperCase());
+                    String v_ColName  = v_Meta.getMnameABC();
+                    Object v_ColValue = v_Row.remove(v_Meta.getMname());
+                    v_Row.put(v_ColName ,v_ColValue);
                 }
-                else
+                
+                // 删除无须上传的信息
+                v_Row.remove(ProbeKeyword.IsDel       .getValue());
+                v_Row.remove(ProbeKeyword.UpdateUserID.getValue());
+                v_Row.remove(ProbeKeyword.AssetID     .getValue());
+                
+                if ( v_IsDel == 1 )
                 {
-                    v_UserDels.putRow(v_UserID ,v_AssetIDDB);
+                    v_UserDels.putRow(v_UserID ,v_YMDNo);
                 }
             }
         }
@@ -253,7 +265,7 @@ public class ProbeClientJob
                 List<String> v_UDels = v_UserDels.get(v_UserID);
                 for (String v_AssetIDDB : v_UDels)
                 {
-                    io_Datas.removeRow(v_UserID ,v_AssetIDDB);
+                    // io_Datas.removeRow(v_UserID ,v_AssetIDDB);
                 }
             }
         }
@@ -368,8 +380,9 @@ public class ProbeClientJob
                        + (i_Request.getDels()  == null ? 0 : i_Request.getDels().size()) 
                        + "条，整体用时" + Date.toTimeLenNano(v_Result.getEndTime() - v_Result.getBeginTime()));
             
-            /*
-            List<String> v_AssetIDDBs = null;
+            // 先汇总同步数据
+            ProbeResponseVO v_ProbeResponse = (ProbeResponseVO) v_Context.get("ProbeResponse");
+            List<String>    v_AssetIDDBs    = null;
             if ( !Help.isNull(i_Request.getDels()) )
             {
                 v_AssetIDDBs = i_Request.getDels();
@@ -382,8 +395,35 @@ public class ProbeClientJob
             {
                 v_AssetIDDBs.addAll(i_Request.getSaves().keySet());
             }
-            this.probeDataDAO.updateAssetStates(i_TableName ,v_AssetIDDBs ,true ,i_Request.getUserID());
-            */
+            
+            // 后剔除非法数据
+            if ( !Help.isNull(v_ProbeResponse.getErrorDatas()) )
+            {
+                for (int x=v_AssetIDDBs.size() - 1; x>=0; x--)
+                {
+                    String v_AssetIDDB = v_AssetIDDBs.get(x);
+                    String v_AssetID   = i_Request.getType() + v_AssetIDDB + this.client.getSource();
+                    String v_ErrorInfo = v_ProbeResponse.getErrorDatas().get(v_AssetID);
+                    if ( !Help.isNull(v_ErrorInfo) )
+                    {
+                        $Logger.error("ProbeData[" + i_Request.getType() + " -> "  + v_AssetIDDB + " -> " + this.client.getSource() + "] " + v_ErrorInfo);
+                        v_AssetIDDBs.remove(x);
+                    }
+                }
+            }
+            
+            // 再更新同步标记
+            if ( !Help.isNull(v_AssetIDDBs) )
+            {
+                // 还原在数据库表中的数据资产编号
+                for (int x=0; x<v_AssetIDDBs.size(); x++)
+                {
+                    String v_YMDNo = v_AssetIDDBs.get(x);
+                    v_AssetIDDBs.set(x ,v_YMDNo + this.client.getSource());
+                }
+                
+                this.probeDataDAO.updateAssetStates(i_TableName ,v_AssetIDDBs ,true ,i_Request.getUserID());
+            }
         }
         else
         {
@@ -396,8 +436,6 @@ public class ProbeClientJob
             }
             $Logger.error(v_Error ,v_Result.getException());
         }
-        
-        System.out.println("返回值：ReturnData=" + v_Context.get("ProbeResponse"));
     }
     
 }
